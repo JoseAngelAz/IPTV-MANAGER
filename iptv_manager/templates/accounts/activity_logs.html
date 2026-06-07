@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+{% block title %} — Registro de Actividad{% endblock %}
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <div class="bg-white dark:bg-gray-800 p-6 rounded shadow">
+        <div class="flex flex-wrap justify-between items-center mb-4 gap-2">
+            <h2 class="text-2xl font-bold"><i class="fas fa-history mr-2 text-blue-600"></i>Registro de Actividad del Sistema</h2>
+            <div class="flex items-center gap-3">
+                <p class="text-sm text-gray-500">{{ logs.paginator.count }} registros</p>
+                {% if can_delete %}
+                <button onclick="toggleSelectAll()" class="text-xs px-3 py-1 rounded bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 font-semibold">
+                    <i class="fas fa-check-double mr-1"></i>Seleccionar todos
+                </button>
+                <button id="delete-selected-btn" onclick="confirmBulkDelete()" class="text-xs px-3 py-1 rounded bg-red-600 text-white hover:bg-red-700 font-semibold hidden">
+                    <i class="fas fa-trash mr-1"></i>Eliminar seleccionados
+                </button>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <form id="log-form" method="post" action="{% url 'activity_log_bulk_delete' %}">
+                {% csrf_token %}
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b dark:border-gray-600 text-left">
+                            {% if can_delete %}<th class="p-2 w-10"><input type="checkbox" id="select-all" onchange="toggleSelectAllCheckboxes()" class="cursor-pointer"></th>{% endif %}
+                            <th class="p-2">Usuario</th>
+                            <th class="p-2">Acción</th>
+                            <th class="p-2">Modelo</th>
+                            <th class="p-2">Objeto</th>
+                            <th class="p-2">IP</th>
+                            <th class="p-2">Fecha</th>
+                            {% if can_delete %}<th class="p-2 w-20">Acción</th>{% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for log in logs %}
+                        <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
+                            {% if can_delete %}<td class="p-2"><input type="checkbox" name="selected_ids" value="{{ log.pk }}" class="log-checkbox cursor-pointer" onchange="updateDeleteBtn()"></td>{% endif %}
+                            <td class="p-2">{{ log.username|default:'—' }}</td>
+                            <td class="p-2">
+                                <span class="px-2 py-0.5 rounded text-xs font-semibold inline-flex items-center gap-1
+                                    {% if log.action == 'create' %}bg-green-100 text-green-800
+                                    {% elif log.action == 'update' %}bg-blue-100 text-blue-800
+                                    {% elif log.action == 'delete' %}bg-red-100 text-red-800
+                                    {% elif log.action == 'login' %}bg-purple-100 text-purple-800
+                                    {% elif log.action == 'logout' %}bg-yellow-100 text-yellow-800
+                                    {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                    <i class="fas fa-{% if log.action == 'create' %}plus-circle{% elif log.action == 'update' %}edit{% elif log.action == 'delete' %}trash{% elif log.action == 'login' %}sign-in-alt{% elif log.action == 'logout' %}sign-out-alt{% else %}circle{% endif %}"></i>
+                                    {{ log.get_action_display }}
+                                </span>
+                            </td>
+                            <td class="p-2">{{ log.model_name|default:'—' }}</td>
+                            <td class="p-2 max-w-xs truncate" title="{{ log.object_repr }}">{{ log.object_repr|default:'—' }}</td>
+                            <td class="p-2 font-mono text-xs">{{ log.ip_address|default:'—' }}</td>
+                            <td class="p-2 text-xs">{{ log.timestamp|date:'d/m/Y H:i' }}</td>
+                            {% if can_delete %}
+                            <td class="p-2">
+                                <button type="button" onclick="confirmSingleDelete({{ log.pk }})" class="text-red-500 hover:text-red-700 text-xs flex items-center gap-1">
+                                    <i class="fas fa-trash"></i> Eliminar
+                                </button>
+                            </td>
+                            {% endif %}
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="{% if can_delete %}8{% else %}7{% endif %}" class="p-4 text-center text-gray-500"><i class="fas fa-inbox mr-2"></i>No hay registros de actividad.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </form>
+        </div>
+
+        {% if logs.has_other_pages %}
+        <div class="mt-4 flex justify-center gap-2">
+            {% if logs.has_previous %}
+            <a href="?page=1" class="px-3 py-1 rounded bg-gray-200 dark:bg-gray-600 hover:bg-gray-300">&laquo;</a>
+            <a href="?page={{ logs.previous_page_number }}" class="px-3 py-1 rounded bg-gray-200 dark:bg-gray-600 hover:bg-gray-300">&lsaquo;</a>
+            {% endif %}
+            <span class="px-3 py-1 rounded bg-blue-600 text-white font-semibold">{{ logs.number }}</span>
+            {% if logs.has_next %}
+            <a href="?page={{ logs.next_page_number }}" class="px-3 py-1 rounded bg-gray-200 dark:bg-gray-600 hover:bg-gray-300">&rsaquo;</a>
+            <a href="?page={{ logs.paginator.num_pages }}" class="px-3 py-1 rounded bg-gray-200 dark:bg-gray-600 hover:bg-gray-300">&raquo;</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+var singleDeletePk = null;
+
+function toggleSelectAll(){
+    var checkboxes = document.querySelectorAll('.log-checkbox');
+    var allChecked = Array.from(checkboxes).every(function(cb){ return cb.checked; });
+    var master = document.getElementById('select-all');
+    checkboxes.forEach(function(cb){ cb.checked = !allChecked; });
+    if(master) master.checked = !allChecked;
+    updateDeleteBtn();
+}
+
+function toggleSelectAllCheckboxes(){
+    var master = document.getElementById('select-all');
+    var checkboxes = document.querySelectorAll('.log-checkbox');
+    checkboxes.forEach(function(cb){ cb.checked = master.checked; });
+    updateDeleteBtn();
+}
+
+function updateDeleteBtn(){
+    var checked = document.querySelectorAll('.log-checkbox:checked').length;
+    var btn = document.getElementById('delete-selected-btn');
+    if(btn){
+        if(checked > 0){ btn.classList.remove('hidden'); btn.innerHTML = '<i class="fas fa-trash mr-1"></i>Eliminar ' + checked + ' registro(s)'; }
+        else { btn.classList.add('hidden'); }
+    }
+}
+
+function confirmBulkDelete(){
+    var checked = document.querySelectorAll('.log-checkbox:checked').length;
+    if(checked === 0) return;
+    openModal(
+        '¿Eliminar ' + checked + ' registros?',
+        'Esta acción no se puede deshacer. Los registros seleccionados se eliminarán permanentemente.',
+        function(){ document.getElementById('log-form').submit(); }
+    );
+}
+
+function confirmSingleDelete(pk){
+    singleDeletePk = pk;
+    openModal(
+        '¿Eliminar este registro?',
+        'Esta acción no se puede deshacer. El registro se eliminará permanentemente.',
+        function(){
+            var form = document.createElement('form');
+            form.method = 'post';
+            form.action = '{% url "activity_log_bulk_delete" %}';
+            var csrf = document.createElement('input');
+            csrf.type = 'hidden';
+            csrf.name = 'csrfmiddlewaretoken';
+            csrf.value = '{{ csrf_token }}';
+            form.appendChild(csrf);
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'selected_ids';
+            input.value = singleDeletePk;
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    );
+}
+</script>
+{% endblock %}

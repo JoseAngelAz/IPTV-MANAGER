@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block title %} — {{ tr.mi_perfil }}{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto bg-white dark:bg-gray-800 p-6 rounded shadow">
+    <h2 class="text-2xl font-bold mb-4"><i class="fas fa-user-circle text-blue-600 mr-2"></i>{{ tr.mi_perfil }}</h2>
+
+    <div class="flex items-center gap-4 mb-6">
+        <div class="relative">
+            {% if user.profile_picture and user.profile_picture.url %}
+            <img src="{{ user.profile_picture.url }}" alt="Foto" class="w-20 h-20 rounded-full object-cover border-2 border-blue-500" id="preview-img" onerror="this.style.display='none';document.getElementById('preview-placeholder').style.display='flex'">
+            <div class="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-2xl text-white font-bold" id="preview-placeholder" style="display:none">
+                {{ user.first_name|first|default:user.username|first|upper }}
+            </div>
+            {% else %}
+            <div class="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-2xl text-white font-bold" id="preview-placeholder">
+                {{ user.first_name|first|default:user.username|first|upper }}
+            </div>
+            {% endif %}
+        </div>
+        <div>
+            <p class="text-lg font-semibold">{{ user.get_full_name|default:user.username }}</p>
+            <p class="text-sm text-gray-500">{% for g in user.groups.all %}{{ g.name }}{% if not forloop.last %}, {% endif %}{% empty %}Sin grupo{% endfor %}</p>
+            <p class="text-sm text-gray-500">{{ user.email|default:'Sin email' }}</p>
+        </div>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" id="profile-form" class="space-y-4">
+        {% csrf_token %}
+        {% for field in form %}
+        <div>
+            <label class="block text-sm font-medium mb-1">{{ field.label }}</label>
+            {% if field.name == 'profile_picture' %}
+            <div>
+                <input type="file" name="{{ field.name }}" id="id_profile_picture" accept="image/*" class="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:text-white" onchange="previewFile(this)">
+                <p class="text-xs text-gray-400 mt-1">{{ tr.haz_clic_para_seleccionar_podras_recortar_la_imagen_antes_de_guardar }}</p>
+            </div>
+            {% else %}
+            {{ field }}
+            {% endif %}
+            {% if field.errors %}<p class="text-red-500 text-xs mt-1">{{ field.errors.0 }}</p>{% endif %}
+        </div>
+        {% endfor %}
+        <button type="submit" class="btn-primary px-6 py-2 font-semibold"><i class="fas fa-save mr-1"></i>{{ tr.guardar_cambios }}</button>
+        <a href="{% url 'change_password' %}" class="ml-2 text-sm text-blue-500 hover:underline"><i class="fas fa-key mr-1"></i>{{ tr.cambiar_contrasena }}</a>
+    </form>
+</div>
+
+<script>
+function previewFile(input){
+    var file = input.files[0];
+    if(!file) return;
+    var reader = new FileReader();
+    reader.onload = function(e){
+        var preview = document.getElementById('preview-img');
+        var placeholder = document.getElementById('preview-placeholder');
+        if(preview){
+            preview.src = e.target.result;
+            preview.style.display = '';
+        } else {
+            var container = input.closest('.space-y-4') || document.querySelector('.flex.items-center.gap-4');
+            if(container){
+                var img = document.createElement('img');
+                img.src = e.target.result;
+                img.alt = 'Foto';
+                img.className = 'w-20 h-20 rounded-full object-cover border-2 border-blue-500';
+                img.id = 'preview-img';
+                var oldImg = document.getElementById('preview-img');
+                if(oldImg) oldImg.remove();
+                container.querySelector('.relative').appendChild(img);
+            }
+        }
+        if(placeholder) placeholder.style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+}
+</script>
+{% endblock %}

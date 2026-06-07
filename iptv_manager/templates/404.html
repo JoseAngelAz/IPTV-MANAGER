@@ -1,0 +1,114 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 — {{ error_settings.title }}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { margin: 0; min-height: 100vh; font-family: system-ui, -apple-system, sans-serif;
+               background: {{ error_settings.bg_color }}; color: {{ error_settings.text_color }};
+               display: flex; align-items: center; justify-content: center;
+               overflow: hidden; position: relative; }
+        {{ pixel_css }}
+
+        .fade-in { animation: fadeInUp 0.8s ease-out both; }
+        .fade-in-d1 { animation: fadeInUp 0.8s ease-out 0.2s both; }
+        .fade-in-d2 { animation: fadeInUp 0.8s ease-out 0.4s both; }
+        .fade-in-d3 { animation: fadeInUp 0.8s ease-out 0.6s both; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        .glow-number {
+            font-size: 8rem; font-weight: 900; line-height: 1;
+            background: linear-gradient(135deg, {{ error_settings.text_color }}88, {{ error_settings.text_color }});
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; filter: drop-shadow(0 0 30px {{ error_settings.text_color }}33);
+            animation: pulse-glow 3s ease-in-out infinite;
+        }
+        @keyframes pulse-glow { 0%,100% { filter: drop-shadow(0 0 20px {{ error_settings.text_color }}22); } 50% { filter: drop-shadow(0 0 40px {{ error_settings.text_color }}44); } }
+
+        .card-404 {
+            background: {% if error_settings.show_pixel_art %}rgba(0,0,0,0.3){% else %}rgba(255,255,255,0.1){% endif %};
+            backdrop-filter: blur(12px);
+            border: 1px solid {{ error_settings.text_color }}22;
+            border-radius: 1.5rem;
+            padding: 3rem;
+            max-width: 34rem;
+            width: 90%;
+            position: relative; z-index: 1;
+        }
+        .btn-404 {
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+        .btn-404-primary {
+            background: {{ error_settings.text_color }};
+            color: {{ error_settings.bg_color }};
+        }
+        .btn-404-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px {{ error_settings.text_color }}44; }
+        .btn-404-outline {
+            border: 2px solid {{ error_settings.text_color }}66;
+            color: {{ error_settings.text_color }};
+        }
+        .btn-404-outline:hover { background: {{ error_settings.text_color }}22; transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+    {% if error_settings.show_pixel_art %}
+    <div class="pixel-bg">
+        <div class="pixel-ground"></div>
+        <div class="pixel-castle" style="bottom: 35%;">
+            <div class="pixel-tower">
+                <div class="pixel-roof"></div>
+                <div class="pixel-window"></div>
+            </div>
+            <div class="pixel-wall">
+                <div class="pixel-roof" style="border-left-width:20px;border-right-width:20px;border-bottom-width:25px;"></div>
+                <div class="pixel-door"></div>
+            </div>
+            <div class="pixel-tower">
+                <div class="pixel-roof"></div>
+                <div class="pixel-window"></div>
+            </div>
+        </div>
+        <div class="pixel-star" style="top:10%;left:15%;animation-delay:0s;"></div>
+        <div class="pixel-star" style="top:20%;left:75%;animation-delay:0.5s;"></div>
+        <div class="pixel-star" style="top:5%;left:45%;animation-delay:1s;"></div>
+        <div class="pixel-star" style="top:15%;left:85%;animation-delay:1.5s;"></div>
+        <div class="pixel-star" style="top:8%;left:30%;animation-delay:2s;"></div>
+        <div class="pixel-star" style="top:25%;left:60%;animation-delay:2.5s;"></div>
+        <div class="pixel-star" style="top:30%;left:20%;animation-delay:3s;"></div>
+    </div>
+    {% endif %}
+
+    <div class="card-404 fade-in">
+        <div class="text-center">
+            <div class="glow-number fade-in-d1">404</div>
+            <h1 class="text-3xl font-bold mb-3 fade-in-d1">{{ error_settings.title }}</h1>
+            <p class="text-base mb-8 opacity-80 leading-relaxed fade-in-d2">{{ error_settings.message }}</p>
+            <div class="flex flex-wrap justify-center gap-4 fade-in-d3">
+                <a href="{% url 'home' %}" class="btn-404 btn-404-primary">
+                    <i class="fas fa-home"></i> {{ tr.ir_al_inicio }}
+                </a>
+                <a href="{% url 'login' %}" class="btn-404 btn-404-outline">
+                    <i class="fas fa-sign-in-alt"></i> {{ tr.iniciar_sesion }}
+                </a>
+            </div>
+            <div class="mt-8 flex justify-center gap-4 text-sm opacity-40">
+                <a href="{% url 'dashboard' %}" class="hover:opacity-80 transition"><i class="fas fa-chart-bar mr-1"></i>{{ tr.dashboard }}</a>
+                <span class="opacity-30">|</span>
+                <a href="{% url 'about' %}" class="hover:opacity-80 transition"><i class="fas fa-question-circle mr-1"></i>{{ tr.ayuda }}</a>
+            </div>
+            <p class="mt-6 text-xs opacity-30"><i class="far fa-copyright mr-1"></i>IPTV Manager</p>
+        </div>
+    </div>
+</body>
+</html>

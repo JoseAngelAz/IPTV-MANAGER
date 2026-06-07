@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% block title %} — {{ tr.como_usar_el_sistema }}{% endblock %}
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+
+<div class="card-custom p-6 rounded shadow">
+    <h2 class="text-2xl font-bold mb-2"><i class="fas fa-info-circle text-blue-600 mr-2"></i>{{ tr.como_usar_iptv_manager }}</h2>
+    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">{{ tr.guia_paso_a_paso_para_operar_el_sistema }}</p>
+</div>
+
+<div class="card-custom p-6 rounded shadow">
+    <h3 class="font-bold text-lg mb-4"><i class="fas fa-arrow-right text-green-500 mr-2"></i>{{ tr.primeros_pasos }}</h3>
+    <ol class="list-decimal list-inside space-y-3 text-sm">
+        <li><strong>{{ tr.iniciar_sesion_title }}</strong> — Ve a <code>/accounts/login/</code> e ingresa tus credenciales.</li>
+        <li><strong>{{ tr.dashboard }}</strong> — Al entrar verás el panel principal con indicadores clave: clientes activos, suscripciones vigentes, ingresos del mes, y gráficos financieros.</li>
+        <li><strong>{{ tr.mi_perfil }}</strong> — En "Mi Perfil" puedes agregar tu foto, nombre completo y correo electrónico.</li>
+        <li><strong>{{ tr.personalizar_tema }}</strong> — En "Personalizar Tema" elige entre 5 presets o crea tu propio esquema de colores.</li>
+    </ol>
+</div>
+
+<div class="card-custom p-6 rounded shadow">
+    <h3 class="font-bold text-lg mb-4"><i class="fas fa-users text-blue-500 mr-2"></i>{{ tr.gestion_de_clientes }}</h3>
+    <ol class="list-decimal list-inside space-y-2 text-sm">
+        <li><strong>Crear cliente</strong> — Ve a <span class="font-semibold">Clientes → Nuevo Cliente</span>. Ingresa nombre, teléfono, email y dispositivo (MAC address).</li>
+        <li><strong>Agregar foto</strong> — Al crear o editar un cliente puedes asignarle una foto de perfil.</li>
+        <li><strong>Ver detalle</strong> — Haz clic en un cliente para ver su información completa, suscripciones activas, historial de cambios y notas.</li>
+        <li><strong>Agregar notas</strong> — Desde la ficha del cliente puedes añadir notas internas visibles para todo el equipo.</li>
+        <li><strong>Editar/Eliminar</strong> — Usa los botones de acción en la lista de clientes. Solo roles con permisos pueden eliminar.</li>
+    </ol>
+</div>
+
+<div class="card-custom p-6 rounded shadow">
+    <h3 class="font-bold text-lg mb-4"><i class="fas fa-clipboard-list text-green-500 mr-2"></i>{{ tr.suscripciones_y_planes }}</h3>
+    <ol class="list-decimal list-inside space-y-2 text-sm">
+        <li><strong>Crear suscripción</strong> — Ve a <span class="font-semibold">Suscripciones → Nueva Suscripción</span>. Selecciona un cliente, un plan, y la fecha de inicio.</li>
+        <li><strong>Planes disponibles</strong> — Los planes se configuran en el admin de Django. Cada plan tiene nombre, precio y duración en días.</li>
+        <li><strong>Estados</strong> — Las suscripciones pueden estar: activas, vencidas o canceladas. El sistema calcula automáticamente la fecha de vencimiento.</li>
+        <li><strong>Renovar/Cancelar</strong> — Usa los botones de acción en la lista para renovar o cancelar suscripciones existentes.</li>
+        <li><strong>Historial automático</strong> — Cada cambio en una suscripción se registra automáticamente en el historial del cliente.</li>
+    </ol>
+</div>
+
+<div class="card-custom p-6 rounded shadow">
+    <h3 class="font-bold text-lg mb-4"><i class="fas fa-coins text-yellow-500 mr-2"></i>{{ tr.finanzas }}</h3>
+    <ol class="list-decimal list-inside space-y-2 text-sm">
+        <li><strong>Ver movimientos</strong> — En <span class="font-semibold">Finanzas</span> verás el listado completo de ingresos y egresos.</li>
+        <li><strong>Registrar movimiento</strong> — Usa "Nuevo Movimiento" para registrar un ingreso (pago de suscripción) o egreso (gasto operativo).</li>
+        <li><strong>Dashboard financiero</strong> — El panel principal muestra gráficos de ingresos vs egresos de los últimos 6 meses, con proyecciones.</li>
+        <li><strong>Nota:</strong> Solo roles con permisos financieros pueden crear o modificar movimientos (el rol Soporte solo puede ver).</li>
+    </ol>
+</div>
+
+<div class="card-custom p-6 rounded shadow">
+    <h3 class="font-bold text-lg mb-4"><i class="fas fa-bell text-purple-500 mr-2"></i>{{ tr.notificaciones }}</h3>
+    <ol class="list-decimal list-inside space-y-2 text-sm">
+        <li><strong>Ver notificaciones</strong> — En <span class="font-semibold">Notificaciones</span> se listan todos los envíos realizados.</li>
+        <li><strong>Enviar recordatorio</strong> — Desde la ficha de un cliente o suscripción puedes enviar recordatorios manuales.</li>
+        <li><strong>Recordatorios automáticos</strong> — El sistema tiene un comando cron que envía recordatorios de suscripciones por vencer.</li>
+        <li><strong>Canales:</strong> WhatsApp y correo electrónico, según la configuración del cliente.</li>
+        <li><strong>WhatsApp API:</strong> El sistema incluye un microservicio Node.js (<code>whatsapp-api/</code>) que se conecta a WhatsApp Web. Al iniciarlo por primera vez, muestra un código QR que debes escanear con tu WhatsApp. La sesión queda guardada para usos futuros. Detén y reinicia el contenedor si necesitas cambiar de cuenta.</li>
+        <li><strong>Resolución de errores WhatsApp:</strong> Si ves <code>Error al enviar WhatsApp</code> con "Connection refused", verifica que el servicio esté corriendo: <code>docker-compose ps whatsapp</code> o <code>docker-compose logs -f whatsapp</code>.</li>
+    </ol>
+</div>
+
+<div class="card-custom p-6 rounded shadow">
+    <h3 class="font-bold text-lg mb-4"><i class="fas fa-history text-orange-500 mr-2"></i>{{ tr.actividad }}</h3>
+    <ol class="list-decimal list-inside space-y-2 text-sm">
+        <li><strong>Ver actividad</strong> — En <span class="font-semibold">Actividad</span> se registra automáticamente cada acción del sistema (crear, editar, eliminar, login, logout).</li>
+        <li><strong>Filtrar</strong> — Usa los filtros de acción, modelo y fecha en el admin de Django para búsquedas avanzadas.</li>
+        <li><strong>Eliminar registros</strong> — Solo el admin maestro (superuser) puede eliminar registros, individualmente o en lote.</li>
+        <li><strong>Selección múltiple:</strong> Marca varios registros con checkboxes y usa "Eliminar seleccionados".</li>
+    </ol>
+</div>
+
+<div class="card-custom p-6 rounded shadow">
+    <h3 class="font-bold text-lg mb-4"><i class="fas fa-palette text-pink-500 mr-2"></i>{{ tr.personalizacion }}</h3>
+    <ol class="list-decimal list-inside space-y-2 text-sm">
+        <li><strong>Temas predefinidos</strong> — Elige entre 5 presets: Moderno, Corporativo, Minimalista, Vibrante y Dark Neumorphic.</li>
+        <li><strong>Colores manuales</strong> — Personaliza cada color individualmente con selectores de color.</li>
+        <li><strong>CSS personalizado</strong> — Agrega tu propio CSS para ajustes finos adicionales.</li>
+        <li><strong>Presets guardados</strong> — Guarda tus combinaciones favoritas como preset personalizado con nombre e icono.</li>
+        <li><strong>Modo oscuro</strong> — Activa/desactiva desde el interruptor en la barra lateral.</li>
+    </ol>
+</div>
+
+<div class="card-custom p-6 rounded shadow">
+    <h3 class="font-bold text-lg mb-4"><i class="fas fa-shield-alt text-red-500 mr-2"></i>{{ tr.roles_y_permisos }}</h3>
+    <div class="overflow-x-auto text-sm">
+        <table class="w-full border-collapse">
+            <thead><tr class="border-b dark:border-gray-600"><th class="text-left p-2">{{ tr.grupo }}</th><th class="text-left p-2">Permisos</th></tr></thead>
+            <tbody>
+                <tr class="border-b dark:border-gray-600"><td class="p-2 font-semibold">{{ tr.admin_maestro }}</td><td class="p-2">{{ tr.admin_maestro_desc }}</td></tr>
+                <tr class="border-b dark:border-gray-600"><td class="p-2 font-semibold">Superadmin</td><td class="p-2">{{ tr.superadmin_desc }}</td></tr>
+                <tr class="border-b dark:border-gray-600"><td class="p-2 font-semibold">Gerente</td><td class="p-2">{{ tr.gerente_desc }}</td></tr>
+                <tr class="border-b dark:border-gray-600"><td class="p-2 font-semibold">Soporte</td><td class="p-2">{{ tr.soporte_desc }}</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card-custom p-6 rounded shadow">
+    <h3 class="font-bold text-lg mb-4"><i class="fas fa-tasks text-green-500 mr-2"></i>{{ tr.tareas }} (To-Do List)</h3>
+    <ol class="list-decimal list-inside space-y-2 text-sm">
+        <li><strong>{{ tr.nueva_tarea }}</strong> — Crea tareas personales con título, prioridad y categoría.</li>
+        <li><strong>{{ tr.prioridad }}</strong> — Asigna prioridad: Baja, Media, Alta o Urgente. Las tareas se ordenan automáticamente.</li>
+        <li><strong>{{ tr.categoria }}</strong> — Clasifica por categoría: General, Clientes, Finanzas, Suscripciones, Sistema, Otro.</li>
+        <li><strong>Fecha de vencimiento</strong> — Opcionalmente asigna una fecha límite. Las tareas vencidas se marcan en rojo.</li>
+        <li><strong>Completar/Eliminar</strong> — Marca como completada haciendo clic en el checkbox o elimínala con el botón de borrar.</li>
+        <li><strong>{{ tr.filtros }}</strong> — Filtra por estado: Todas, Pendientes o Completadas.</li>
+    </ol>
+</div>
+
+<div class="card-custom p-6 rounded shadow">
+    <h3 class="font-bold text-lg mb-4"><i class="fas fa-question-circle text-blue-500 mr-2"></i>{{ tr.solucion_de_problemas }}</h3>
+    <div class="space-y-3 text-sm">
+        <div>
+            <p class="font-semibold">No puedo iniciar sesión</p>
+            <p class="text-xs text-gray-500">Verifica tus credenciales. Si excediste los intentos, espera 1 hora o contacta al administrador.</p>
+        </div>
+        <div>
+            <p class="font-semibold">No veo algunas secciones</p>
+            <p class="text-xs text-gray-500">Tu rol de usuario determina qué secciones puedes ver. Contacta al admin maestro si necesitas más permisos.</p>
+        </div>
+        <div>
+            <p class="font-semibold">El servidor no responde</p>
+            <p class="text-xs text-gray-500">Asegúrate de que el servidor esté corriendo con <code>python manage.py runserver</code>. Verifica que el puerto 8000 esté libre.</p>
+        </div>
+        <div>
+            <p class="font-semibold">No se ve el sidebar</p>
+            <p class="text-xs text-gray-500">En dispositivos móviles el sidebar se oculta automáticamente. Toca el botón de menú (☰) en la esquina superior izquierda para mostrarlo.</p>
+        </div>
+    </div>
+</div>
+
+<div class="card-custom p-6 rounded shadow text-center text-sm text-gray-500">
+    <p><i class="far fa-copyright mr-1"></i>2026 José Ángel Azucena Méndez</p>
+</div>
+
+</div>
+{% endblock %}

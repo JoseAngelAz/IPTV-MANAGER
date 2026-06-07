@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block title %} — Vista Previa Reporte{% endblock %}
+{% block content %}
+<div class="max-w-5xl mx-auto space-y-4">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+        <h2 class="text-2xl font-bold"><i class="fas fa-eye text-blue-600 mr-2"></i>Vista Previa</h2>
+        <div class="flex gap-2">
+            <a href="{% url 'reports:report_create' %}" class="px-4 py-2 rounded bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 font-semibold text-sm">
+                <i class="fas fa-arrow-left mr-1"></i>Atrás
+            </a>
+        </div>
+    </div>
+
+    <div id="report-container" class="bg-white dark:bg-gray-800 rounded shadow overflow-hidden">
+        <div class="bg-gray-100 dark:bg-gray-900 px-4 py-2 text-xs text-gray-500 flex items-center gap-4 border-b flex-wrap">
+            <span><i class="far fa-file-pdf mr-1"></i>PDF — {{ template.nombre }}</span>
+            <span><i class="far fa-calendar mr-1"></i>{{ now|date:"d/m/Y H:i" }}</span>
+            {% if date_start and date_end %}
+            <span><i class="far fa-clock mr-1"></i>{{ date_start }} al {{ date_end }}</span>
+            {% endif %}
+            <span class="ml-auto flex gap-2 flex-wrap">
+                <form method="post" action="{% url 'reports:report_create' %}" class="inline">
+                    {% csrf_token %}
+                    {% for s in sections %}<input type="hidden" name="{{ s }}" value="on">{% endfor %}
+                    <input type="hidden" name="template_id" value="{{ template_id }}">
+                    <input type="hidden" name="date_start" value="{{ date_start|default:'' }}">
+                    <input type="hidden" name="date_end" value="{{ date_end|default:'' }}">
+                    <input type="hidden" name="format" value="pdf">
+                    <input type="hidden" name="action" value="download">
+                    <button type="submit" class="text-blue-600 hover:underline font-semibold text-xs">
+                        <i class="fas fa-download mr-1"></i>PDF
+                    </button>
+                </form>
+                <form method="post" action="{% url 'reports:report_create' %}" class="inline">
+                    {% csrf_token %}
+                    {% for s in sections %}<input type="hidden" name="{{ s }}" value="on">{% endfor %}
+                    <input type="hidden" name="template_id" value="{{ template_id }}">
+                    <input type="hidden" name="date_start" value="{{ date_start|default:'' }}">
+                    <input type="hidden" name="date_end" value="{{ date_end|default:'' }}">
+                    <input type="hidden" name="format" value="excel">
+                    <input type="hidden" name="action" value="download">
+                    <button type="submit" class="text-green-600 hover:underline font-semibold text-xs">
+                        <i class="fas fa-file-excel mr-1"></i>Excel
+                    </button>
+                </form>
+                <button onclick="downloadJPG()" class="text-purple-600 hover:underline font-semibold text-xs">
+                    <i class="fas fa-image mr-1"></i>JPG
+                </button>
+            </span>
+        </div>
+
+        <div id="report-content" class="p-4" style="background:white;color:#1e293b;font-family:{% if template_id == 3 %}Georgia,serif{% elif template_id == 2 %}Courier New,monospace{% else %}Arial,Helvetica,sans-serif{% endif %};">
+            {% include 'reports/preview_content.html' %}
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script>
+function downloadJPG() {
+    const original = document.getElementById('report-content');
+    const container = document.getElementById('report-container');
+    const clone = original.cloneNode(true);
+    clone.style.position = 'absolute';
+    clone.style.left = '-9999px';
+    clone.style.top = '0';
+    clone.style.width = original.scrollWidth + 'px';
+    clone.style.zIndex = '-1';
+    document.body.appendChild(clone);
+    if (container) container.classList.remove('overflow-hidden');
+    html2canvas(clone, {
+        scale: 2,
+        backgroundColor: '#ffffff',
+        logging: false,
+        useCORS: true,
+        width: clone.scrollWidth,
+        height: clone.scrollHeight,
+        windowWidth: clone.scrollWidth,
+        windowHeight: clone.scrollHeight,
+    }).then(canvas => {
+        document.body.removeChild(clone);
+        if (container) container.classList.add('overflow-hidden');
+        const link = document.createElement('a');
+        link.download = 'reporte_{{ now|date:"Ymd_His" }}.jpg';
+        link.href = canvas.toDataURL('image/jpeg', 0.92);
+        link.click();
+    }).catch(() => {
+        document.body.removeChild(clone);
+        if (container) container.classList.add('overflow-hidden');
+    });
+}
+</script>
+{% endblock %}

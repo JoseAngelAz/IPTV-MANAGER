@@ -1,0 +1,198 @@
+{% load humanize %}
+{% if template_id == 1 %}
+<style>
+.rpt-header { background:#1e293b; color:white; padding:16px 24px; border-radius:8px 8px 0 0; }
+.rpt-header h1 { margin:0; font-size:20px; }
+.rpt-header .meta { font-size:11px; color:#94a3b8; margin-top:4px; }
+.rpt-title { color:#2563eb; font-size:18px; font-weight:700; margin:20px 0 4px; }
+.rpt-rule { border:none; border-top:2px solid #2563eb; margin:0 0 16px; }
+.rpt-section-title { color:#1e40af; font-size:15px; font-weight:700; margin:20px 0 10px; }
+.rpt-table { width:100%; border-collapse:collapse; font-size:12px; }
+.rpt-table th { background:#3b82f6; color:white; padding:8px 10px; text-align:left; font-weight:600; }
+.rpt-table td { padding:6px 10px; border-bottom:1px solid #e2e8f0; }
+.rpt-table tr:nth-child(even) td { background:#f0f4ff; }
+.rpt-summary { font-size:12px; margin:8px 0; }
+.rpt-footer { text-align:center; font-size:10px; color:#94a3b8; border-top:1px solid #e2e8f0; padding-top:12px; margin-top:24px; }
+</style>
+{% elif template_id == 2 %}
+<style>
+.rpt-header { background:#0f172a; color:white; padding:16px 24px; border-radius:8px 8px 0 0; border-bottom:3px solid #7c3aed; }
+.rpt-header h1 { margin:0; font-size:18px; font-family:'Courier New',monospace; }
+.rpt-header .meta { font-size:10px; color:#64748b; margin-top:4px; }
+.rpt-title { color:#7c3aed; font-size:16px; font-weight:700; margin:20px 0 4px; font-family:'Courier New',monospace; }
+.rpt-rule { border:none; border-top:2px solid #7c3aed; margin:0 0 16px; }
+.rpt-section-title { color:#4f46e5; font-size:14px; font-weight:700; margin:20px 0 10px; font-family:'Courier New',monospace; text-transform:uppercase; letter-spacing:1px; }
+.rpt-table { width:100%; border-collapse:collapse; font-size:11px; font-family:'Courier New',monospace; }
+.rpt-table th { background:#7c3aed; color:white; padding:8px 10px; text-align:left; font-weight:700; border:1px solid #c4b5fd; }
+.rpt-table td { padding:6px 10px; border:1px solid #c4b5fd; }
+.rpt-table tr:nth-child(even) td { background:#f5f3ff; }
+.rpt-summary { font-size:11px; margin:8px 0; font-family:'Courier New',monospace; }
+.rpt-footer { text-align:center; font-size:9px; color:#64748b; border-top:2px solid #7c3aed; padding-top:12px; margin-top:24px; font-family:'Courier New',monospace; }
+</style>
+{% else %}
+<style>
+.rpt-header { background:#1e3a5f; color:white; padding:16px 24px; border-radius:8px 8px 0 0; border-bottom:3px double #b8860b; }
+.rpt-header h1 { margin:0; font-size:20px; font-family:Georgia,serif; font-weight:400; }
+.rpt-header .meta { font-size:11px; color:#cbd5e1; margin-top:4px; font-style:italic; }
+.rpt-title { color:#1e3a5f; font-size:18px; font-weight:700; margin:20px 0 4px; font-family:Georgia,serif; }
+.rpt-rule { border:none; border-top:3px double #b8860b; margin:0 0 16px; }
+.rpt-section-title { color:#b8860b; font-size:15px; font-weight:700; margin:20px 0 10px; font-family:Georgia,serif; font-variant:small-caps; }
+.rpt-table { width:100%; border-collapse:collapse; font-size:12px; }
+.rpt-table th { background:#b8860b; color:white; padding:8px 10px; text-align:left; font-weight:700; border:1px solid #8b7355; }
+.rpt-table td { padding:6px 10px; border:1px solid #8b7355; }
+.rpt-table tr:nth-child(even) td { background:#f8f6f0; }
+.rpt-summary { font-size:12px; margin:8px 0; }
+.rpt-footer { text-align:center; font-size:10px; color:#8b7355; border-top:2px double #b8860b; padding-top:12px; margin-top:24px; }
+</style>
+{% endif %}
+
+<div class="rpt-header">
+    <h1><i class="fas fa-tv mr-2"></i>IPTV Manager</h1>
+    <div class="meta">
+        {{ now|date:"d/m/Y H:i" }} &mdash;
+        Generado por: {{ user.get_full_name|default:user.username }}
+        {% if date_start and date_end %} &mdash; Período: {{ date_start }} al {{ date_end }}{% endif %}
+    </div>
+</div>
+
+<h2 class="rpt-title">
+    Reporte: {% for s in sections %}{% if s == 'clientes' %}Clientes{% elif s == 'finanzas' %}Finanzas{% elif s == 'notificaciones' %}Notificaciones{% elif s == 'suscripciones' %}Suscripciones{% endif %}{% if not forloop.last %} + {% endif %}{% endfor %}
+</h2>
+<hr class="rpt-rule">
+
+{% for s in sections %}
+<h3 class="rpt-section-title">
+    {% if s == 'clientes' %}<i class="fas fa-users mr-1"></i>
+    {% elif s == 'finanzas' %}<i class="fas fa-coins mr-1"></i>
+    {% elif s == 'notificaciones' %}<i class="fas fa-bell mr-1"></i>
+    {% elif s == 'suscripciones' %}<i class="fas fa-tag mr-1"></i>
+    {% endif %}
+    {% if s == 'clientes' %}Clientes{% elif s == 'finanzas' %}Finanzas{% elif s == 'notificaciones' %}Notificaciones{% elif s == 'suscripciones' %}Suscripciones{% endif %}
+</h3>
+
+{% if s == 'clientes' %}
+    {% if data.clientes %}
+    <table class="rpt-table">
+        <thead><tr><th>#</th><th>Nombre</th><th>Teléfono</th><th>Email</th><th>Dispositivo</th><th>Registro</th><th>Subs Activas</th><th>Total Gastado</th></tr></thead>
+        <tbody>
+            {% for c in data.clientes %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ c.nombre }}</td>
+                <td>{{ c.telefono|default:'—' }}</td>
+                <td>{{ c.email|default:'—' }}</td>
+                <td>{{ c.dispositivo_id|default:'—' }}</td>
+                <td>{{ c.fecha_registro|date:"d/m/Y"|default:'—' }}</td>
+                <td class="text-center">{{ c.subs_activas|default:0 }}</td>
+                <td>${{ c.total_gastado|default:0|floatformat:2|intcomma }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p class="rpt-summary">Total clientes: {{ data.clientes|length }}</p>
+    {% else %}
+    <p class="text-gray-400 text-sm"><i>No hay datos de clientes.</i></p>
+    {% endif %}
+
+{% elif s == 'finanzas' %}
+    {% if data.resumen_finanzas %}
+    <div class="rpt-summary">
+        <strong>Ingresos:</strong> ${{ data.resumen_finanzas.ingresos|floatformat:2|intcomma }} &nbsp;&nbsp;
+        <strong>Egresos:</strong> ${{ data.resumen_finanzas.egresos|floatformat:2|intcomma }} &nbsp;&nbsp;
+        <strong>Neto:</strong> ${{ data.resumen_finanzas.neto|floatformat:2|intcomma }}
+    </div>
+    {% if data.finanzas %}
+    <div class="flex gap-8 my-4" style="display:flex; gap:32px; margin:16px 0;">
+        {% with ingresos=data.resumen_finanzas.ingresos|default:0 egresos=data.resumen_finanzas.egresos|default:0 %}
+        {% with total=ingresos|add:egresos %}
+        {% if total > 0 %}
+        <div style="flex:1;">
+            <div class="text-xs font-semibold mb-1">Ingresos vs Egresos</div>
+            <div style="height:20px; display:flex; border-radius:4px; overflow:hidden;">
+                <div style="width:{% widthratio ingresos total 100 %}%; background:#22c55e; height:100%;"></div>
+                <div style="width:{% widthratio egresos total 100 %}%; background:#ef4444; height:100%;"></div>
+            </div>
+            <div class="text-xs mt-1 flex justify-between">
+                <span><span style="color:#22c55e;">■</span> Ingresos: ${{ ingresos|floatformat:2|intcomma }}</span>
+                <span><span style="color:#ef4444;">■</span> Egresos: ${{ egresos|floatformat:2|intcomma }}</span>
+            </div>
+        </div>
+        {% endif %}
+        {% endwith %}
+        {% endwith %}
+    </div>
+    {% endif %}
+    {% endif %}
+    {% if data.finanzas %}
+    <table class="rpt-table">
+        <thead><tr><th>#</th><th>Tipo</th><th>Monto</th><th>Fecha</th><th>Descripción</th></tr></thead>
+        <tbody>
+            {% for m in data.finanzas %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td><span class="px-2 py-0.5 rounded text-xs {% if m.tipo == 'ingreso' %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-700{% endif %}">{{ m.tipo|capfirst }}</span></td>
+                <td>${{ m.monto|floatformat:2|intcomma }}</td>
+                <td>{{ m.fecha|date:"d/m/Y"|default:'—' }}</td>
+                <td>{{ m.descripcion|default:'—'|truncatechars:40 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="text-gray-400 text-sm"><i>No hay movimientos financieros.</i></p>
+    {% endif %}
+
+{% elif s == 'notificaciones' %}
+    {% if data.notificaciones %}
+    <table class="rpt-table">
+        <thead><tr><th>#</th><th>Canal</th><th>Destinatario</th><th>Cliente</th><th>Mensaje</th><th>Estado</th><th>Fecha</th></tr></thead>
+        <tbody>
+            {% for n in data.notificaciones %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ n.canal }}</td>
+                <td>{{ n.destinatario }}</td>
+                <td>{{ n.cliente_nombre }}</td>
+                <td class="text-xs">{{ n.mensaje|default:'—'|truncatechars:40 }}</td>
+                <td>{% if n.enviado_ok %}<span class="text-green-600">✓ Enviado</span>{% else %}<span class="text-red-600">✗ Fallido</span>{% endif %}</td>
+                <td>{{ n.fecha_creacion|date:"d/m/Y"|default:'—' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="text-gray-400 text-sm"><i>No hay notificaciones.</i></p>
+    {% endif %}
+
+{% elif s == 'suscripciones' %}
+    {% if data.suscripciones %}
+    <table class="rpt-table">
+        <thead><tr><th>#</th><th>Cliente</th><th>Teléfono</th><th>Plan</th><th>Precio</th><th>Inicio</th><th>Vencimiento</th><th>Días Rest.</th><th>Estado</th></tr></thead>
+        <tbody>
+            {% for sub in data.suscripciones %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ sub.cliente_nombre }}</td>
+                <td>{{ sub.cliente_telefono|default:'—' }}</td>
+                <td>{{ sub.plan_nombre }}</td>
+                <td>${{ sub.plan_precio|floatformat:2|intcomma }}</td>
+                <td>{{ sub.fecha_inicio|date:"d/m/Y"|default:'—' }}</td>
+                <td>{{ sub.fecha_vencimiento|date:"d/m/Y"|default:'—' }}</td>
+                <td class="text-center">{{ sub.dias_restantes }}</td>
+                <td><span class="px-2 py-0.5 rounded text-xs {% if sub.estado == 'Activo' %}bg-green-100 text-green-700{% elif sub.estado == 'Vencido' %}bg-red-100 text-red-700{% else %}bg-gray-100 text-gray-700{% endif %}">{{ sub.estado }}</span></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p class="rpt-summary">Total suscripciones: {{ data.suscripciones|length }}</p>
+    {% else %}
+    <p class="text-gray-400 text-sm"><i>No hay suscripciones.</i></p>
+    {% endif %}
+{% endif %}
+
+{% if not forloop.last %}<hr class="rpt-rule" style="width:40%;margin:16px auto;">{% endif %}
+{% endfor %}
+
+<div class="rpt-footer">
+    <i class="far fa-copyright mr-1"></i>IPTV Manager &mdash; Reporte generado el {{ now|date:"d/m/Y" }} a las {{ now|date:"H:i" }}
+</div>

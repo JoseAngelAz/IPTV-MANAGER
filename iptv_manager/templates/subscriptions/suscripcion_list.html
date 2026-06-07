@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block title %} — Suscripciones{% endblock %}
+{% block content %}
+<div class="flex justify-between items-center mb-4">
+    <h2 class="text-2xl font-bold">Suscripciones</h2>
+    {% if perms.subscriptions.add_suscripcion %}
+    <a href="{% url 'suscripcion_create' %}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">+ Nueva Suscripción</a>
+    {% endif %}
+</div>
+
+<form method="get" class="mb-4">
+    <select name="estado" class="px-3 py-2 border rounded" onchange="this.form.submit()">
+        <option value="">Todos los estados</option>
+        <option value="activo" {% if request.GET.estado == 'activo' %}selected{% endif %}>Activo</option>
+        <option value="vencido" {% if request.GET.estado == 'vencido' %}selected{% endif %}>Vencido</option>
+        <option value="cancelado" {% if request.GET.estado == 'cancelado' %}selected{% endif %}>Cancelado</option>
+    </select>
+</form>
+
+<div class="bg-white rounded shadow overflow-x-auto">
+    <table class="w-full">
+        <thead>
+            <tr class="bg-gray-50 text-left">
+                <th class="p-3">Cliente</th>
+                <th class="p-3">Plan</th>
+                <th class="p-3">Inicio</th>
+                <th class="p-3">Vencimiento</th>
+                <th class="p-3">Estado</th>
+                <th class="p-3">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in suscripciones %}
+            <tr class="border-t hover:bg-gray-50">
+                <td class="p-3"><a href="{% url 'cliente_detail' s.cliente.pk %}" class="text-blue-600 hover:underline">{{ s.cliente.nombre }}</a></td>
+                <td class="p-3">{{ s.plan.nombre }}</td>
+                <td class="p-3 text-sm">{{ s.fecha_inicio|date:"d/m/Y" }}</td>
+                <td class="p-3 text-sm">{{ s.fecha_vencimiento|date:"d/m/Y" }}</td>
+                <td class="p-3">
+                    <span class="px-2 py-1 rounded text-xs
+                        {% if s.estado == 'activo' %}bg-green-100 text-green-700
+                        {% elif s.estado == 'vencido' %}bg-red-100 text-red-700
+                        {% else %}bg-gray-100 text-gray-700{% endif %}">
+                        {{ s.get_estado_display }}
+                    </span>
+                </td>
+                <td class="p-3 space-x-2 text-sm">
+                    {% if s.estado == 'activo' %}
+                        {% if perms.subscriptions.change_suscripcion %}
+                        <a href="{% url 'suscripcion_cancel' s.pk %}" class="text-red-600 hover:underline" onclick="return confirm('¿Cancelar?')">Cancelar</a>
+                        {% endif %}
+                        {% if perms.subscriptions.add_suscripcion %}
+                        <a href="{% url 'suscripcion_renew' s.pk %}" class="text-green-600 hover:underline" onclick="return confirm('¿Renovar?')">Renovar</a>
+                        {% endif %}
+                        {% if perms.notifications.add_lognotificacion %}
+                        <a href="{% url 'enviar_recordatorio' s.pk %}" class="text-blue-600 hover:underline">Recordatorio</a>
+                        {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="6" class="p-3 text-center text-gray-400">No hay suscripciones</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if page_obj.paginator.num_pages > 1 %}
+<div class="mt-4 flex justify-center space-x-2">
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.estado %}&estado={{ request.GET.estado }}{% endif %}" class="px-3 py-1 bg-white border rounded hover:bg-gray-100">Anterior</a>
+    {% endif %}
+    <span class="px-3 py-1">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}{% if request.GET.estado %}&estado={{ request.GET.estado }}{% endif %}" class="px-3 py-1 bg-white border rounded hover:bg-gray-100">Siguiente</a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

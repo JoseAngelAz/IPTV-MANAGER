@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %} — {{ tr.configuracion_de_sesion }}{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto card-custom p-6 rounded shadow">
+    <h2 class="text-2xl font-bold mb-4"><i class="fas fa-clock text-blue-500 mr-2"></i>{{ tr.tiempo_de_sesion }}</h2>
+    <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">{{ tr.config_sesion_desc }}</p>
+
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+        <div>
+            <label class="block text-sm font-medium mb-1">{{ form.timeout_minutes.label }}</label>
+            {{ form.timeout_minutes }}
+            <p class="text-xs text-gray-400 mt-1">Valor entre 1 y 1440 minutos (24 horas). Actual: <strong>{{ config.timeout_minutes }} minutos</strong>.</p>
+        </div>
+        <div class="bg-blue-50 dark:bg-blue-900/30 p-4 rounded text-sm">
+            <p><i class="fas fa-info-circle text-blue-500 mr-1"></i>La sesión se cerrará automáticamente después de <strong>{{ config.timeout_minutes }} minutos</strong> de inactividad. El usuario recibirá una advertencia 2 minutos antes.</p>
+        </div>
+        <div class="flex gap-3 pt-2">
+            <button type="submit" class="btn-primary px-6 py-2 font-semibold"><i class="fas fa-save mr-1"></i>Guardar</button>
+            <a href="{% url 'dashboard' %}" class="px-4 py-2 rounded bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 font-semibold"><i class="fas fa-arrow-left mr-1"></i>Volver</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

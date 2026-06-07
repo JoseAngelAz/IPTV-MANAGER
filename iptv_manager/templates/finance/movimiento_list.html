@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %} — Finanzas{% endblock %}
+{% block content %}
+<div class="flex justify-between items-center mb-4">
+    <h2 class="text-2xl font-bold">Movimientos Financieros</h2>
+    {% if perms.finance.add_movimientofinanciero %}
+    <a href="{% url 'movimiento_create' %}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">+ Nuevo Movimiento</a>
+    {% endif %}
+</div>
+
+<form method="get" class="mb-4">
+    <select name="tipo" class="px-3 py-2 border rounded" onchange="this.form.submit()">
+        <option value="">Todos</option>
+        <option value="ingreso" {% if request.GET.tipo == 'ingreso' %}selected{% endif %}>Ingresos</option>
+        <option value="egreso" {% if request.GET.tipo == 'egreso' %}selected{% endif %}>Egresos</option>
+    </select>
+</form>
+
+<div class="bg-white rounded shadow overflow-x-auto">
+    <table class="w-full">
+        <thead>
+            <tr class="bg-gray-50 text-left">
+                <th class="p-3">Tipo</th>
+                <th class="p-3">Monto</th>
+                <th class="p-3">Descripción</th>
+                <th class="p-3">Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for m in movimientos %}
+            <tr class="border-t hover:bg-gray-50">
+                <td class="p-3">
+                    <span class="px-2 py-1 rounded text-xs {% if m.tipo == 'ingreso' %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-700{% endif %}">
+                        {{ m.get_tipo_display }}
+                    </span>
+                </td>
+                <td class="p-3 font-mono">${{ m.monto|floatformat:2 }}</td>
+                <td class="p-3 text-sm">{{ m.descripcion|truncatechars:60 }}</td>
+                <td class="p-3 text-sm text-gray-500">{{ m.fecha|date:"d/m/Y" }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" class="p-3 text-center text-gray-400">Sin movimientos</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if page_obj.paginator.num_pages > 1 %}
+<div class="mt-4 flex justify-center space-x-2">...</div>
+{% endif %}
+{% endblock %}

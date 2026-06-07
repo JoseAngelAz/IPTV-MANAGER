@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %} — {{ tr.personalizar_pagina_404 }}{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto card-custom p-6 rounded shadow">
+    <h2 class="text-2xl font-bold mb-4"><i class="fas fa-exclamation-triangle text-yellow-500 mr-2"></i>{{ tr.personalizar_pagina_404 }}</h2>
+    <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">{{ tr.config_404_desc }}</p>
+
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+        <div>
+            <label class="block text-sm font-medium mb-1">{{ tr.titulo }}</label>
+            <input type="text" name="title" value="{{ settings.title }}" maxlength="200" class="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:text-white">
+        </div>
+        <div>
+            <label class="block text-sm font-medium mb-1">{{ tr.mensaje }}</label>
+            <textarea name="message" rows="3" class="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:text-white">{{ settings.message }}</textarea>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium mb-1">Color de fondo</label>
+                <input type="color" name="bg_color" value="{{ settings.bg_color }}" class="w-full h-10 p-1 border rounded cursor-pointer">
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-1">Color de texto</label>
+                <input type="color" name="text_color" value="{{ settings.text_color }}" class="w-full h-10 p-1 border rounded cursor-pointer">
+            </div>
+        </div>
+        <div class="flex items-center gap-2">
+            <input type="checkbox" name="show_pixel_art" id="show_pixel_art" {% if settings.show_pixel_art %}checked{% endif %} class="cursor-pointer w-4 h-4">
+                <label for="show_pixel_art" class="text-sm font-medium cursor-pointer">{{ tr.mostrar_arte_pixelado }}</label>
+        </div>
+        <div class="flex gap-3 pt-2">
+            <button type="submit" class="btn-primary px-6 py-2 font-semibold"><i class="fas fa-save mr-1"></i>{{ tr.guardar }}</button>
+            <a href="{% url 'dashboard' %}" class="px-4 py-2 rounded bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 font-semibold"><i class="fas fa-arrow-left mr-1"></i>{{ tr.volver }}</a>
+            <a href="{% url 'error_page_preview' %}" target="_blank" class="px-4 py-2 rounded bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 font-semibold"><i class="fas fa-eye mr-1"></i>{{ tr.vista_previa }}</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

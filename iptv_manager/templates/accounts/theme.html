@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% block title %} — Personalizar Tema{% endblock %}
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+
+    <div class="card-custom p-6 rounded shadow">
+        <h2 class="text-2xl font-bold mb-4"><i class="fas fa-palette text-blue-600 mr-2"></i>Personalizar Tema</h2>
+        <p class="text-sm text-gray-500 mb-4">Elige uno de los 5 presets predefinidos, aplica un preset guardado, o personaliza los colores manualmente.</p>
+
+        {% if custom_presets %}
+        <div class="mb-6 p-4 bg-gray-50 dark:bg-gray-900 rounded">
+            <h3 class="font-semibold mb-3"><i class="fas fa-bookmark text-yellow-500 mr-2"></i>Tus presets guardados</h3>
+            <div class="flex flex-wrap gap-2">
+                {% for preset in custom_presets %}
+                <div class="flex items-center gap-2 bg-white dark:bg-gray-800 px-3 py-2 rounded border dark:border-gray-600">
+                    <span class="text-xl">{{ preset.icon }}</span>
+                    <span class="text-sm font-medium">{{ preset.name }}</span>
+                    <form method="post" action="{% url 'theme' %}" class="inline" onsubmit="return false;">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="apply_custom_preset">
+                        <input type="hidden" name="preset_id" value="{{ preset.pk }}">
+                        <button type="button" onclick="applyCustomPreset(this)" class="text-xs text-blue-600 hover:text-blue-800 px-2 py-1 rounded hover:bg-blue-100 dark:hover:bg-blue-900">
+                            <i class="fas fa-check"></i>
+                        </button>
+                    </form>
+                    <form method="post" action="{% url 'theme' %}" class="inline" onsubmit="return false;">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="delete_preset">
+                        <input type="hidden" name="preset_id" value="{{ preset.pk }}">
+                        <button type="button" onclick="deletePreset(this)" class="text-xs text-red-500 hover:text-red-700 px-2 py-1 rounded hover:bg-red-100 dark:hover:bg-red-900">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <form method="post" id="theme-form" class="space-y-4">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="save_theme">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {% for field in form %}
+                {% if field.name == 'custom_css' %}
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium mb-1">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}<p class="text-red-500 text-xs mt-1">{{ field.errors.0 }}</p>{% endif %}
+                </div>
+                {% elif field.name == 'apply_preset' %}
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium mb-1"><i class="fas fa-layer-group mr-1"></i>{{ field.label }}</label>
+                    {{ field }}
+                    <p class="text-xs text-gray-400 mt-1">Selecciona un preset para sobrescribir los colores.</p>
+                </div>
+                {% else %}
+                <div>
+                    <label class="block text-sm font-medium mb-1">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}<p class="text-red-500 text-xs mt-1">{{ field.errors.0 }}</p>{% endif %}
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+
+            <div class="flex flex-wrap gap-3">
+                <button type="submit" class="btn-primary px-6 py-2 font-semibold flex items-center gap-2">
+                    <i class="fas fa-save"></i> Guardar tema
+                </button>
+                <button type="button" onclick="openSavePresetModal()" class="btn-secondary px-6 py-2 font-semibold flex items-center gap-2">
+                    <i class="fas fa-bookmark"></i> Guardar como preset
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="save-preset-modal" class="modal-backdrop">
+    <div class="modal-content">
+        <div class="text-center">
+            <div class="text-4xl mb-4"><i class="fas fa-bookmark text-yellow-500"></i></div>
+            <h3 class="text-lg font-bold mb-4">Guardar preset personalizado</h3>
+            <form method="post" action="{% url 'theme' %}" class="space-y-3 text-left">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="save_preset">
+                <div>
+                    <label class="block text-sm font-medium mb-1">Nombre del preset</label>
+                    <input type="text" name="name" required maxlength="50" placeholder="Mi preset" class="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:text-white">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Icono</label>
+                    <select name="icon" class="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:text-white">
+                        {% for val, label in preset_form.icon.field.choices %}
+                        <option value="{{ val }}" {% if forloop.first %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% for field in preset_form.hidden_fields %}{{ field }}{% endfor %}
+                <div class="flex justify-center gap-3 pt-2">
+                    <button type="button" onclick="closeSavePresetModal()" class="px-4 py-2 rounded bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 font-semibold">Cancelar</button>
+                    <button type="submit" class="btn-primary px-6 py-2 font-semibold"><i class="fas fa-save mr-1"></i>Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const applyPreset = document.querySelector('[name="apply_preset"]');
+    if (applyPreset) {
+        applyPreset.addEventListener('change', function() {
+            const presets = {
+                'modern': {primary: '#2563eb', secondary: '#1d4ed8', bg: '#f1f5f9', text: '#1e293b', card: '#ffffff', sidebar: '#111827', btn: 'rounded'},
+                'corporate': {primary: '#059669', secondary: '#047857', bg: '#f0fdf4', text: '#1e293b', card: '#ffffff', sidebar: '#064e3b', btn: 'square'},
+                'minimal': {primary: '#334155', secondary: '#1e293b', bg: '#f8fafc', text: '#0f172a', card: '#ffffff', sidebar: '#0f172a', btn: 'square'},
+                'vibrant': {primary: '#7c3aed', secondary: '#6d28d9', bg: '#f5f3ff', text: '#1e1b4b', card: '#ffffff', sidebar: '#2e1065', btn: 'pill'},
+                'dark-neumorphic': {primary: '#10b981', secondary: '#059669', bg: '#1a202c', text: '#e2e8f0', card: '#2d3748', sidebar: '#0f172a', btn: 'pill'},
+            };
+            const p = presets[this.value];
+            if (p) {
+                document.querySelector('[name="primary_color"]').value = p.primary;
+                document.querySelector('[name="secondary_color"]').value = p.secondary;
+                document.querySelector('[name="bg_color"]').value = p.bg;
+                document.querySelector('[name="text_color"]').value = p.text;
+                document.querySelector('[name="card_bg"]').value = p.card;
+                document.querySelector('[name="sidebar_bg"]').value = p.sidebar;
+                document.querySelector('[name="button_style"]').value = p.btn;
+            }
+        });
+    }
+});
+
+function openSavePresetModal(){
+    document.getElementById('save-preset-modal').classList.add('open');
+}
+
+function closeSavePresetModal(){
+    document.getElementById('save-preset-modal').classList.remove('open');
+}
+
+function applyCustomPreset(btn){
+    var form = btn.closest('form');
+    openModal('¿Aplicar preset?', 'Se sobrescribirán los colores actuales con los del preset guardado.', function(){
+        form.submit();
+    });
+}
+
+function deletePreset(btn){
+    var form = btn.closest('form');
+    var name = form.parentElement.querySelector('.text-sm.font-medium').textContent;
+    openModal('¿Eliminar "' + name + '"?', 'Este preset guardado se eliminará permanentemente.', function(){
+        form.submit();
+    });
+}
+</script>
+{% endblock %}
