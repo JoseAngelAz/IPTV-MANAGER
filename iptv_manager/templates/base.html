@@ -90,7 +90,7 @@
 {% if user.is_authenticated %}
 <div id="sidebar-overlay" class="sidebar-overlay" onclick="toggleSidebarMobile()"></div>
 
-<aside id="sidebar" class="sidebar-custom text-white h-screen p-4 flex flex-col sidebar-transition overflow-hidden" style="width:250px">
+<aside id="sidebar" class="sidebar-custom text-white h-screen p-4 flex flex-col sidebar-transition overflow-y-auto" style="width:250px">
     <div class="flex items-center justify-between mb-4 sidebar-brand">
         <h1 class="text-xl font-bold">IPTV Manager</h1>
         <button onclick="toggleSidebar()" class="text-gray-400 hover:text-white p-1 rounded transition sidebar-toggle-collapse hidden md:block">
