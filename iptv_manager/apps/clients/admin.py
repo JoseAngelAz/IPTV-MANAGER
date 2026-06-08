@@ -5,7 +5,8 @@ from .models import Cliente, HistorialCliente, Nota
 @admin.register(Cliente)
 class ClienteAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'telefono', 'dispositivo_id', 'fecha_registro', 'activo')
-    search_fields = ('nombre', 'telefono', 'dispositivo_id')
+    list_filter = ('activo',)
+    search_fields = ('nombre', 'telefono', 'dispositivo_id', 'documento_identidad')
 
 
 @admin.register(HistorialCliente)

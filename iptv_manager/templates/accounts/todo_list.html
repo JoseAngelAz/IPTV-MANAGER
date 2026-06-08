@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block title %} — Tareas{% endblock %}
+{% block content %}
+<div class="flex justify-between items-center mb-4">
+    <h2 class="text-2xl font-bold"><i class="fas fa-tasks text-green-500 mr-2"></i>Lista de Tareas</h2>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+    <div class="lg:col-span-1">
+        <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
+            <h3 class="font-bold mb-3">Nueva tarea</h3>
+            <form method="post" action="{% url 'todo_create' %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="mt-3 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">Crear tarea</button>
+            </form>
+        </div>
+        <div class="bg-white dark:bg-gray-800 p-4 rounded shadow mt-4">
+            <h3 class="font-bold mb-3">Filtros</h3>
+            <div class="space-y-2">
+                <a href="?filtro=todas" class="block px-3 py-2 rounded text-sm {% if filtro == 'todas' %}bg-blue-100 text-blue-700{% else %}hover:bg-gray-100{% endif %}">Todas</a>
+                <a href="?filtro=pendientes" class="block px-3 py-2 rounded text-sm {% if filtro == 'pendientes' %}bg-blue-100 text-blue-700{% else %}hover:bg-gray-100{% endif %}">Pendientes</a>
+                <a href="?filtro=completadas" class="block px-3 py-2 rounded text-sm {% if filtro == 'completadas' %}bg-blue-100 text-blue-700{% else %}hover:bg-gray-100{% endif %}">Completadas</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="lg:col-span-3">
+        <div class="bg-white dark:bg-gray-800 rounded shadow">
+            {% for tarea in tareas %}
+            <div class="flex items-center justify-between p-4 border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 {% if tarea.completada %}opacity-60{% endif %}">
+                <div class="flex items-center space-x-3 flex-1">
+                    <a href="{% url 'todo_toggle' tarea.pk %}" class="flex-shrink-0">
+                        {% if tarea.completada %}
+                        <i class="fas fa-check-circle text-green-500 text-xl"></i>
+                        {% else %}
+                        <i class="far fa-circle text-gray-400 text-xl hover:text-blue-500"></i>
+                        {% endif %}
+                    </a>
+                    <div class="flex-1">
+                        <p class="font-semibold {% if tarea.completada %}line-through text-gray-400{% endif %}">{{ tarea.titulo }}</p>
+                        <div class="flex space-x-2 text-xs text-gray-500 mt-1">
+                            <span class="px-2 py-0.5 rounded {% if tarea.prioridad == 'urgente' %}bg-red-100 text-red-700{% elif tarea.prioridad == 'alta' %}bg-orange-100 text-orange-700{% elif tarea.prioridad == 'media' %}bg-yellow-100 text-yellow-700{% else %}bg-gray-100 text-gray-700{% endif %}">
+                                {{ tarea.get_prioridad_display }}
+                            </span>
+                            <span class="px-2 py-0.5 rounded bg-blue-100 text-blue-700">{{ tarea.get_categoria_display }}</span>
+                            {% if tarea.fecha_vencimiento %}
+                            <span class="px-2 py-0.5 rounded {% if tarea.fecha_vencimiento < now and not tarea.completada %}bg-red-100 text-red-700{% else %}bg-gray-100 text-gray-700{% endif %}">
+                                <i class="far fa-calendar-alt mr-1"></i>{{ tarea.fecha_vencimiento|date:"d/m/Y" }}
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <form method="post" action="{% url 'todo_delete' tarea.pk %}" onsubmit="return confirm('¿Eliminar tarea?')" class="ml-2">
+                    {% csrf_token %}
+                    <button type="submit" class="text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></button>
+                </form>
+            </div>
+            {% empty %}
+            <div class="p-6 text-center text-gray-400">
+                <i class="fas fa-clipboard-list text-4xl mb-2"></i>
+                <p>No hay tareas{% if filtro != 'todas' %} {{ filtro }}{% endif %}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

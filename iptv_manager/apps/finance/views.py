@@ -1,5 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, UpdateView
 from django.urls import reverse_lazy
 from django.contrib import messages
 from .models import MovimientoFinanciero
@@ -33,4 +33,19 @@ class MovimientoCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVi
     def form_valid(self, form):
         resp = super().form_valid(form)
         messages.success(self.request, 'Movimiento registrado.')
+        return resp
+
+
+class MovimientoUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    model = MovimientoFinanciero
+    form_class = MovimientoForm
+    template_name = 'finance/movimiento_form.html'
+    permission_required = 'finance.change_movimientofinanciero'
+
+    def get_success_url(self):
+        return reverse_lazy('movimiento_list')
+
+    def form_valid(self, form):
+        resp = super().form_valid(form)
+        messages.success(self.request, 'Movimiento actualizado.')
         return resp

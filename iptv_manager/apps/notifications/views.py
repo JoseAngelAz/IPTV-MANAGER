@@ -8,6 +8,7 @@ from django.utils import timezone
 from .models import LogNotificacion
 from apps.subscriptions.models import Suscripcion
 from apps.clients.models import HistorialCliente
+from apps.accounts.models import RecordatorioTemplate
 
 
 class LogNotificacionListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
@@ -28,7 +29,16 @@ def enviar_recordatorio_manual(request, suscripcion_id):
         messages.warning(request, f'Ya se envió un recordatorio de WhatsApp para esta suscripción.')
         return redirect('suscripcion_list')
 
-    mensaje = f'Hola {cliente.nombre}, tu suscripción {suscripcion.plan.nombre} vence el {suscripcion.fecha_vencimiento.strftime("%d/%m/%Y")}. ¡Renueva ahora!'
+    template = RecordatorioTemplate.get_active()
+    if template:
+        mensaje = template.render(
+            cliente=cliente.nombre,
+            plan=suscripcion.plan.nombre,
+            vencimiento=suscripcion.fecha_vencimiento.strftime('%d/%m/%Y'),
+            precio=f'${suscripcion.plan.precio:,.2f}',
+        )
+    else:
+        mensaje = f'Hola {cliente.nombre}, tu suscripción {suscripcion.plan.nombre} vence el {suscripcion.fecha_vencimiento.strftime("%d/%m/%Y")}. ¡Renueva ahora!'
 
     try:
         import requests

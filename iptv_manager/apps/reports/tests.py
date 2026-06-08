@@ -1,6 +1,6 @@
 from io import BytesIO
 from datetime import date
-from django.test import TestCase, Client
+from django.test import TestCase, Client, override_settings
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import ModelBackend
@@ -36,6 +36,7 @@ class ReportTemplateTest(TestCase):
         self.assertEqual(str(t), 'Test')
 
 
+@override_settings(SECURE_SSL_REDIRECT=False)
 class ReportAccessTest(TestCase):
     def setUp(self):
         self.client = Client()
@@ -63,6 +64,7 @@ class ReportAccessTest(TestCase):
         self.assertRedirects(r, reverse('reports:report_create'))
 
 
+@override_settings(SECURE_SSL_REDIRECT=False)
 class ReportDataCollectionTest(TestCase):
     def setUp(self):
         self.client = Client()

@@ -189,7 +189,7 @@ def generate_report_excel(sections, data, date_start, date_end, user):
                     chart.set_categories(cats_ref)
                     ws.add_chart(chart, 'F8')
 
-            headers = ['#', 'Cliente', 'Teléfono', 'Plan', 'Precio', 'Inicio', 'Vencimiento', 'Días Rest.', 'Estado']
+            headers = ['#', 'Cliente', 'Teléfono', 'Plan', 'Precio', 'Inicio', 'Vencimiento', 'Días Rest.', 'Estado', 'Método de pago']
             rows = []
             for i, s in enumerate(subs, 1):
                 fecha_ini = s.get('fecha_inicio', '')
@@ -205,7 +205,8 @@ def generate_report_excel(sections, data, date_start, date_end, user):
                             f'${float(s.get("plan_precio", 0)):,.2f}',
                             s['fecha_inicio'], s['fecha_vencimiento'],
                             s.get('dias_restantes', 0),
-                            s.get('estado', '')])
+                            s.get('estado', ''),
+                            s.get('metodo_pago', '')])
             _write_table(ws, 4, headers, rows)
             total_row = 4 + len(rows) + 1
             ws.cell(row=total_row, column=1,

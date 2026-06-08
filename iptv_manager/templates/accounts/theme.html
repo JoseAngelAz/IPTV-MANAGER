@@ -43,7 +43,8 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {% for field in form %}
-                {% if field.name == 'custom_css' %}
+                {% if field.name in 'text_bold,text_italic,text_underline,text_strikethrough' %}
+                {% elif field.name == 'custom_css' %}
                 <div class="md:col-span-2">
                     <label class="block text-sm font-medium mb-1">{{ field.label }}</label>
                     {{ field }}
@@ -63,6 +64,28 @@
                 </div>
                 {% endif %}
                 {% endfor %}
+            </div>
+
+            <div class="mt-4 p-4 bg-gray-50 dark:bg-gray-900 rounded">
+                <h4 class="font-semibold mb-3 text-sm"><i class="fas fa-font mr-2"></i>Estilo de texto</h4>
+                <div class="flex flex-wrap gap-4">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        {{ form.text_bold }}
+                        <span class="text-sm font-medium"><b>Negrilla</b></span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        {{ form.text_italic }}
+                        <span class="text-sm font-medium"><i>Itálica</i></span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        {{ form.text_underline }}
+                        <span class="text-sm font-medium"><u>Subrayado</u></span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        {{ form.text_strikethrough }}
+                        <span class="text-sm font-medium" style="text-decoration:line-through;">Tachado</span>
+                    </label>
+                </div>
             </div>
 
             <div class="flex flex-wrap gap-3">

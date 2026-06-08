@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import User, ThemeSettings, UserActivityLog, CustomPreset, ErrorPageSettings, SessionConfig
+from .models import User, ThemeSettings, UserActivityLog, CustomPreset, ErrorPageSettings, SessionConfig, Tarea, WhatsAppConfig, RecordatorioTemplate
 
 
 @admin.register(User)
@@ -34,12 +34,32 @@ class CustomPresetAdmin(admin.ModelAdmin):
 
 @admin.register(ErrorPageSettings)
 class ErrorPageSettingsAdmin(admin.ModelAdmin):
-    list_display = ('title', 'show_pixel_art', 'updated_at')
+    list_display = ('title', 'title_500', 'show_pixel_art', 'updated_at')
     fieldsets = (
-        (None, {'fields': ('title', 'message', 'show_pixel_art', 'bg_color', 'text_color')}),
+        ('Página 404', {'fields': ('title', 'message', 'show_pixel_art', 'bg_color', 'text_color')}),
+        ('Página 500', {'fields': ('title_500', 'message_500', 'show_pixel_art_500', 'bg_color_500', 'text_color_500')}),
     )
 
 
 @admin.register(SessionConfig)
 class SessionConfigAdmin(admin.ModelAdmin):
     list_display = ('timeout_minutes', 'updated_at')
+
+
+@admin.register(Tarea)
+class TareaAdmin(admin.ModelAdmin):
+    list_display = ('titulo', 'usuario', 'prioridad', 'categoria', 'completada', 'fecha_vencimiento')
+    list_filter = ('prioridad', 'categoria', 'completada')
+
+
+@admin.register(WhatsAppConfig)
+class WhatsAppConfigAdmin(admin.ModelAdmin):
+    list_display = ('session_status', 'last_qr_at', 'updated_at')
+    readonly_fields = ('qr_code', 'session_status', 'last_qr_at', 'updated_at')
+
+
+@admin.register(RecordatorioTemplate)
+class RecordatorioTemplateAdmin(admin.ModelAdmin):
+    list_display = ('nombre', 'categoria', 'activo', 'created_by', 'created_at')
+    list_filter = ('activo', 'categoria')
+    search_fields = ('nombre',)

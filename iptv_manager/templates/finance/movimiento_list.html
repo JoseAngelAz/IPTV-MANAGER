@@ -24,6 +24,9 @@
                 <th class="p-3">Monto</th>
                 <th class="p-3">Descripción</th>
                 <th class="p-3">Fecha</th>
+                {% if perms.finance.change_movimientofinanciero %}
+                <th class="p-3"></th>
+                {% endif %}
             </tr>
         </thead>
         <tbody>
@@ -35,11 +38,16 @@
                     </span>
                 </td>
                 <td class="p-3 font-mono">${{ m.monto|floatformat:2 }}</td>
-                <td class="p-3 text-sm">{{ m.descripcion|truncatechars:60 }}</td>
+                <td class="p-3 text-sm" style="max-width:300px; word-break:break-word; white-space:normal;">{{ m.descripcion|truncatechars:120 }}</td>
                 <td class="p-3 text-sm text-gray-500">{{ m.fecha|date:"d/m/Y" }}</td>
+                {% if perms.finance.change_movimientofinanciero %}
+                <td class="p-3">
+                    <a href="{% url 'movimiento_update' m.pk %}" class="text-blue-600 hover:underline text-sm"><i class="fas fa-edit"></i></a>
+                </td>
+                {% endif %}
             </tr>
             {% empty %}
-            <tr><td colspan="4" class="p-3 text-center text-gray-400">Sin movimientos</td></tr>
+            <tr><td colspan="5" class="p-3 text-center text-gray-400">Sin movimientos</td></tr>
             {% endfor %}
         </tbody>
     </table>

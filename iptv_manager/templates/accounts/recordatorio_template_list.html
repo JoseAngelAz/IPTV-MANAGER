@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-bold flex items-center gap-3">
+            <i class="fas fa-envelope-open-text"></i>
+            <span>{{ tr.reminder_templates }}</span>
+        </h1>
+        <a href="{% url 'whatsapp_config' %}" class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition flex items-center gap-2">
+            <i class="fas fa-arrow-left"></i> {{ tr.volver }}
+        </a>
+    </div>
+
+    <div class="mb-4">
+        <a href="{% url 'recordatorio_template_create' %}" class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
+            <i class="fas fa-plus"></i> {{ tr.new_template }}
+        </a>
+    </div>
+
+    {% if templates %}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {% for tpl in templates %}
+        <div class="bg-white dark:bg-gray-800 p-5 rounded-lg shadow">
+                    <div class="flex items-center justify-between mb-3">
+                <h3 class="font-semibold text-lg flex items-center gap-2">
+                    {{ tpl.nombre }}
+                    <span class="text-xs bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 px-2 py-0.5 rounded-full">{{ tpl.get_categoria_display }}</span>
+                    {% if tpl.activo %}
+                    <span class="text-xs bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 px-2 py-0.5 rounded-full">{{ tr.activo }}</span>
+                    {% else %}
+                    <span class="text-xs bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 px-2 py-0.5 rounded-full">{{ tr.inactivo }}</span>
+                    {% endif %}
+                </h3>
+                <div class="flex gap-2">
+                    <a href="{% url 'recordatorio_template_edit' tpl.pk %}" class="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition">
+                        <i class="fas fa-edit"></i> {{ tr.editar }}
+                    </a>
+                    <a href="{% url 'recordatorio_template_delete' tpl.pk %}" class="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition">
+                        <i class="fas fa-trash"></i> {{ tr.eliminar }}
+                    </a>
+                </div>
+            </div>
+            <div class="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                <span>{{ tr.created_by }}: {{ tpl.created_by.get_full_name|default:tpl.created_by.username|default:'-' }}</span>
+            </div>
+            <pre class="text-sm bg-gray-50 dark:bg-gray-900 p-3 rounded overflow-x-auto whitespace-pre-wrap border border-gray-200 dark:border-gray-700">{{ tpl.mensaje }}</pre>
+            {% if tpl.activo %}
+            <div class="mt-3 text-xs text-gray-500 dark:text-gray-400">
+                <i class="fas fa-info-circle"></i> {{ tr.template_active_info }}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-12 text-center">
+        <i class="fas fa-envelope-open-text text-gray-300 dark:text-gray-600 text-6xl mb-4"></i>
+        <p class="text-gray-500 dark:text-gray-400 text-lg">{{ tr.no_templates }}</p>
+        <a href="{% url 'recordatorio_template_create' %}" class="inline-flex items-center gap-2 mt-4 px-6 py-3 bg-green-600 text-white rounded hover:bg-green-700 transition">
+            <i class="fas fa-plus"></i> {{ tr.create_first_template }}
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

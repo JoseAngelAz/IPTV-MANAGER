@@ -1,12 +1,20 @@
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, UpdateView
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.utils import timezone
 from .models import Suscripcion, Plan
 from .forms import SuscripcionForm
+from apps.clients.models import Cliente
+from django.db.models import F
+
+
+def _aplicar_cortesia(suscripcion):
+    if suscripcion.get_precio_final() == 0:
+        suscripcion.metodo_pago = Suscripcion.MetodoPago.CORTESIA
+        suscripcion.save(update_fields=['metodo_pago'])
 
 
 class SuscripcionListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
@@ -35,6 +43,7 @@ class SuscripcionCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateV
 
     def form_valid(self, form):
         resp = super().form_valid(form)
+        _aplicar_cortesia(form.instance)
         messages.success(self.request, 'Suscripción creada exitosamente.')
         return resp
 
@@ -44,6 +53,34 @@ class SuscripcionCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateV
         if cliente_id:
             initial['cliente'] = cliente_id
         return initial
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['planes_precios'] = Plan.objects.filter(activo=True).values('id', 'precio')
+        ctx['editando'] = False
+        return ctx
+
+
+class SuscripcionUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    model = Suscripcion
+    form_class = SuscripcionForm
+    template_name = 'subscriptions/suscripcion_form.html'
+    permission_required = 'subscriptions.change_suscripcion'
+
+    def get_success_url(self):
+        return reverse_lazy('suscripcion_list')
+
+    def form_valid(self, form):
+        resp = super().form_valid(form)
+        _aplicar_cortesia(form.instance)
+        messages.success(self.request, 'Suscripción actualizada exitosamente.')
+        return resp
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['planes_precios'] = Plan.objects.filter(activo=True).values('id', 'precio')
+        ctx['editando'] = True
+        return ctx
 
 
 @login_required

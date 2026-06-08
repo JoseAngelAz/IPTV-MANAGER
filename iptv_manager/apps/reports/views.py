@@ -78,6 +78,7 @@ def _collect_data(sections, date_start, date_end):
                 'fecha_vencimiento': s.fecha_vencimiento,
                 'dias_restantes': max(dias_restantes, 0),
                 'estado': s.get_estado_display(),
+                'metodo_pago': s.get_metodo_pago_display(),
             })
         data['suscripciones'] = subs
 
@@ -109,6 +110,8 @@ def report_create(request):
         report_padding = request.POST.get('report_padding', 'normal')
         report_landscape = request.POST.get('report_landscape') == 'on'
         report_chart = request.POST.get('report_chart', 'bar')
+        chart_ingreso_color = request.POST.get('chart_ingreso_color', '#22c55e')
+        chart_egreso_color = request.POST.get('chart_egreso_color', '#ef4444')
 
         data = _collect_data(selected_sections, date_start, date_end)
 
@@ -122,6 +125,8 @@ def report_create(request):
                 'user': request.user,
                 'template': templates.get(template_id),
                 'now': datetime.now(),
+                'chart_ingreso_color': chart_ingreso_color,
+                'chart_egreso_color': chart_egreso_color,
             }
             html = render_to_string('reports/preview.html', ctx, request=request)
             return render(request, 'reports/preview.html', {
@@ -131,7 +136,8 @@ def report_create(request):
         if format_type == 'pdf':
             buf = generate_report_pdf(template_id, selected_sections, data, date_start, date_end, request.user,
                                       margin=report_margin, font=report_font, padding=report_padding,
-                                      landscape_mode=report_landscape, chart_type=report_chart)
+                                      landscape_mode=report_landscape, chart_type=report_chart,
+                                      chart_ingreso_color=chart_ingreso_color, chart_egreso_color=chart_egreso_color)
             filename = f'reporte_{"_".join(selected_sections)}_{datetime.now().strftime("%Y%m%d_%H%M")}.pdf'
             response = HttpResponse(buf, content_type='application/pdf')
             response['Content-Disposition'] = f'attachment; filename="{filename}"'

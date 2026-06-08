@@ -4,6 +4,7 @@ from django.utils import timezone
 from apps.subscriptions.models import Suscripcion
 from apps.notifications.models import LogNotificacion
 from apps.clients.models import HistorialCliente
+from apps.accounts.models import RecordatorioTemplate
 
 
 class Command(BaseCommand):
@@ -24,13 +25,24 @@ class Command(BaseCommand):
 
         import requests
 
+        template = RecordatorioTemplate.get_active()
+
         for suscripcion in suscripciones:
             cliente = suscripcion.cliente
-            mensaje = (
-                f'Hola {cliente.nombre}, tu suscripción {suscripcion.plan.nombre} '
-                f'vence el {suscripcion.fecha_vencimiento.strftime("%d/%m/%Y")}. '
-                f'¡Renueva ahora para no perder el servicio!'
-            )
+
+            if template:
+                mensaje = template.render(
+                    cliente=cliente.nombre,
+                    plan=suscripcion.plan.nombre,
+                    vencimiento=suscripcion.fecha_vencimiento.strftime('%d/%m/%Y'),
+                    precio=f'${suscripcion.plan.precio:,.2f}',
+                )
+            else:
+                mensaje = (
+                    f'Hola {cliente.nombre}, tu suscripción {suscripcion.plan.nombre} '
+                    f'vence el {suscripcion.fecha_vencimiento.strftime("%d/%m/%Y")}. '
+                    f'¡Renueva ahora para no perder el servicio!'
+                )
 
             if not LogNotificacion.objects.filter(
                 suscripcion=suscripcion, canal=LogNotificacion.Canal.WHATSAPP

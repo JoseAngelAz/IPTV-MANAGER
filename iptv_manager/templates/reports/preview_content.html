@@ -109,12 +109,12 @@
         <div style="flex:1;">
             <div class="text-xs font-semibold mb-1">Ingresos vs Egresos</div>
             <div style="height:20px; display:flex; border-radius:4px; overflow:hidden;">
-                <div style="width:{% widthratio ingresos total 100 %}%; background:#22c55e; height:100%;"></div>
-                <div style="width:{% widthratio egresos total 100 %}%; background:#ef4444; height:100%;"></div>
+                <div style="width:{% widthratio ingresos total 100 %}%; background:{{ chart_ingreso_color|default:'#22c55e' }}; height:100%;"></div>
+                <div style="width:{% widthratio egresos total 100 %}%; background:{{ chart_egreso_color|default:'#ef4444' }}; height:100%;"></div>
             </div>
             <div class="text-xs mt-1 flex justify-between">
-                <span><span style="color:#22c55e;">■</span> Ingresos: ${{ ingresos|floatformat:2|intcomma }}</span>
-                <span><span style="color:#ef4444;">■</span> Egresos: ${{ egresos|floatformat:2|intcomma }}</span>
+                <span><span style="color:{{ chart_ingreso_color|default:'#22c55e' }};">■</span> Ingresos: ${{ ingresos|floatformat:2|intcomma }}</span>
+                <span><span style="color:{{ chart_egreso_color|default:'#ef4444' }};">■</span> Egresos: ${{ egresos|floatformat:2|intcomma }}</span>
             </div>
         </div>
         {% endif %}
@@ -167,7 +167,7 @@
 {% elif s == 'suscripciones' %}
     {% if data.suscripciones %}
     <table class="rpt-table">
-        <thead><tr><th>#</th><th>Cliente</th><th>Teléfono</th><th>Plan</th><th>Precio</th><th>Inicio</th><th>Vencimiento</th><th>Días Rest.</th><th>Estado</th></tr></thead>
+        <thead><tr><th>#</th><th>Cliente</th><th>Teléfono</th><th>Plan</th><th>Precio</th><th>Inicio</th><th>Vencimiento</th><th>Días Rest.</th><th>Estado</th><th>Método de pago</th></tr></thead>
         <tbody>
             {% for sub in data.suscripciones %}
             <tr>
@@ -180,6 +180,7 @@
                 <td>{{ sub.fecha_vencimiento|date:"d/m/Y"|default:'—' }}</td>
                 <td class="text-center">{{ sub.dias_restantes }}</td>
                 <td><span class="px-2 py-0.5 rounded text-xs {% if sub.estado == 'Activo' %}bg-green-100 text-green-700{% elif sub.estado == 'Vencido' %}bg-red-100 text-red-700{% else %}bg-gray-100 text-gray-700{% endif %}">{{ sub.estado }}</span></td>
+                <td>{{ sub.metodo_pago }}</td>
             </tr>
             {% endfor %}
         </tbody>

@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 
 
 class User(AbstractUser):
@@ -44,6 +45,12 @@ class ThemeSettings(models.Model):
                                          ('rain', 'Lluvia'), ('mountain', 'Montañas'),
                                          ('nebula', 'Nebulosa'), ('matrix', 'Matrix')],
                                 default='none')
+    text_border_color = models.CharField('Color del borde de texto', max_length=7, default='', blank=True)
+    text_border_width = models.PositiveIntegerField('Grosor del borde de texto', default=0)
+    text_bold = models.BooleanField('Negrilla', default=False)
+    text_italic = models.BooleanField('Itálica', default=False)
+    text_underline = models.BooleanField('Subrayado', default=False)
+    text_strikethrough = models.BooleanField('Tachado', default=False)
 
     class Meta:
         verbose_name = 'Configuración de Tema'
@@ -181,19 +188,29 @@ class ErrorPageSettings(models.Model):
     show_pixel_art = models.BooleanField('Mostrar arte pixelado', default=True)
     bg_color = models.CharField('Color de fondo', max_length=7, default='#1a202c')
     text_color = models.CharField('Color de texto', max_length=7, default='#e2e8f0')
+
+    title_500 = models.CharField('Título (500)', max_length=200, default='¡Error interno del servidor!')
+    message_500 = models.TextField('Mensaje (500)', default='Ocurrió un error inesperado. El equipo técnico ha sido notificado. Intenta de nuevo más tarde.')
+    show_pixel_art_500 = models.BooleanField('Mostrar arte pixelado (500)', default=True)
+    bg_color_500 = models.CharField('Color de fondo (500)', max_length=7, default='#1a202c')
+    text_color_500 = models.CharField('Color de texto (500)', max_length=7, default='#e2e8f0')
+
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = 'Configuración de página 404'
-        verbose_name_plural = 'Configuración de página 404'
+        verbose_name = 'Configuración de páginas de error'
+        verbose_name_plural = 'Configuración de páginas de error'
 
     def __str__(self):
-        return 'Configuración 404'
+        return 'Configuración de errores'
 
     @classmethod
     def get_settings(cls):
-        obj, _ = cls.objects.get_or_create(pk=1, defaults={'title': '¡Página no encontrada!'})
+        obj, _ = cls.objects.get_or_create(pk=1, defaults={
+            'title': '¡Página no encontrada!',
+            'title_500': '¡Error interno del servidor!',
+        })
         return obj
 
 
@@ -213,6 +230,103 @@ class SessionConfig(models.Model):
     def get_config(cls):
         obj, _ = cls.objects.get_or_create(pk=1, defaults={'timeout_minutes': 60})
         return obj
+
+
+class Tarea(models.Model):
+    class Prioridad(models.TextChoices):
+        BAJA = 'baja', 'Baja'
+        MEDIA = 'media', 'Media'
+        ALTA = 'alta', 'Alta'
+        URGENTE = 'urgente', 'Urgente'
+
+    class Categoria(models.TextChoices):
+        GENERAL = 'general', 'General'
+        CLIENTES = 'clientes', 'Clientes'
+        FINANZAS = 'finanzas', 'Finanzas'
+        SUSCRIPCIONES = 'suscripciones', 'Suscripciones'
+        SISTEMA = 'sistema', 'Sistema'
+        OTRO = 'otro', 'Otro'
+
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='tareas', verbose_name='Usuario')
+    titulo = models.CharField('Título', max_length=255)
+    prioridad = models.CharField('Prioridad', max_length=10, choices=Prioridad.choices, default=Prioridad.MEDIA)
+    categoria = models.CharField('Categoría', max_length=20, choices=Categoria.choices, default=Categoria.GENERAL)
+    completada = models.BooleanField('Completada', default=False)
+    fecha_vencimiento = models.DateTimeField('Fecha de vencimiento', null=True, blank=True)
+    created_at = models.DateTimeField('Creada', auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Tarea'
+        verbose_name_plural = 'Tareas'
+        ordering = ['completada', '-prioridad', '-created_at']
+
+    def __str__(self):
+        return self.titulo
+
+
+class WhatsAppConfig(models.Model):
+    STATUS_CHOICES = [
+        ('disconnected', 'Desconectado'),
+        ('connecting', 'Conectando'),
+        ('connected', 'Conectado'),
+    ]
+
+    qr_code = models.TextField('Código QR', blank=True, null=True)
+    session_status = models.CharField('Estado de sesión', max_length=20, choices=STATUS_CHOICES, default='disconnected')
+    last_qr_at = models.DateTimeField('Último QR generado', null=True, blank=True)
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Configuración de WhatsApp'
+        verbose_name_plural = 'Configuración de WhatsApp'
+
+    def __str__(self):
+        return f'WhatsApp — {self.get_session_status_display()}'
+
+    @classmethod
+    def get_config(cls):
+        obj, _ = cls.objects.get_or_create(pk=1)
+        return obj
+
+
+class RecordatorioTemplate(models.Model):
+    class Categoria(models.TextChoices):
+        VENCIMIENTO = 'vencimiento', 'Recordatorio de vencimiento'
+        BIENVENIDA = 'bienvenida', 'Bienvenida / Asignación'
+        OFERTA = 'oferta', 'Oferta / Promoción'
+        PERSONALIZADO = 'personalizado', 'Personalizado'
+
+    nombre = models.CharField('Nombre', max_length=100)
+    categoria = models.CharField('Categoría', max_length=20, choices=Categoria.choices, default=Categoria.PERSONALIZADO)
+    mensaje = models.TextField(
+        'Mensaje',
+        help_text='Placeholders disponibles: {cliente}, {plan}, {vencimiento}, {precio}'
+    )
+    activo = models.BooleanField('Activo', default=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
+    created_at = models.DateTimeField('Creado', auto_now_add=True)
+    updated_at = models.DateTimeField('Actualizado', auto_now=True)
+
+    class Meta:
+        verbose_name = 'Plantilla de recordatorio'
+        verbose_name_plural = 'Plantillas de recordatorio'
+        ordering = ['-activo', 'nombre']
+
+    def __str__(self):
+        return self.nombre
+
+    def render(self, cliente=None, plan=None, vencimiento=None, precio=None):
+        mensaje = self.mensaje
+        mensaje = mensaje.replace('{cliente}', cliente or '')
+        mensaje = mensaje.replace('{plan}', plan or '')
+        mensaje = mensaje.replace('{vencimiento}', vencimiento or '')
+        mensaje = mensaje.replace('{precio}', precio or '')
+        return mensaje
+
+    @classmethod
+    def get_active(cls):
+        return cls.objects.filter(activo=True).first()
 
 
 def log_user_action(user, action, model_name='', object_repr='', object_id=None, details='', request=None):

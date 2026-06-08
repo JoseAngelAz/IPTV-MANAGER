@@ -54,7 +54,8 @@ FONTS = {
 class ReportPDF:
     def __init__(self, template_id, sections, data, date_start, date_end, user,
                  margin='normal', font='helvetica', padding='normal',
-                 landscape_mode=False, chart_type='bar'):
+                 landscape_mode=False, chart_type='bar',
+                 chart_ingreso_color='#22c55e', chart_egreso_color='#ef4444'):
         self.template_id = template_id
         self.template_name = {1: 'ejecutivo', 2: 'moderno', 3: 'clasico'}[template_id]
         self.colors = COLOR[self.template_name]
@@ -68,6 +69,8 @@ class ReportPDF:
         self.padding = PADDING_MAP.get(padding, (5, 5, 4, 4))
         self.landscape_mode = landscape_mode
         self.chart_type = chart_type
+        self.chart_ingreso_color = HexColor(chart_ingreso_color)
+        self.chart_egreso_color = HexColor(chart_egreso_color)
         self.elements = []
         self._table_num = 0
         self._figure_num = 0
@@ -224,7 +227,7 @@ class ReportPDF:
             bc.y = 25
             bc.width = usable - 100
             bc.height = 65
-            bc.data = [list(chart_data)]
+            bc.data = [[v] for v in chart_data]
             bc.categoryAxis.categoryNames = list(labels)
             bc.categoryAxis.labels.fontSize = 8
             bc.categoryAxis.labels.fontName = self.font_name
@@ -234,7 +237,9 @@ class ReportPDF:
             bc.valueAxis.labels.fontName = self.font_name
             bc.valueAxis.labelTextFormat = '$%1.0f' if any(isinstance(v, (int, float)) and v > 100 for v in chart_data) else '%d'
             if colors:
-                bc.bars[0].fillColor = colors[0] if colors else HexColor('#3b82f6')
+                for i, clr in enumerate(colors):
+                    if i < len(bc.bars):
+                        bc.bars[i].fillColor = clr
             bc.barWidth = 40 if len(chart_data) <= 3 else 25
             bc.groupSpacing = 40
             bc.strokeColor = None
@@ -287,7 +292,7 @@ class ReportPDF:
                 d = self._chart_drawing(280, 110)
                 d = self._add_chart(d, [ingresos, egresos], ['Ingresos', 'Egresos'],
                                     'Ingresos vs Egresos',
-                                    colors=[HexColor('#22c55e'), HexColor('#ef4444')])
+                                    colors=[self.chart_ingreso_color, self.chart_egreso_color])
                 elements.append(d)
                 elements.append(self._figure_label('Comparación de ingresos vs egresos'))
         if not finanzas:
@@ -352,7 +357,7 @@ class ReportPDF:
             elements.append(Spacer(1, 6))
 
         elements.append(self._table_title('Suscripciones registradas'))
-        headers = ['#', 'Cliente', 'Tel.', 'Plan', 'Precio', 'Inicio', 'Venc.', 'Días', 'Estado']
+        headers = ['#', 'Cliente', 'Tel.', 'Plan', 'Precio', 'Inicio', 'Venc.', 'Días', 'Estado', 'Método de pago']
         rows = []
         for i, s in enumerate(subs, 1):
             for fld in ('fecha_inicio', 'fecha_vencimiento'):
@@ -367,11 +372,12 @@ class ReportPDF:
                 f'${float(s.get("plan_precio", 0)):,.2f}',
                 s['fecha_inicio'], s['fecha_vencimiento'],
                 str(s.get('dias_restantes', 0)),
-                s.get('estado', '')
+                s.get('estado', ''),
+                s.get('metodo_pago', '')
             ])
         u = self.usable_width
-        cw = [u * 0.04, u * 0.16, u * 0.10, u * 0.14,
-              u * 0.10, u * 0.10, u * 0.10, u * 0.06, u * 0.20]
+        cw = [u * 0.04, u * 0.14, u * 0.08, u * 0.12,
+              u * 0.09, u * 0.09, u * 0.09, u * 0.06, u * 0.14, u * 0.15]
         alignments = {0: 'CENTER', 4: 'RIGHT', 7: 'CENTER'}
         elements.append(self._make_table(headers, rows, col_widths=cw, alignments=alignments))
         elements.append(Spacer(1, 4))
@@ -418,8 +424,10 @@ class ReportPDF:
 
 def generate_report_pdf(template_id, sections, data, date_start, date_end, user,
                         margin='normal', font='helvetica', padding='normal',
-                        landscape_mode=False, chart_type='bar'):
+                        landscape_mode=False, chart_type='bar',
+                        chart_ingreso_color='#22c55e', chart_egreso_color='#ef4444'):
     pdf = ReportPDF(template_id, sections, data, date_start, date_end, user,
                     margin=margin, font=font, padding=padding,
-                    landscape_mode=landscape_mode, chart_type=chart_type)
+                    landscape_mode=landscape_mode, chart_type=chart_type,
+                    chart_ingreso_color=chart_ingreso_color, chart_egreso_color=chart_egreso_color)
     return pdf.generate()

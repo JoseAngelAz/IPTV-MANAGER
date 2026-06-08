@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %} — Eliminar Nota{% endblock %}
+{% block content %}
+<div class="max-w-lg mx-auto bg-white p-6 rounded shadow text-center">
+    <div class="text-4xl mb-4"><i class="fas fa-exclamation-triangle text-red-500"></i></div>
+    <h2 class="text-2xl font-bold mb-2">Eliminar Nota</h2>
+    <p class="text-gray-600 mb-6">¿Estás seguro de eliminar esta nota?</p>
+    <div class="p-3 bg-gray-50 rounded mb-4 text-sm text-left">
+        {{ nota.contenido }}
+    </div>
+    <form method="post">
+        {% csrf_token %}
+        <div class="flex justify-center space-x-3">
+            <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Eliminar</button>
+            <a href="{% url 'cliente_detail' nota.cliente.pk %}" class="px-4 py-2 border rounded hover:bg-gray-100">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

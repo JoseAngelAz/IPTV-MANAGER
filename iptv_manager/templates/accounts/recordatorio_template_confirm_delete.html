@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-md mx-auto">
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow text-center">
+        <div class="text-5xl mb-4 text-red-500"><i class="fas fa-exclamation-triangle"></i></div>
+        <h2 class="text-xl font-bold mb-2">{{ tr.estas_seguro }}</h2>
+        <p class="text-gray-500 dark:text-gray-400 mb-2">{{ tr.delete_template_confirm }}</p>
+        <p class="font-semibold text-lg mb-6">"{{ tpl.nombre }}"</p>
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="flex justify-center gap-3">
+                <button type="submit" class="px-6 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition flex items-center gap-2">
+                    <i class="fas fa-trash"></i> {{ tr.eliminar }}
+                </button>
+                <a href="{% url 'recordatorio_template_list' %}" class="px-6 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition flex items-center gap-2">
+                    <i class="fas fa-times"></i> {{ tr.cancelar }}
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

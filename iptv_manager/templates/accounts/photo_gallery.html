@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %} — {{ tr.galeria_fotos }}{% endblock %}
+{% block content %}
+<h2 class="text-2xl font-bold mb-4"><i class="fas fa-images mr-2 text-blue-600"></i>{{ tr.galeria_fotos }}</h2>
+
+{% if users %}
+<h3 class="text-lg font-semibold mb-3"><i class="fas fa-user mr-2"></i>Usuarios</h3>
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
+    {% for u in users %}
+    <div class="card-custom rounded shadow p-3 text-center">
+        <img src="{{ u.profile_picture.url }}" alt="{{ u.get_full_name|default:u.username }}" class="w-24 h-24 rounded-full object-cover mx-auto mb-2 cursor-pointer" onclick="openLightbox('{{ u.profile_picture.url }}', '{{ u.get_full_name|default:u.username }}')">
+        <p class="text-sm font-medium">{{ u.get_full_name|default:u.username }}</p>
+        <p class="text-xs text-gray-500">{{ u.email|default:'' }}</p>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if clients %}
+<h3 class="text-lg font-semibold mb-3"><i class="fas fa-users mr-2"></i>Clientes</h3>
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    {% for c in clients %}
+    <div class="card-custom rounded shadow p-3 text-center">
+        <img src="{{ c.foto.url }}" alt="{{ c.nombre }}" class="w-24 h-24 rounded-full object-cover mx-auto mb-2 cursor-pointer" onclick="openLightbox('{{ c.foto.url }}', '{{ c.nombre }}')">
+        <p class="text-sm font-medium">{{ c.nombre }}</p>
+        <p class="text-xs text-gray-500">{{ c.dispositivo_id }}</p>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if not users and not clients %}
+<p class="text-gray-400 text-center py-8">{{ tr.sin_imagenes }}</p>
+{% endif %}
+
+
+{% endblock %}

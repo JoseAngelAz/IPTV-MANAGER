@@ -9,6 +9,6 @@ class PlanAdmin(admin.ModelAdmin):
 
 @admin.register(Suscripcion)
 class SuscripcionAdmin(admin.ModelAdmin):
-    list_display = ('cliente', 'plan', 'fecha_inicio', 'fecha_vencimiento', 'estado')
-    list_filter = ('estado', 'plan')
+    list_display = ('cliente', 'plan', 'fecha_inicio', 'fecha_vencimiento', 'estado', 'metodo_pago')
+    list_filter = ('estado', 'plan', 'metodo_pago')
     search_fields = ('cliente__nombre',)

@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <h1 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <i class="fab fa-whatsapp text-green-500"></i>
+        <span>{{ tr.whatsapp_config }}</span>
+    </h1>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+            <h2 class="text-lg font-semibold mb-4">{{ tr.whatsapp_status }}</h2>
+
+            <div class="flex items-center gap-3 mb-6">
+                <span id="status-dot" class="w-4 h-4 rounded-full inline-block bg-gray-400"></span>
+                <span id="status-text" class="text-lg font-medium">{{ config.get_session_status_display }}</span>
+            </div>
+
+            <div id="qr-container" class="flex justify-center mb-6 min-h-[200px] items-center {% if config.session_status == 'connected' %}hidden{% endif %}">
+                <div id="qr-loading" class="text-center">
+                    <i class="fas fa-spinner fa-pulse text-3xl text-blue-500 mb-3 block"></i>
+                    <p class="text-gray-500">{{ tr.esperando_qr }}</p>
+                </div>
+                <img id="qr-image" src="" alt="WhatsApp QR" class="w-56 h-56 border-2 border-gray-300 dark:border-gray-600 rounded-lg hidden">
+            </div>
+
+            <div id="connected-info" class="text-center p-6 {% if config.session_status != 'connected' %}hidden{% endif %}">
+                <i class="fas fa-check-circle text-green-500 text-6xl mb-3"></i>
+                <p class="text-green-600 dark:text-green-400 font-semibold text-lg">{{ tr.whatsapp_connected }}</p>
+            </div>
+
+            <div class="flex justify-center gap-3">
+                <button id="btn-refresh" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition flex items-center gap-2" onclick="updateStatus()">
+                    <i class="fas fa-sync-alt"></i> {{ tr.refresh }}
+                </button>
+                <button id="btn-logout" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition flex items-center gap-2 {% if config.session_status != 'connected' %}hidden{% endif %}" onclick="confirmLogout()">
+                    <i class="fas fa-sign-out-alt"></i> {{ tr.desconectar }}
+                </button>
+            </div>
+
+            <div class="mt-4 text-sm text-gray-500 dark:text-gray-400">
+                <p><strong>{{ tr.instructions }}</strong></p>
+                <ol class="list-decimal list-inside mt-2 space-y-1">
+                    <li>{{ tr.whatsapp_instruction_1 }}</li>
+                    <li>{{ tr.whatsapp_instruction_2 }}</li>
+                    <li>{{ tr.whatsapp_instruction_3 }}</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+            <h2 class="text-lg font-semibold mb-4">{{ tr.reminder_templates }}</h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">{{ tr.reminder_templates_desc }}</p>
+
+            <div class="mb-4">
+                <a href="{% url 'recordatorio_template_create' %}" class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
+                    <i class="fas fa-plus"></i> {{ tr.new_template }}
+                </a>
+            </div>
+
+            {% if templates %}
+            <div class="space-y-3">
+                {% for tpl in templates %}
+                <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="font-semibold flex items-center gap-2">
+                            {{ tpl.nombre }}
+                            <span class="text-xs bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 px-2 py-0.5 rounded-full">{{ tpl.get_categoria_display }}</span>
+                            {% if tpl.activo %}
+                            <span class="text-xs bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 px-2 py-0.5 rounded-full">{{ tr.activo }}</span>
+                            {% else %}
+                            <span class="text-xs bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 px-2 py-0.5 rounded-full">{{ tr.inactivo }}</span>
+                            {% endif %}
+                        </h3>
+                        <div class="flex gap-2">
+                            <a href="{% url 'recordatorio_template_edit' tpl.pk %}" class="text-blue-600 hover:text-blue-800" title="{{ tr.editar }}">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="{% url 'recordatorio_template_delete' tpl.pk %}" class="text-red-600 hover:text-red-800" title="{{ tr.eliminar }}">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <pre class="text-sm bg-gray-50 dark:bg-gray-900 p-2 rounded overflow-x-auto whitespace-pre-wrap">{{ tpl.mensaje }}</pre>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-gray-500 dark:text-gray-400 text-center py-8">{{ tr.no_templates }}</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<form id="logout-form" action="{% url 'whatsapp_logout' %}" method="POST" class="hidden">
+    {% csrf_token %}
+</form>
+
+<script>
+function showQr(qrDataUrl) {
+    var img = document.getElementById('qr-image');
+    var loading = document.getElementById('qr-loading');
+    if (!img || !loading) return;
+    if (qrDataUrl) {
+        img.src = qrDataUrl;
+        img.classList.remove('hidden');
+        loading.classList.add('hidden');
+    } else {
+        img.classList.add('hidden');
+        loading.classList.remove('hidden');
+    }
+}
+
+function updateStatus() {
+    fetch('{% url "whatsapp_status" %}')
+        .then(function(r){ return r.json(); })
+        .then(function(data) {
+            var dot = document.getElementById('status-dot');
+            var text = document.getElementById('status-text');
+            var qrContainer = document.getElementById('qr-container');
+            var connectedInfo = document.getElementById('connected-info');
+            var btnLogout = document.getElementById('btn-logout');
+            if (!dot || !text || !qrContainer || !connectedInfo || !btnLogout) return;
+
+            if (data.status === 'connected') {
+                dot.className = 'w-4 h-4 rounded-full inline-block bg-green-500';
+                text.textContent = '{{ tr.conectado }}';
+                qrContainer.classList.add('hidden');
+                connectedInfo.classList.remove('hidden');
+                btnLogout.classList.remove('hidden');
+                showQr(null);
+            } else if (data.status === 'connecting') {
+                dot.className = 'w-4 h-4 rounded-full inline-block bg-yellow-500';
+                text.textContent = '{{ tr.conectando }}';
+                qrContainer.classList.remove('hidden');
+                connectedInfo.classList.add('hidden');
+                btnLogout.classList.add('hidden');
+                fetchQr();
+            } else {
+                dot.className = 'w-4 h-4 rounded-full inline-block bg-gray-400';
+                text.textContent = '{{ tr.desconectado }}';
+                qrContainer.classList.remove('hidden');
+                connectedInfo.classList.add('hidden');
+                btnLogout.classList.add('hidden');
+                fetchQr();
+            }
+        })
+        .catch(function(err) { console.log('Status error:', err); });
+}
+
+function fetchQr() {
+    fetch('{% url "whatsapp_qr" %}')
+        .then(function(r){ return r.json(); })
+        .then(function(data) {
+            showQr(data.qr || null);
+        })
+        .catch(function(err) { console.log('QR fetch error:', err); });
+}
+
+function confirmLogout() {
+    if (confirm('{{ tr.confirm_desconectar }}')) {
+        document.getElementById('logout-form').submit();
+    }
+}
+
+updateStatus();
+setInterval(updateStatus, 5000);
+</script>
+{% endblock %}

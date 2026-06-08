@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <h1 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <i class="fas fa-envelope-open-text"></i>
+        <span>{{ accion }} {{ tr.template }}</span>
+    </h1>
+
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-1">{{ form.nombre.label }}</label>
+                {{ form.nombre }}
+                {% if form.nombre.errors %}
+                <p class="text-red-500 text-sm mt-1">{{ form.nombre.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-1">{{ form.categoria.label }}</label>
+                {{ form.categoria }}
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-1">{{ form.mensaje.label }}</label>
+                {{ form.mensaje }}
+                {% if form.mensaje.errors %}
+                <p class="text-red-500 text-sm mt-1">{{ form.mensaje.errors.0 }}</p>
+                {% endif %}
+                <div class="mt-2 text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-900 p-2 rounded">
+                    <p class="font-medium mb-1">{{ tr.available_placeholders }}:</p>
+                    <code class="block text-blue-600 dark:text-blue-400">&#123;cliente&#125;</code> — {{ tr.placeholder_cliente }}
+                    <code class="block text-blue-600 dark:text-blue-400">&#123;plan&#125;</code> — {{ tr.placeholder_plan }}
+                    <code class="block text-blue-600 dark:text-blue-400">&#123;vencimiento&#125;</code> — {{ tr.placeholder_vencimiento }}
+                    <code class="block text-blue-600 dark:text-blue-400">&#123;precio&#125;</code> — {{ tr.placeholder_precio }}
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <label class="flex items-center gap-3">
+                    {{ form.activo }}
+                    <span class="text-sm font-medium">{{ form.activo.label }}</span>
+                </label>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 ml-8">{{ tr.template_active_help }}</p>
+            </div>
+
+            <div class="flex gap-3">
+                <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition flex items-center gap-2">
+                    <i class="fas fa-save"></i> {{ tr.guardar }}
+                </button>
+                <a href="{% url 'recordatorio_template_list' %}" class="px-6 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition flex items-center gap-2">
+                    <i class="fas fa-times"></i> {{ tr.cancelar }}
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -9,7 +9,7 @@ class LogNotificacion(models.Model):
         EMAIL = 'email', 'Email'
 
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, verbose_name='Cliente')
-    suscripcion = models.ForeignKey(Suscripcion, on_delete=models.CASCADE, verbose_name='Suscripción')
+    suscripcion = models.ForeignKey(Suscripcion, on_delete=models.CASCADE, verbose_name='Suscripción', null=True, blank=True)
     canal = models.CharField('Canal', max_length=10, choices=Canal.choices)
     destinatario = models.CharField('Destinatario', max_length=200)
     mensaje = models.TextField('Mensaje')

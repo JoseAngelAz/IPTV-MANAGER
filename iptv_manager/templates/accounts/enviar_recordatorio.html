@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <h1 class="text-2xl font-bold mb-6 flex items-center gap-3">
+        <i class="fab fa-whatsapp text-green-500"></i>
+        <span>{{ tr.enviar_recordatorio }}</span>
+    </h1>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+            <form method="POST" id="send-form">
+                {% csrf_token %}
+
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">{{ tr.seleccionar_cliente }}</label>
+                    <select name="cliente_id" id="cliente-select" class="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:text-white">
+                        <option value="">{{ tr.seleccionar }}...</option>
+                        {% for c in clientes %}
+                        <option value="{{ c.id }}">{{ c.nombre }} {% if c.telefono %}— {{ c.telefono }}{% endif %}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">{{ tr.seleccionar_plantillas }}</label>
+                    <div class="space-y-2 max-h-64 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded p-2">
+                        {% for t in templates %}
+                        <label class="flex items-center gap-3 p-2 rounded hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
+                            <input type="checkbox" name="templates" value="{{ t.id }}" class="template-checkbox w-4 h-4 text-blue-600">
+                            <div>
+                                <span class="font-medium">{{ t.nombre }}</span>
+                                <span class="text-xs text-gray-500 ml-2">({{ t.get_categoria_display }})</span>
+                            </div>
+                        </label>
+                        {% empty %}
+                        <p class="text-gray-500 text-sm text-center py-4">{{ tr.no_active_templates }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <label class="flex items-center gap-3">
+                        <input type="checkbox" name="enviar_whatsapp" checked class="w-4 h-4 text-green-600">
+                        <span class="text-sm font-medium">{{ tr.enviar_por_whatsapp }}</span>
+                    </label>
+                    <p class="text-xs text-gray-500 mt-1 ml-7">{{ tr.enviar_por_whatsapp_help }}</p>
+                </div>
+
+                <div class="flex gap-3">
+                    <button type="submit" class="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition flex items-center gap-2">
+                        <i class="fab fa-whatsapp"></i> {{ tr.enviar }}
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+            <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                <i class="fas fa-eye"></i> {{ tr.vista_previa }}
+            </h2>
+
+            <div id="preview-area" class="text-center py-12 text-gray-400">
+                <i class="fas fa-comment-dots text-4xl mb-3 block"></i>
+                <p>{{ tr.selecciona_cliente_plantilla }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+var clientes = {{ clientes_json|safe }};
+var templates = {{ templates_json|safe }};
+
+function actualizarPreview() {
+    var clienteId = document.getElementById('cliente-select').value;
+    var checkboxes = document.querySelectorAll('.template-checkbox:checked');
+    var previewArea = document.getElementById('preview-area');
+
+    if (!clienteId || checkboxes.length === 0) {
+        previewArea.innerHTML = '<i class="fas fa-comment-dots text-4xl mb-3 block"></i><p>{{ tr.selecciona_cliente_plantilla|escapejs }}</p>';
+        return;
+    }
+
+    var cliente = clientes.find(function(c) { return c.id == clienteId; });
+    if (!cliente) return;
+
+    var html = '';
+    checkboxes.forEach(function(cb) {
+        var tpl = templates.find(function(t) { return t.id == cb.value; });
+        if (!tpl) return;
+
+        var msg = tpl.mensaje;
+        msg = msg.replace(/\{cliente\}/g, cliente.nombre);
+        msg = msg.replace(/\{plan\}/g, cliente.plan || '');
+        msg = msg.replace(/\{vencimiento\}/g, cliente.vencimiento || '');
+        msg = msg.replace(/\{precio\}/g, cliente.precio || '');
+
+        html += '<div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-3 text-left">';
+        html += '<div class="flex items-center justify-between mb-2">';
+        html += '<span class="font-semibold text-sm">' + tpl.nombre + '</span>';
+        html += '<span class="text-xs text-gray-500">' + tpl.categoria + '</span>';
+        html += '</div>';
+        html += '<div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3 text-sm">';
+        html += '<div class="flex items-start gap-2">';
+        html += '<i class="fab fa-whatsapp text-green-500 mt-0.5"></i>';
+        html += '<span>' + msg.replace(/\n/g, '<br>') + '</span>';
+        html += '</div>';
+        html += '</div>';
+        html += '</div>';
+    });
+
+    if (!html) {
+        html = '<i class="fas fa-comment-dots text-4xl mb-3 block"></i><p>{{ tr.selecciona_cliente_plantilla|escapejs }}</p>';
+    }
+
+    previewArea.innerHTML = html;
+}
+
+document.getElementById('cliente-select').addEventListener('change', actualizarPreview);
+document.querySelectorAll('.template-checkbox').forEach(function(cb) {
+    cb.addEventListener('change', actualizarPreview);
+});
+
+// Inicializar preview si hay datos
+actualizarPreview();
+</script>
+{% endblock %}

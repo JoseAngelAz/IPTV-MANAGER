@@ -11,4 +11,6 @@ urlpatterns = [
     path('clientes/<int:pk>/eliminar/', views.cliente_delete, name='cliente_delete'),
     path('clientes/<int:pk>/nota/', views.agregar_nota, name='agregar_nota'),
     path('clientes/<int:pk>/anotacion/', views.nota_create, name='nota_create'),
+    path('anotaciones/<int:pk>/editar/', views.nota_update, name='nota_update'),
+    path('anotaciones/<int:pk>/eliminar/', views.nota_delete, name='nota_delete'),
 ]

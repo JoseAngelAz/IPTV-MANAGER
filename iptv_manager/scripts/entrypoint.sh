@@ -8,17 +8,17 @@ echo "Creating default groups..."
 python manage.py shell <<EOF
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
-from apps.clients.models import Cliente, HistorialCliente
+from apps.clients.models import Cliente, HistorialCliente, Nota
 from apps.subscriptions.models import Plan, Suscripcion
 from apps.finance.models import MovimientoFinanciero
 from apps.notifications.models import LogNotificacion
-from apps.accounts.models import UserActivityLog
+from apps.accounts.models import UserActivityLog, Tarea
 
 superadmin, _ = Group.objects.get_or_create(name='Superadmin')
 manager, _ = Group.objects.get_or_create(name='Gerente')
 soporte, _ = Group.objects.get_or_create(name='Soporte')
 
-for model in [Cliente, HistorialCliente, Plan, Suscripcion, MovimientoFinanciero, LogNotificacion, UserActivityLog]:
+for model in [Cliente, HistorialCliente, Plan, Suscripcion, MovimientoFinanciero, LogNotificacion, UserActivityLog, Nota, Tarea]:
     ct = ContentType.objects.get_for_model(model)
     perms = Permission.objects.filter(content_type=ct)
     manager.permissions.add(*perms)

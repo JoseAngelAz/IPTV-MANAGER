@@ -42,6 +42,7 @@ class Cliente(models.Model):
     email = models.EmailField('Email', blank=True, default='')
     dispositivo_id = models.CharField('ID Dispositivo / MAC', max_length=20, validators=[mac_validator], unique=True)
     foto = models.ImageField('Foto', upload_to=_procesar_foto, blank=True, null=True)
+    documento_identidad = models.CharField('Documento de identidad', max_length=100, blank=True, default='')
     fecha_registro = models.DateTimeField('Fecha de registro', auto_now_add=True)
     activo = models.BooleanField('Activo', default=True)
 

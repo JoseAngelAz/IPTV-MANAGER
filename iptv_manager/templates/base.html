@@ -27,6 +27,19 @@
             --card-bg: {{ theme_card_bg }};
             --sidebar-bg: {{ theme_sidebar_bg }};
             --radius: {{ theme_radius }};
+            --text-border-color: {{ theme_text_border_color }};
+            --text-border-width: {{ theme_text_border_width }}px;
+        }
+        body {
+            -webkit-text-stroke: var(--text-border-width) var(--text-border-color);
+            {% if theme_text_bold == 'true' %}font-weight: bold;{% endif %}
+            {% if theme_text_italic == 'true' %}font-style: italic;{% endif %}
+            {% if theme_text_underline == 'true' or theme_text_strikethrough == 'true' %}
+            text-decoration:
+                {% if theme_text_underline == 'true' %}underline{% endif %}
+                {% if theme_text_underline == 'true' and theme_text_strikethrough == 'true' %} {% endif %}
+                {% if theme_text_strikethrough == 'true' %}line-through{% endif %};
+            {% endif %}
         }
         .btn-primary { background-color: var(--primary); color: white; border-radius: var(--radius); }
         .btn-primary:hover { filter: brightness(1.1); }
@@ -70,6 +83,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
     <link rel="stylesheet" href="/static/css/pixel-bg.css">
     <script src="/static/vendor/cdn-fallback.js" defer></script>
+    {% block extra_head %}{% endblock %}
 </head>
 <body class="bg-custom text-custom min-h-screen flex transition-colors{% if theme_pixel_bg and theme_pixel_bg != 'none' %} bg-pixel-{{ theme_pixel_bg }}{% endif %}">
 
@@ -141,12 +155,32 @@
             <a href="{% url 'theme' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700/50 {% if '/tema' in request.path %}bg-gray-700/50{% endif %}">
                 <i class="fas fa-palette w-5 text-center"></i><span class="nav-label">{{ tr.personalizar_tema }}</span>
             </a>
-            {% if user.is_superuser %}
-            <a href="{% url 'error_page_settings' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700/50 {% if '/error-page-settings' in request.path %}bg-gray-700/50{% endif %}">
-                <i class="fas fa-exclamation-triangle w-5 text-center"></i><span class="nav-label">{{ tr.personalizar_404 }}</span>
+            <a href="{% url 'photo_gallery' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700/50 {% if '/galeria-fotos' in request.path %}bg-gray-700/50{% endif %}">
+                <i class="fas fa-images w-5 text-center"></i><span class="nav-label">{{ tr.galeria_fotos }}</span>
             </a>
+            {% if user.is_superuser %}
+            <div>
+                <button onclick="toggleSubmenu('error-pages')" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700/50 w-full text-left">
+                    <i class="fas fa-exclamation-triangle w-5 text-center"></i><span class="nav-label flex-1">{{ tr.paginas_error }}</span>
+                    <i class="fas fa-chevron-down text-xs transition-transform duration-200" id="chevron-error-pages"></i>
+                </button>
+                <div id="submenu-error-pages" class="overflow-hidden transition-all duration-200 pl-8 space-y-1" style="max-height:0;opacity:0;">
+                    <a href="{% url 'error_page_settings' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700/50 text-sm {% if '/error-page-settings' in request.path and not '/500' in request.path %}bg-gray-700/50{% endif %}">
+                        <i class="fas fa-exclamation-circle w-4 text-center"></i><span class="nav-label">{{ tr.personalizar_404 }}</span>
+                    </a>
+                    <a href="{% url 'error_page_500_settings' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700/50 text-sm {% if '/error-page-500' in request.path %}bg-gray-700/50{% endif %}">
+                        <i class="fas fa-fire w-4 text-center"></i><span class="nav-label">{{ tr.personalizar_pagina_500 }}</span>
+                    </a>
+                </div>
+            </div>
             <a href="{% url 'session_config' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700/50 {% if '/session-config' in request.path %}bg-gray-700/50{% endif %}">
                 <i class="fas fa-clock w-5 text-center"></i><span class="nav-label">{{ tr.tiempo_de_sesion }}</span>
+            </a>
+            <a href="{% url 'whatsapp_config' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700/50 {% if '/whatsapp' in request.path and not '/enviar-recordatorio' in request.path %}bg-gray-700/50{% endif %}">
+                <i class="fab fa-whatsapp w-5 text-center text-green-400"></i><span class="nav-label">{{ tr.whatsapp_config }}</span>
+            </a>
+            <a href="{% url 'enviar_recordatorio' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700/50 {% if '/enviar-recordatorio' in request.path %}bg-gray-700/50{% endif %}">
+                <i class="fas fa-paper-plane w-5 text-center"></i><span class="nav-label">{{ tr.enviar_recordatorio }}</span>
             </a>
             {% endif %}
             <a href="{% url 'reports:report_create' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700/50 {% if '/reportes' in request.path %}bg-gray-700/50{% endif %}">
@@ -155,6 +189,14 @@
             <a href="{% url 'documentation' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700/50 {% if '/documentacion' in request.path %}bg-gray-700/50{% endif %}">
                 <i class="fas fa-book w-5 text-center"></i><span class="nav-label">{{ tr.documentacion }}</span>
             </a>
+            <a href="{% url 'todo_list' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700/50 {% if '/tareas' in request.path %}bg-gray-700/50{% endif %}">
+                <i class="fas fa-tasks w-5 text-center"></i><span class="nav-label">{{ tr.tareas }}</span>
+            </a>
+            {% if user.is_superuser or perms.auth.view_user %}
+            <a href="{% url 'user_list' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700/50 {% if '/usuarios' in request.path %}bg-gray-700/50{% endif %}">
+                <i class="fas fa-users-cog w-5 text-center"></i><span class="nav-label">{{ tr.usuarios }}</span>
+            </a>
+            {% endif %}
             <a href="{% url 'about' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700/50 {% if request.path == '/about/' %}bg-gray-700/50{% endif %}">
                 <i class="fas fa-info-circle w-5 text-center"></i><span class="nav-label">{{ tr.acerca_de_uso }}</span>
             </a>
@@ -237,11 +279,50 @@
     </div>
 </div>
 
+<div id="lightbox" class="fixed inset-0 z-50 bg-black bg-opacity-80 hidden items-center justify-center" onclick="closeLightbox(event)">
+    <div class="relative max-w-4xl max-h-screen p-4">
+        <button onclick="closeLightbox()" class="absolute top-2 right-2 text-white text-3xl hover:text-gray-300 z-10">&times;</button>
+        <img id="lightbox-img" src="" alt="" class="max-w-full max-h-[90vh] object-contain mx-auto rounded shadow-2xl">
+        <p id="lightbox-caption" class="text-center text-white text-sm mt-2"></p>
+    </div>
+</div>
+
 <script>
+function openLightbox(src, caption) {
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox-img').alt = caption;
+    document.getElementById('lightbox-caption').textContent = caption;
+    document.getElementById('lightbox').classList.remove('hidden');
+    document.getElementById('lightbox').classList.add('flex');
+    document.body.style.overflow = 'hidden';
+}
+function closeLightbox(e) {
+    if (e && e.target !== e.currentTarget) return;
+    document.getElementById('lightbox').classList.add('hidden');
+    document.getElementById('lightbox').classList.remove('flex');
+    document.body.style.overflow = '';
+}
 var sessionTimeout = {{ session_timeout_minutes|default:60 }} * 60 * 1000;
 var warningTime = 2 * 60 * 1000;
 var sessionTimer = null;
 var sessionRealtimeTimer = null;
+
+function toggleSubmenu(id){
+    var el = document.getElementById('submenu-' + id);
+    var ch = document.getElementById('chevron-' + id);
+    var isOpen = el.style.maxHeight && el.style.maxHeight !== '0px';
+    if(isOpen){
+        el.style.maxHeight = '0';
+        el.style.opacity = '0';
+        if(ch) ch.style.transform = 'rotate(0deg)';
+        localStorage.setItem('submenu-' + id, 'closed');
+    } else {
+        el.style.maxHeight = '200px';
+        el.style.opacity = '1';
+        if(ch) ch.style.transform = 'rotate(180deg)';
+        localStorage.setItem('submenu-' + id, 'open');
+    }
+}
 
 function toggleSidebar(){
     var s = document.getElementById('sidebar');
@@ -344,6 +425,14 @@ document.addEventListener('DOMContentLoaded', function(){
         var s = document.getElementById('sidebar');
         if(s && window.innerWidth >= 768) s.classList.add('sidebar-collapsed');
     }
+    ['error-pages'].forEach(function(id){
+        if(localStorage.getItem('submenu-' + id) === 'open'){
+            var el = document.getElementById('submenu-' + id);
+            var ch = document.getElementById('chevron-' + id);
+            if(el){ el.style.maxHeight = '200px'; el.style.opacity = '1'; }
+            if(ch) ch.style.transform = 'rotate(180deg)';
+        }
+    });
     var mobileToggle = document.getElementById('sidebar-mobile-toggle');
     if(mobileToggle && window.innerWidth < 768) mobileToggle.classList.remove('hidden');
     window.addEventListener('resize', function(){

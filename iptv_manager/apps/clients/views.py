@@ -117,3 +117,29 @@ def nota_create(request, pk):
             Nota.objects.create(cliente=cliente, usuario=request.user, contenido=contenido)
             messages.success(request, 'Nota agregada.')
     return redirect('cliente_detail', pk=pk)
+
+
+@login_required
+@permission_required('clients.change_cliente', raise_exception=True)
+def nota_update(request, pk):
+    nota = get_object_or_404(Nota, pk=pk)
+    if request.method == 'POST':
+        contenido = request.POST.get('contenido', '').strip()
+        if contenido:
+            nota.contenido = contenido
+            nota.save()
+            messages.success(request, 'Nota actualizada.')
+        return redirect('cliente_detail', pk=nota.cliente.pk)
+    return render(request, 'clients/nota_form.html', {'nota': nota})
+
+
+@login_required
+@permission_required('clients.delete_cliente', raise_exception=True)
+def nota_delete(request, pk):
+    nota = get_object_or_404(Nota, pk=pk)
+    cliente_pk = nota.cliente.pk
+    if request.method == 'POST':
+        nota.delete()
+        messages.success(request, 'Nota eliminada.')
+        return redirect('cliente_detail', pk=cliente_pk)
+    return render(request, 'clients/nota_confirm_delete.html', {'nota': nota})

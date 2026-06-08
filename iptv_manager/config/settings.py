@@ -123,6 +123,7 @@ SECURE_HSTS_PRELOAD = config('HTTPS', default=True, cast=bool)
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_SSL_REDIRECT = config('HTTPS', default=True, cast=bool)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SESSION_COOKIE_SECURE = config('HTTPS', default=True, cast=bool)
 CSRF_COOKIE_SECURE = config('HTTPS', default=True, cast=bool)
 X_FRAME_OPTIONS = 'DENY'

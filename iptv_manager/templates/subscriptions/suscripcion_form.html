@@ -1,16 +1,102 @@
 {% extends 'base.html' %}
-{% block title %} — Nueva Suscripción{% endblock %}
+{% block title %} — {% if editando %}Editar{% else %}Nueva{% endif %} Suscripción{% endblock %}
 {% block content %}
-<h2 class="text-2xl font-bold mb-4">Nueva Suscripción</h2>
+<h2 class="text-2xl font-bold mb-4">{% if editando %}Editar{% else %}Nueva{% endif %} Suscripción</h2>
 
 <div class="max-w-lg bg-white p-6 rounded shadow">
-    <form method="post">
+    <form method="post" id="suscripcion-form">
         {% csrf_token %}
-        {{ form.as_p }}
+        {% for field in form %}
+        <div class="mb-3">
+            <label class="block text-sm font-medium mb-1">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}<p class="text-red-500 text-xs mt-1">{{ field.errors.0 }}</p>{% endif %}
+        </div>
+        {% endfor %}
+        <div class="p-3 bg-gray-50 rounded mb-3">
+            <p class="text-sm"><strong>Precio del plan:</strong> <span id="plan-price">$0.00</span></p>
+            <p class="text-sm"><strong>Precio final:</strong> <span id="final-price">$0.00</span></p>
+            <p id="discount-warning" class="text-red-500 text-xs mt-1 hidden"></p>
+        </div>
         <div class="mt-4 flex space-x-3">
-            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Guardar</button>
+            <button type="submit" id="submit-btn" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">{% if editando %}Actualizar{% else %}Guardar{% endif %}</button>
             <a href="{% url 'suscripcion_list' %}" class="px-4 py-2 border rounded hover:bg-gray-100">Cancelar</a>
         </div>
     </form>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    var planSelect = document.getElementById('id_plan');
+    var descTipo = document.getElementById('id_descuento_tipo');
+    var descValor = document.getElementById('id_descuento_valor');
+    var planPrice = document.getElementById('plan-price');
+    var finalPrice = document.getElementById('final-price');
+    var warning = document.getElementById('discount-warning');
+    var submitBtn = document.getElementById('submit-btn');
+    var metodoPago = document.getElementById('id_metodo_pago');
+    var prices = {};
+
+    {% for p in planes_precios %}
+    prices[{{ p.id }}] = {{ p.precio }};
+    {% endfor %}
+
+    function validateDiscount(){
+        var pid = planSelect.value;
+        var precio = prices[pid] || 0;
+        var tipo = descTipo.value;
+        var valor = parseFloat(descValor.value) || 0;
+        var msg = '';
+
+        if(valor < 0){
+            msg = 'El descuento no puede ser negativo.';
+        } else if(tipo === 'porcentaje' && valor > 100){
+            msg = 'El descuento porcentual no puede superar el 100%.';
+            descValor.value = 100;
+            valor = 100;
+        } else if(tipo === 'fijo' && valor > precio){
+            msg = 'El descuento fijo no puede superar el precio del plan ($' + precio.toFixed(2) + ').';
+            descValor.value = precio;
+            valor = precio;
+        }
+
+        if(msg){
+            warning.textContent = msg;
+            warning.classList.remove('hidden');
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        } else {
+            warning.classList.add('hidden');
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+        return precio;
+    }
+
+    function updatePrice(){
+        var precio = validateDiscount();
+        planPrice.textContent = '$' + precio.toFixed(2);
+        var final = precio;
+        var tipo = descTipo.value;
+        var valor = parseFloat(descValor.value) || 0;
+        if(tipo === 'porcentaje' && valor > 0){
+            final = precio - (precio * Math.min(valor, 100) / 100);
+        } else if(tipo === 'fijo' && valor > 0){
+            final = Math.max(0, precio - Math.min(valor, precio));
+        }
+        finalPrice.textContent = '$' + final.toFixed(2);
+        if (final === 0 && metodoPago) {
+            metodoPago.value = 'cortesia';
+        }
+    }
+
+    planSelect.addEventListener('change', updatePrice);
+    descTipo.addEventListener('change', updatePrice);
+    descValor.addEventListener('input', function(){
+        validateDiscount();
+        updatePrice();
+    });
+    updatePrice();
+});
+</script>
 {% endblock %}

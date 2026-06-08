@@ -1,7 +1,304 @@
 {% extends 'base.html' %}
 {% block title %} — {{ tr.iniciar_sesion }}{% endblock %}
+{% block extra_head %}
+<style>
+:root {
+  --pixel-size: 4px;
+}
+.pixel-art-container {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.pixel-scene {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  image-rendering: pixelated;
+}
+.ground {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30%;
+  background: repeating-linear-gradient(
+    90deg,
+    #2d5a27 0px, #2d5a27 calc(var(--pixel-size) * 4),
+    #3a7a32 calc(var(--pixel-size) * 4), #3a7a32 calc(var(--pixel-size) * 8)
+  );
+}
+.ground::before {
+  content: '';
+  position: absolute;
+  top: calc(var(--pixel-size) * -2);
+  left: 0;
+  right: 0;
+  height: calc(var(--pixel-size) * 2);
+  background: repeating-linear-gradient(
+    90deg,
+    #4a8a42 0px, #4a8a42 calc(var(--pixel-size) * 2),
+    #5a9a52 calc(var(--pixel-size) * 2), #5a9a52 calc(var(--pixel-size) * 4),
+    #3a7a32 calc(var(--pixel-size) * 4), #3a7a32 calc(var(--pixel-size) * 6)
+  );
+}
+.pixel-tree {
+  position: absolute;
+  bottom: 30%;
+}
+.pixel-tree::before {
+  content: '';
+  position: absolute;
+  display: block;
+}
+.tree-1 { left: 5%; }
+.tree-1 .trunk {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(var(--pixel-size) * 4);
+  height: calc(var(--pixel-size) * 8);
+  background: #5c3a1e;
+  box-shadow:
+    calc(var(--pixel-size) * 4) 0 #5c3a1e,
+    0 calc(var(--pixel-size) * 8) #5c3a1e,
+    calc(var(--pixel-size) * 4) calc(var(--pixel-size) * 8) #5c3a1e;
+}
+.tree-1 .foliage {
+  position: absolute;
+  bottom: calc(var(--pixel-size) * 8);
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(var(--pixel-size) * 16);
+  height: calc(var(--pixel-size) * 16);
+  background: transparent;
+  box-shadow:
+    calc(var(--pixel-size) * 2) 0 #1a6b12, calc(var(--pixel-size) * 4) 0 #1a6b12, calc(var(--pixel-size) * 6) 0 #1a6b12, calc(var(--pixel-size) * 8) 0 #1a6b12,
+    0 calc(var(--pixel-size) * 2) #1a6b12, calc(var(--pixel-size) * 2) calc(var(--pixel-size) * 2) #2d8a22, calc(var(--pixel-size) * 4) calc(var(--pixel-size) * 2) #2d8a22, calc(var(--pixel-size) * 6) calc(var(--pixel-size) * 2) #2d8a22, calc(var(--pixel-size) * 8) calc(var(--pixel-size) * 2) #2d8a22, calc(var(--pixel-size) * 10) calc(var(--pixel-size) * 2) #1a6b12,
+    calc(var(--pixel-size) * -2) calc(var(--pixel-size) * 2) #1a6b12,
+    calc(var(--pixel-size) * 2) calc(var(--pixel-size) * 4) #2d8a22, calc(var(--pixel-size) * 4) calc(var(--pixel-size) * 4) #3a9a32, calc(var(--pixel-size) * 6) calc(var(--pixel-size) * 4) #3a9a32, calc(var(--pixel-size) * 8) calc(var(--pixel-size) * 4) #2d8a22,
+    calc(var(--pixel-size) * -4) calc(var(--pixel-size) * 4) #1a6b12,
+    calc(var(--pixel-size) * 4) calc(var(--pixel-size) * 6) #3a9a32, calc(var(--pixel-size) * 6) calc(var(--pixel-size) * 6) #3a9a32,
+    calc(var(--pixel-size) * -2) calc(var(--pixel-size) * 6) #2d8a22, calc(var(--pixel-size) * 2) calc(var(--pixel-size) * 6) #2d8a22, calc(var(--pixel-size) * 10) calc(var(--pixel-size) * 6) #1a6b12,
+    calc(var(--pixel-size) * 2) calc(var(--pixel-size) * 8) #3a9a32, calc(var(--pixel-size) * 4) calc(var(--pixel-size) * 8) #3a9a32, calc(var(--pixel-size) * 6) calc(var(--pixel-size) * 8) #3a9a32, calc(var(--pixel-size) * 8) calc(var(--pixel-size) * 8) #2d8a22,
+    calc(var(--pixel-size) * -4) calc(var(--pixel-size) * 8) #1a6b12, calc(var(--pixel-size) * 12) calc(var(--pixel-size) * 8) #1a6b12,
+    calc(var(--pixel-size) * 4) calc(var(--pixel-size) * 10) #3a9a32, calc(var(--pixel-size) * 6) calc(var(--pixel-size) * 10) #3a9a32,
+    calc(var(--pixel-size) * -2) calc(var(--pixel-size) * 10) #2d8a22, calc(var(--pixel-size) * 2) calc(var(--pixel-size) * 10) #2d8a22,
+    calc(var(--pixel-size) * -4) calc(var(--pixel-size) * 10) #1a6b12, calc(var(--pixel-size) * 10) calc(var(--pixel-size) * 10) #1a6b12,
+    calc(var(--pixel-size) * 4) calc(var(--pixel-size) * 12) #2d8a22, calc(var(--pixel-size) * 6) calc(var(--pixel-size) * 12) #2d8a22,
+    calc(var(--pixel-size) * 2) calc(var(--pixel-size) * 14) #2d8a22, calc(var(--pixel-size) * 4) calc(var(--pixel-size) * 14) #1a6b12, calc(var(--pixel-size) * 6) calc(var(--pixel-size) * 14) #1a6b12,
+    calc(var(--pixel-size) * -2) calc(var(--pixel-size) * 12) #1a6b12, calc(var(--pixel-size) * 10) calc(var(--pixel-size) * 12) #1a6b12;
+  border-radius: 0;
+  animation: sway 4s ease-in-out infinite;
+}
+.tree-2 { left: 75%; transform: scale(0.7); }
+.tree-2 .trunk {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(var(--pixel-size) * 4);
+  height: calc(var(--pixel-size) * 6);
+  background: #5c3a1e;
+  box-shadow: calc(var(--pixel-size) * 4) 0 #5c3a1e;
+}
+.tree-2 .foliage {
+  position: absolute;
+  bottom: calc(var(--pixel-size) * 6);
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(var(--pixel-size) * 20);
+  height: calc(var(--pixel-size) * 20);
+  background: transparent;
+  box-shadow:
+    calc(var(--pixel-size) * 4) 0 #1a5a12, calc(var(--pixel-size) * 6) 0 #1a5a12, calc(var(--pixel-size) * 8) 0 #1a5a12, calc(var(--pixel-size) * 10) 0 #1a5a12,
+    calc(var(--pixel-size) * 2) calc(var(--pixel-size) * 2) #1a5a12, calc(var(--pixel-size) * 4) calc(var(--pixel-size) * 2) #2d7a22, calc(var(--pixel-size) * 6) calc(var(--pixel-size) * 2) #2d7a22, calc(var(--pixel-size) * 8) calc(var(--pixel-size) * 2) #2d7a22, calc(var(--pixel-size) * 10) calc(var(--pixel-size) * 2) #2d7a22, calc(var(--pixel-size) * 12) calc(var(--pixel-size) * 2) #1a5a12,
+    0 calc(var(--pixel-size) * 4) #1a5a12, calc(var(--pixel-size) * 2) calc(var(--pixel-size) * 4) #2d7a22, calc(var(--pixel-size) * 4) calc(var(--pixel-size) * 4) #3a8a32, calc(var(--pixel-size) * 6) calc(var(--pixel-size) * 4) #3a8a32, calc(var(--pixel-size) * 8) calc(var(--pixel-size) * 4) #3a8a32, calc(var(--pixel-size) * 10) calc(var(--pixel-size) * 4) #3a8a32, calc(var(--pixel-size) * 12) calc(var(--pixel-size) * 4) #2d7a22, calc(var(--pixel-size) * 14) calc(var(--pixel-size) * 4) #1a5a12,
+    calc(var(--pixel-size) * 2) calc(var(--pixel-size) * 6) #2d7a22, calc(var(--pixel-size) * 4) calc(var(--pixel-size) * 6) #3a8a32, calc(var(--pixel-size) * 6) calc(var(--pixel-size) * 6) #4a9a42, calc(var(--pixel-size) * 8) calc(var(--pixel-size) * 6) #4a9a42, calc(var(--pixel-size) * 10) calc(var(--pixel-size) * 6) #3a8a32, calc(var(--pixel-size) * 12) calc(var(--pixel-size) * 6) #2d7a22,
+    calc(var(--pixel-size) * 4) calc(var(--pixel-size) * 8) #3a8a32, calc(var(--pixel-size) * 6) calc(var(--pixel-size) * 8) #4a9a42, calc(var(--pixel-size) * 8) calc(var(--pixel-size) * 8) #4a9a42, calc(var(--pixel-size) * 10) calc(var(--pixel-size) * 8) #3a8a32,
+    calc(var(--pixel-size) * -2) calc(var(--pixel-size) * 6) #1a5a12,
+    calc(var(--pixel-size) * -4) calc(var(--pixel-size) * 8) #1a5a12, calc(var(--pixel-size) * 16) calc(var(--pixel-size) * 8) #1a5a12,
+    calc(var(--pixel-size) * -2) calc(var(--pixel-size) * 10) #2d7a22, calc(var(--pixel-size) * 2) calc(var(--pixel-size) * 10) #3a8a32, calc(var(--pixel-size) * 4) calc(var(--pixel-size) * 10) #3a8a32, calc(var(--pixel-size) * 6) calc(var(--pixel-size) * 10) #3a8a32,
+    calc(var(--pixel-size) * 10) calc(var(--pixel-size) * 10) #2d7a22, calc(var(--pixel-size) * 12) calc(var(--pixel-size) * 10) #2d7a22,
+    calc(var(--pixel-size) * -4) calc(var(--pixel-size) * 10) #1a5a12, calc(var(--pixel-size) * 14) calc(var(--pixel-size) * 10) #1a5a12,
+    calc(var(--pixel-size) * 2) calc(var(--pixel-size) * 12) #2d7a22, calc(var(--pixel-size) * 4) calc(var(--pixel-size) * 12) #2d7a22, calc(var(--pixel-size) * 6) calc(var(--pixel-size) * 12) #2d7a22,
+    calc(var(--pixel-size) * -2) calc(var(--pixel-size) * 12) #1a5a12, calc(var(--pixel-size) * 10) calc(var(--pixel-size) * 12) #1a5a12;
+  animation: sway 5s ease-in-out infinite;
+}
+
+@keyframes sway {
+  0%, 100% { transform: translateX(-50%) rotate(0deg); }
+  25% { transform: translateX(-50%) rotate(1deg); }
+  75% { transform: translateX(-50%) rotate(-1deg); }
+}
+
+.pixel-cloud {
+  position: absolute;
+  image-rendering: pixelated;
+  opacity: 0.6;
+}
+.pixel-cloud.c1 {
+  top: 8%;
+  left: 10%;
+  width: calc(var(--pixel-size) * 20);
+  height: calc(var(--pixel-size) * 8);
+  background: transparent;
+  box-shadow:
+    calc(var(--pixel-size) * 4) 0 rgba(255,255,255,0.7),
+    calc(var(--pixel-size) * 6) 0 rgba(255,255,255,0.7),
+    calc(var(--pixel-size) * 8) 0 rgba(255,255,255,0.7),
+    calc(var(--pixel-size) * 2) calc(var(--pixel-size) * 2) rgba(255,255,255,0.7),
+    calc(var(--pixel-size) * 4) calc(var(--pixel-size) * 2) rgba(255,255,255,0.9),
+    calc(var(--pixel-size) * 6) calc(var(--pixel-size) * 2) rgba(255,255,255,0.9),
+    calc(var(--pixel-size) * 8) calc(var(--pixel-size) * 2) rgba(255,255,255,0.9),
+    calc(var(--pixel-size) * 10) calc(var(--pixel-size) * 2) rgba(255,255,255,0.7),
+    calc(var(--pixel-size) * 4) calc(var(--pixel-size) * 4) rgba(255,255,255,0.7),
+    calc(var(--pixel-size) * 6) calc(var(--pixel-size) * 4) rgba(255,255,255,0.7);
+  animation: float-cloud 20s linear infinite;
+}
+.pixel-cloud.c2 {
+  top: 15%;
+  right: 15%;
+  width: calc(var(--pixel-size) * 14);
+  height: calc(var(--pixel-size) * 6);
+  background: transparent;
+  box-shadow:
+    calc(var(--pixel-size) * 2) 0 rgba(255,255,255,0.6),
+    calc(var(--pixel-size) * 4) 0 rgba(255,255,255,0.6),
+    calc(var(--pixel-size) * 6) 0 rgba(255,255,255,0.6),
+    calc(var(--pixel-size) * 2) calc(var(--pixel-size) * 2) rgba(255,255,255,0.8),
+    calc(var(--pixel-size) * 4) calc(var(--pixel-size) * 2) rgba(255,255,255,0.8),
+    calc(var(--pixel-size) * 6) calc(var(--pixel-size) * 2) rgba(255,255,255,0.8),
+    calc(var(--pixel-size) * 4) calc(var(--pixel-size) * 4) rgba(255,255,255,0.6);
+  animation: float-cloud 25s linear infinite reverse;
+}
+
+@keyframes float-cloud {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(30px); }
+  100% { transform: translateX(0); }
+}
+
+.pixel-star {
+  position: absolute;
+  width: calc(var(--pixel-size) * 1);
+  height: calc(var(--pixel-size) * 1);
+  background: #fff;
+  animation: twinkle 3s ease-in-out infinite;
+}
+.pixel-star:nth-child(1) { top: 5%; left: 20%; animation-delay: 0s; }
+.pixel-star:nth-child(2) { top: 10%; left: 40%; animation-delay: 0.5s; }
+.pixel-star:nth-child(3) { top: 3%; left: 60%; animation-delay: 1s; }
+.pixel-star:nth-child(4) { top: 12%; left: 80%; animation-delay: 1.5s; }
+.pixel-star:nth-child(5) { top: 7%; left: 50%; animation-delay: 2s; }
+.pixel-star:nth-child(6) { top: 15%; left: 30%; animation-delay: 2.5s; }
+.pixel-star:nth-child(7) { top: 5%; left: 70%; animation-delay: 0.8s; }
+.pixel-star:nth-child(8) { top: 18%; left: 55%; animation-delay: 1.8s; }
+.pixel-star:nth-child(9) { top: 8%; left: 85%; animation-delay: 0.3s; }
+.pixel-star:nth-child(10) { top: 13%; left: 15%; animation-delay: 1.3s; }
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.5); }
+}
+
+.pixel-mountain {
+  position: absolute;
+  bottom: 30%;
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+.mtn-1 {
+  left: 15%;
+  border-width: 0 calc(var(--pixel-size) * 30) calc(var(--pixel-size) * 40) calc(var(--pixel-size) * 30);
+  border-color: transparent transparent #4a6a3a transparent;
+}
+.mtn-2 {
+  right: 10%;
+  border-width: 0 calc(var(--pixel-size) * 20) calc(var(--pixel-size) * 30) calc(var(--pixel-size) * 20);
+  border-color: transparent transparent #3a5a2a transparent;
+}
+.mtn-3 {
+  left: 40%;
+  border-width: 0 calc(var(--pixel-size) * 25) calc(var(--pixel-size) * 35) calc(var(--pixel-size) * 25);
+  border-color: transparent transparent #5a7a4a transparent;
+}
+
+.pixel-sun {
+  position: absolute;
+  top: 6%;
+  right: 12%;
+  width: calc(var(--pixel-size) * 12);
+  height: calc(var(--pixel-size) * 12);
+  background: #ffdd44;
+  box-shadow:
+    0 0 calc(var(--pixel-size) * 12) rgba(255, 200, 50, 0.4),
+    0 0 calc(var(--pixel-size) * 24) rgba(255, 200, 50, 0.2);
+  animation: pulse-glow 4s ease-in-out infinite;
+}
+.pixel-sun::after {
+  content: '';
+  position: absolute;
+  top: calc(var(--pixel-size) * -2);
+  left: calc(var(--pixel-size) * -2);
+  width: calc(var(--pixel-size) * 16);
+  height: calc(var(--pixel-size) * 16);
+  background: transparent;
+  box-shadow:
+    calc(var(--pixel-size) * -2) calc(var(--pixel-size) * -2) transparent,
+    calc(var(--pixel-size) * 18) calc(var(--pixel-size) * -2) transparent,
+    calc(var(--pixel-size) * -2) calc(var(--pixel-size) * 18) transparent,
+    calc(var(--pixel-size) * 18) calc(var(--pixel-size) * 18) transparent;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 calc(var(--pixel-size) * 12) rgba(255, 200, 50, 0.4), 0 0 calc(var(--pixel-size) * 24) rgba(255, 200, 50, 0.2); }
+  50% { box-shadow: 0 0 calc(var(--pixel-size) * 20) rgba(255, 200, 50, 0.6), 0 0 calc(var(--pixel-size) * 36) rgba(255, 200, 50, 0.3); }
+}
+
+.login-card-wrapper {
+  position: relative;
+  z-index: 1;
+}
+.login-card {
+  backdrop-filter: blur(2px);
+  border: 2px solid rgba(255,255,255,0.15);
+}
+.dark .login-card {
+  border-color: rgba(255,255,255,0.1);
+}
+
+@media (max-width: 640px) {
+  :root { --pixel-size: 2px; }
+  .pixel-scene { height: 30%; }
+}
+</style>
+{% endblock %}
 {% block content %}
-<div class="max-w-md mx-auto mt-20 bg-white dark:bg-gray-800 p-8 rounded-lg shadow">
+<div class="min-h-screen flex items-center justify-center px-4 relative login-card-wrapper">
+  <div class="pixel-art-container" aria-hidden="true">
+    <div class="pixel-star"></div><div class="pixel-star"></div><div class="pixel-star"></div>
+    <div class="pixel-star"></div><div class="pixel-star"></div><div class="pixel-star"></div>
+    <div class="pixel-star"></div><div class="pixel-star"></div><div class="pixel-star"></div>
+    <div class="pixel-star"></div>
+    <div class="pixel-cloud c1"></div>
+    <div class="pixel-cloud c2"></div>
+    <div class="pixel-sun"></div>
+    <div class="pixel-scene">
+      <div class="pixel-mountain mtn-1"></div>
+      <div class="pixel-mountain mtn-2"></div>
+      <div class="pixel-mountain mtn-3"></div>
+      <div class="pixel-tree tree-1"><div class="trunk"></div><div class="foliage"></div></div>
+      <div class="pixel-tree tree-2"><div class="trunk"></div><div class="foliage"></div></div>
+      <div class="ground"></div>
+    </div>
+  </div>
+  <div class="w-full max-w-md bg-white/95 dark:bg-gray-800/95 p-8 rounded-lg shadow-lg login-card">
     <h2 class="text-2xl font-bold mb-6 text-center">{{ tr.iniciar_sesion_title }}</h2>
     <form method="post">
         {% csrf_token %}
@@ -18,5 +315,6 @@
         {% endif %}
         <button type="submit" class="w-full mt-4 bg-blue-600 text-white py-2 rounded hover:bg-blue-700">{{ tr.entrar }}</button>
     </form>
+  </div>
 </div>
 {% endblock %}

@@ -57,8 +57,12 @@
         <li><strong>Enviar recordatorio</strong> — Desde la ficha de un cliente o suscripción puedes enviar recordatorios manuales.</li>
         <li><strong>Recordatorios automáticos</strong> — El sistema tiene un comando cron que envía recordatorios de suscripciones por vencer.</li>
         <li><strong>Canales:</strong> WhatsApp y correo electrónico, según la configuración del cliente.</li>
+        <li><strong>Sincronizar WhatsApp:</strong> Ve a <span class="font-semibold">WhatsApp</span> en el menú lateral (visible para Superadmin/Gerente). Escanea el código QR con tu celular para vincular tu cuenta. El sistema mantiene la sesión activa automáticamente.</li>
+        <li><strong>Plantillas de mensaje:</strong> Puedes crear plantillas personalizadas con placeholders: <code>{cliente}</code>, <code>{plan}</code>, <code>{vencimiento}</code>, <code>{precio}</code>. Clasifícalas por categoría (Vencimiento, Bienvenida, Oferta, Personalizado).</li>
+        <li><strong>Enviar mensaje:</strong> Usa la opción <span class="font-semibold">Enviar mensaje</span> en el menú lateral. Selecciona un cliente, marca una o varias plantillas, visualiza la vista previa y envía. Cada plantilla genera un mensaje independiente.</li>
+        <li><strong>Recordatorios desde Suscripciones:</strong> El botón "Recordatorio" en la lista de suscripciones envía la plantilla activa al cliente.</li>
         <li><strong>WhatsApp API:</strong> El sistema incluye un microservicio Node.js (<code>whatsapp-api/</code>) que se conecta a WhatsApp Web. Al iniciarlo por primera vez, muestra un código QR que debes escanear con tu WhatsApp. La sesión queda guardada para usos futuros. Detén y reinicia el contenedor si necesitas cambiar de cuenta.</li>
-        <li><strong>Resolución de errores WhatsApp:</strong> Si ves <code>Error al enviar WhatsApp</code> con "Connection refused", verifica que el servicio esté corriendo: <code>docker-compose ps whatsapp</code> o <code>docker-compose logs -f whatsapp</code>.</li>
+        <li><strong>Resolución de errores WhatsApp:</strong> Si ves <code>Error al enviar WhatsApp</code> con "Connection refused", verifica que el servicio esté corriendo: <code>docker compose ps whatsapp</code> o <code>docker compose logs whatsapp</code>.</li>
     </ol>
 </div>
 

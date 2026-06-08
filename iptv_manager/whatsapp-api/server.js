@@ -1,11 +1,15 @@
 const express = require('express');
 const { Client, LocalAuth } = require('whatsapp-web.js');
-const qrcode = require('qrcode-terminal');
+const qrcode = require('qrcode');
+const qrcodeTerminal = require('qrcode-terminal');
 
 const app = express();
 app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
+
+let qrCodeBase64 = null;
+let clientStatus = 'disconnected';
 
 const client = new Client({
     authStrategy: new LocalAuth(),
@@ -15,30 +19,56 @@ const client = new Client({
     },
 });
 
-let ready = false;
-
-client.on('qr', (qr) => {
+client.on('qr', async (qr) => {
+    try {
+        qrCodeBase64 = await qrcode.toDataURL(qr);
+    } catch (err) {
+        console.error('[WhatsApp] QR image generation error:', err.message);
+    }
+    clientStatus = 'connecting';
     console.log('\n=== ESCANEA ESTE QR CON WHATSAPP EN TU CELULAR ===');
-    qrcode.generate(qr, { small: true });
+    qrcodeTerminal.generate(qr, { small: true });
     console.log('==================================================\n');
 });
 
 client.on('ready', () => {
-    ready = true;
+    qrCodeBase64 = null;
+    clientStatus = 'connected';
     console.log('[WhatsApp] Cliente conectado y listo');
 });
 
 client.on('disconnected', (reason) => {
-    ready = false;
+    qrCodeBase64 = null;
+    clientStatus = 'disconnected';
     console.log('[WhatsApp] Desconectado:', reason);
 });
 
 client.initialize().catch((err) => {
-    console.error('[WhatsApp] Error al inicializar:', err);
+    console.error('[WhatsApp] Error al inicializar:', err.message);
 });
 
 app.get('/health', (_req, res) => {
-    res.json({ status: ready ? 'ready' : 'connecting', ready });
+    res.json({ status: clientStatus, ready: clientStatus === 'connected' });
+});
+
+app.get('/api/qr', (_req, res) => {
+    res.json({ qr: qrCodeBase64, status: clientStatus });
+});
+
+app.get('/api/status', (_req, res) => {
+    res.json({ status: clientStatus, ready: clientStatus === 'connected' });
+});
+
+app.post('/api/logout', async (_req, res) => {
+    try {
+        await client.logout();
+        await client.destroy();
+        qrCodeBase64 = null;
+        clientStatus = 'disconnected';
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
 });
 
 app.post('/api/send', async (req, res) => {
@@ -48,7 +78,7 @@ app.post('/api/send', async (req, res) => {
         return res.status(400).json({ error: 'Faltan campos: number, message' });
     }
 
-    if (!ready) {
+    if (clientStatus !== 'connected') {
         return res.status(503).json({ error: 'WhatsApp no está conectado. Escanea el QR primero.' });
     }
 
@@ -66,6 +96,10 @@ app.post('/api/send', async (req, res) => {
 
 app.listen(PORT, () => {
     console.log(`[WhatsApp API] Servidor corriendo en http://localhost:${PORT}`);
-    console.log(`[WhatsApp API] Endpoint: POST /api/send`);
-    console.log(`[WhatsApp API] Health:    GET /health`);
+    console.log(`[WhatsApp API] Endpoints:`);
+    console.log(`[WhatsApp API]   POST /api/send`);
+    console.log(`[WhatsApp API]   GET  /api/qr`);
+    console.log(`[WhatsApp API]   GET  /api/status`);
+    console.log(`[WhatsApp API]   POST /api/logout`);
+    console.log(`[WhatsApp API]   GET  /health`);
 });

@@ -1,16 +1,17 @@
+from decimal import Decimal
 from django.test import TestCase, Client, override_settings
 from django.urls import reverse
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
 from django.core.files.uploadedfile import SimpleUploadedFile
-from .models import User, ThemeSettings, UserActivityLog, log_user_action
+from .models import User, ThemeSettings, UserActivityLog, log_user_action, Tarea
 from .middleware import set_current_user
 from apps.clients.models import Cliente
 from apps.subscriptions.models import Plan, Suscripcion
 from apps.finance.models import MovimientoFinanciero
 
 
-@override_settings(AXES_ENABLED=False)
+@override_settings(AXES_ENABLED=False, SECURE_SSL_REDIRECT=False)
 class BaseTest(TestCase):
     def setUp(self):
         self.client = Client()
@@ -54,6 +55,9 @@ class BaseTest(TestCase):
         self.client_soporte.force_login(self.soporte_user, backend='django.contrib.auth.backends.ModelBackend')
 
         self.plan = Plan.objects.create(nombre='Premium', precio=299.99, duracion_dias=30)
+
+    def tearDown(self):
+        UserActivityLog.objects.all().delete()
 
 
 class UserModelTest(BaseTest):
@@ -193,6 +197,12 @@ class ThemeViewTest(BaseTest):
             'button_style': 'pill',
             'custom_css': '',
             'pixel_bg': 'none',
+            'text_border_color': '',
+            'text_border_width': '0',
+            'text_bold': 'on',
+            'text_italic': '',
+            'text_underline': '',
+            'text_strikethrough': '',
             'apply_preset': '',
         })
         self.assertEqual(r.status_code, 302)
@@ -317,6 +327,105 @@ class ContextProcessorTest(BaseTest):
             user = type('AnonymousUser', (), {'is_authenticated': False})()
         ctx = theme_context(MockRequest())
         self.assertEqual(ctx['theme_primary'], '#2563eb')
+
+
+class TareaModelTest(BaseTest):
+    def test_create_tarea(self):
+        t = Tarea.objects.create(usuario=self.master, titulo='Test tarea', prioridad='alta')
+        self.assertEqual(str(t), 'Test tarea')
+        self.assertFalse(t.completada)
+
+    def test_tarea_prioridad_default(self):
+        t = Tarea.objects.create(usuario=self.master, titulo='Tarea default')
+        self.assertEqual(t.prioridad, 'media')
+
+    def test_tarea_ordering(self):
+        Tarea.objects.create(usuario=self.master, titulo='Baja', prioridad='baja')
+        Tarea.objects.create(usuario=self.master, titulo='Alta', prioridad='alta')
+        tareas = Tarea.objects.filter(usuario=self.master)
+        self.assertEqual(tareas.count(), 2)
+
+
+class TareaViewTest(BaseTest):
+    def test_todo_list_get(self):
+        r = self.client_master.get(reverse('todo_list'))
+        self.assertEqual(r.status_code, 200)
+
+    def test_todo_create(self):
+        r = self.client_master.post(reverse('todo_create'), {'titulo': 'Nueva tarea', 'prioridad': 'alta', 'categoria': 'general'})
+        self.assertEqual(r.status_code, 302)
+        self.assertTrue(Tarea.objects.filter(titulo='Nueva tarea').exists())
+
+    def test_todo_toggle(self):
+        t = Tarea.objects.create(usuario=self.master, titulo='Toggle test')
+        r = self.client_master.get(reverse('todo_toggle', args=[t.pk]))
+        self.assertEqual(r.status_code, 302)
+        t.refresh_from_db()
+        self.assertTrue(t.completada)
+
+    def test_todo_delete(self):
+        t = Tarea.objects.create(usuario=self.master, titulo='Delete test')
+        r = self.client_master.post(reverse('todo_delete', args=[t.pk]))
+        self.assertEqual(r.status_code, 302)
+        self.assertFalse(Tarea.objects.filter(pk=t.pk).exists())
+
+    def test_todo_requires_login(self):
+        r = self.client.get(reverse('todo_list'))
+        self.assertEqual(r.status_code, 302)
+
+
+class UserListViewTest(BaseTest):
+    def test_user_list_master(self):
+        r = self.client_master.get(reverse('user_list'))
+        self.assertEqual(r.status_code, 200)
+
+    def test_user_list_gerente(self):
+        r = self.client_admin.get(reverse('user_list'))
+        self.assertEqual(r.status_code, 200)
+
+    def test_user_list_soporte_blocked(self):
+        r = self.client_soporte.get(reverse('user_list'))
+        self.assertEqual(r.status_code, 302)
+
+    def test_user_list_anonymous_blocked(self):
+        r = self.client.get(reverse('user_list'))
+        self.assertEqual(r.status_code, 302)
+
+
+class SuscripcionConDescuentoTest(BaseTest):
+    def test_descuento_porcentaje(self):
+        from apps.subscriptions.models import Suscripcion
+        c = Cliente.objects.create(nombre='Test', telefono='+521111111116', dispositivo_id='AA:BB:CC:DD:EE:66')
+        s = Suscripcion.objects.create(cliente=c, plan=self.plan, descuento_tipo='porcentaje', descuento_valor=10)
+        self.plan.refresh_from_db()
+        expected = self.plan.precio * Decimal('0.9')
+        self.assertEqual(s.get_precio_final(), expected)
+
+    def test_descuento_fijo(self):
+        from apps.subscriptions.models import Suscripcion
+        c = Cliente.objects.create(nombre='Test2', telefono='+521111111117', dispositivo_id='AA:BB:CC:DD:EE:77')
+        s = Suscripcion.objects.create(cliente=c, plan=self.plan, descuento_tipo='fijo', descuento_valor=50)
+        expected = max(0, self.plan.precio - 50)
+        self.assertEqual(s.get_precio_final(), expected)
+
+
+class MovimientoFinancieroEditTest(BaseTest):
+    def test_movimiento_update_view(self):
+        from apps.finance.models import MovimientoFinanciero
+        m = MovimientoFinanciero.objects.create(tipo='ingreso', monto=100, descripcion='Test')
+        r = self.client_master.get(reverse('movimiento_update', args=[m.pk]))
+        self.assertEqual(r.status_code, 200)
+
+    def test_movimiento_update_post(self):
+        from apps.finance.models import MovimientoFinanciero
+        m = MovimientoFinanciero.objects.create(tipo='ingreso', monto=100, descripcion='Original')
+        r = self.client_master.post(reverse('movimiento_update', args=[m.pk]), {
+            'tipo': 'egreso', 'monto': 200, 'descripcion': 'Actualizado'
+        })
+        self.assertEqual(r.status_code, 302)
+        m.refresh_from_db()
+        self.assertEqual(m.monto, 200)
+        self.assertEqual(m.descripcion, 'Actualizado')
 
 
 class LoginLogoutTest(BaseTest):
