@@ -51,6 +51,12 @@
         .text-custom { color: var(--text); }
         {{ theme_custom_css }}
 
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(100,116,139,0.3); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(100,116,139,0.5); }
+        * { scrollbar-width: thin; scrollbar-color: rgba(100,116,139,0.3) transparent; }
+
         .sidebar-transition { transition: width 0.3s ease, padding 0.3s ease; }
         .sidebar-collapsed { width: 60px !important; padding-left: 0.5rem !important; padding-right: 0.5rem !important; }
         .sidebar-collapsed .sidebar-content > :not(.sidebar-toggle-expand) { display: none; }

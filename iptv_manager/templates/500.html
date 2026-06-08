@@ -99,7 +99,27 @@
                     <i class="fas fa-sign-in-alt"></i> {{ tr.iniciar_sesion }}
                 </a>
             </div>
-            <div class="mt-8 flex justify-center gap-4 text-sm opacity-40">
+
+            {% if user.is_authenticated %}
+            <hr class="my-6 opacity-20">
+            <div class="fade-in-d3">
+                <button onclick="toggleReportForm()" class="btn-500 btn-500-outline text-sm">
+                    <i class="fas fa-bug"></i> Reportar error
+                </button>
+                <div id="report-form" class="hidden mt-4 text-left">
+                    <form method="post" action="{% url 'error_report' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="url" value="{{ error_url }}">
+                        <textarea name="descripcion" rows="3" placeholder="¿Qué estabas haciendo cuando ocurrió el error?" class="w-full px-3 py-2 rounded bg-white/10 border border-white/20 text-sm text-white placeholder-white/40 focus:outline-none focus:border-white/40" required></textarea>
+                        <button type="submit" class="mt-2 btn-500 btn-500-primary text-sm w-full justify-center">
+                            <i class="fas fa-paper-plane"></i> Enviar reporte
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="mt-6 flex justify-center gap-4 text-sm opacity-40">
                 <a href="{% url 'dashboard' %}" class="hover:opacity-80 transition"><i class="fas fa-chart-bar mr-1"></i>{{ tr.dashboard }}</a>
                 <span class="opacity-30">|</span>
                 <a href="{% url 'about' %}" class="hover:opacity-80 transition"><i class="fas fa-question-circle mr-1"></i>{{ tr.ayuda }}</a>
@@ -107,5 +127,12 @@
             <p class="mt-6 text-xs opacity-30"><i class="far fa-copyright mr-1"></i>IPTV Manager</p>
         </div>
     </div>
+
+<script>
+function toggleReportForm() {
+    var el = document.getElementById('report-form');
+    el.classList.toggle('hidden');
+}
+</script>
 </body>
 </html>

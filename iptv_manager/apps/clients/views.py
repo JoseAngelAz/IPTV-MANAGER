@@ -74,6 +74,7 @@ class ClienteDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView)
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx['suscripciones'] = self.object.suscripciones.all()
+        ctx['suscripciones_activas_count'] = self.object.suscripciones.filter(estado='activo').count()
         ctx['historial'] = self.object.historial.all()[:20]
         ctx['notas'] = self.object.notas.all()[:20]
         return ctx
@@ -100,6 +101,10 @@ def agregar_nota(request, pk):
 def cliente_delete(request, pk):
     cliente = get_object_or_404(Cliente, pk=pk)
     if request.method == 'POST':
+        activas = cliente.suscripciones.filter(estado='activo').count()
+        if activas:
+            Suscripcion.objects.filter(cliente=cliente, estado='activo').update(estado='cancelado')
+            messages.warning(request, f'{activas} suscripción(es) activa(s) fueron canceladas.')
         cliente.activo = False
         cliente.save()
         messages.success(request, 'Cliente desactivado.')

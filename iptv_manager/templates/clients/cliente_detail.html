@@ -2,6 +2,8 @@
 {% block title %} — {{ cliente.nombre }}{% endblock %}
 {% block content %}
 
+<form id="delete-form" method="post" action="{% url 'cliente_delete' cliente.pk %}">{% csrf_token %}</form>
+
 <div class="flex justify-between items-center mb-4">
     <h2 class="text-2xl font-bold">{{ cliente.nombre }}</h2>
     <div class="space-x-2">
@@ -9,7 +11,7 @@
         <a href="{% url 'cliente_update' cliente.pk %}" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 text-sm">Editar</a>
         {% endif %}
         {% if perms.clients.delete_cliente %}
-        <a href="{% url 'cliente_delete' cliente.pk %}" class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-sm" onclick="return confirm('¿Desactivar este cliente?')">Desactivar</a>
+        <button onclick="confirmarDesactivacion({{ cliente.pk }})" class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-sm">Desactivar</button>
         {% endif %}
     </div>
 </div>
@@ -135,4 +137,17 @@
         {% endfor %}
     </div>
 </div>
+
+<script>
+function confirmarDesactivacion(pk) {
+    var activas = {{ suscripciones_activas_count }};
+    var msg = '¿Desactivar este cliente?';
+    if (activas > 0) {
+        msg = 'Este cliente tiene <strong>' + activas + ' suscripción(es) activa(s)</strong> que serán canceladas automáticamente. ¿Desactivar de todas formas?';
+    }
+    openModal('Desactivar cliente', msg, function() {
+        document.getElementById('delete-form').submit();
+    });
+}
+</script>
 {% endblock %}

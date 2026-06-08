@@ -1,5 +1,5 @@
 const express = require('express');
-const { Client, LocalAuth } = require('whatsapp-web.js');
+const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
 const qrcode = require('qrcode');
 const qrcodeTerminal = require('qrcode-terminal');
 
@@ -72,10 +72,10 @@ app.post('/api/logout', async (_req, res) => {
 });
 
 app.post('/api/send', async (req, res) => {
-    const { number, message } = req.body;
+    const { number, message, media } = req.body;
 
-    if (!number || !message) {
-        return res.status(400).json({ error: 'Faltan campos: number, message' });
+    if (!number || (!message && !media)) {
+        return res.status(400).json({ error: 'Faltan campos: number, y message o media' });
     }
 
     if (clientStatus !== 'connected') {
@@ -85,8 +85,15 @@ app.post('/api/send', async (req, res) => {
     const chatId = number.includes('@c.us') ? number : `${number}@c.us`;
 
     try {
-        const result = await client.sendMessage(chatId, message);
-        console.log(`[WhatsApp] Enviado a ${number}: ${message.substring(0, 40)}...`);
+        let result;
+        if (media && media.url) {
+            const mediaFile = await MessageMedia.fromUrl(media.url, { unsafeMime: true });
+            result = await client.sendMessage(chatId, mediaFile, { caption: message || '' });
+            console.log(`[WhatsApp] Enviado con media a ${number}: ${(message || '').substring(0, 40)}...`);
+        } else {
+            result = await client.sendMessage(chatId, message);
+            console.log(`[WhatsApp] Enviado a ${number}: ${message.substring(0, 40)}...`);
+        }
         res.json({ success: true, id: result.id._serialized });
     } catch (err) {
         console.error(`[WhatsApp] Error al enviar a ${number}:`, err.message);

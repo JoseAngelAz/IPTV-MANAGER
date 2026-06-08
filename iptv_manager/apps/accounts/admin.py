@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import User, ThemeSettings, UserActivityLog, CustomPreset, ErrorPageSettings, SessionConfig, Tarea, WhatsAppConfig, RecordatorioTemplate
+from .models import User, ThemeSettings, UserActivityLog, CustomPreset, ErrorPageSettings, SessionConfig, Tarea, WhatsAppConfig, RecordatorioTemplate, ErrorReport
 
 
 @admin.register(User)
@@ -63,3 +63,11 @@ class RecordatorioTemplateAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'categoria', 'activo', 'created_by', 'created_at')
     list_filter = ('activo', 'categoria')
     search_fields = ('nombre',)
+
+
+@admin.register(ErrorReport)
+class ErrorReportAdmin(admin.ModelAdmin):
+    list_display = ('user', 'url', 'created_at', 'ip_address')
+    list_filter = ('created_at',)
+    search_fields = ('descripcion', 'user__username')
+    readonly_fields = ('url', 'descripcion', 'user', 'ip_address', 'user_agent', 'created_at')

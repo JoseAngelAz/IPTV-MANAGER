@@ -124,10 +124,34 @@ def error_page_preview(request):
 
 def custom_500(request, exception=None):
     settings = ErrorPageSettings.get_settings()
+    err_url = request.build_absolute_uri()
+    err_user = request.user if request.user.is_authenticated else None
     return render(request, '500.html', {
         'error_settings': settings,
         'pixel_css': _get_pixel_art_css_500() if settings.show_pixel_art_500 else '',
+        'error_url': err_url,
+        'error_user': err_user,
     }, status=500)
+
+
+@login_required
+def error_report_view(request):
+    if request.method == 'POST':
+        descripcion = request.POST.get('descripcion', '').strip()
+        url = request.POST.get('url', '')
+        if descripcion:
+            from .models import ErrorReport
+            ErrorReport.objects.create(
+                url=url or request.META.get('HTTP_REFERER', ''),
+                descripcion=descripcion,
+                user=request.user if request.user.is_authenticated else None,
+                ip_address=request.META.get('REMOTE_ADDR'),
+                user_agent=request.META.get('HTTP_USER_AGENT', '')[:500],
+            )
+            messages.success(request, 'Reporte de error enviado. Gracias por ayudarnos a mejorar.')
+        else:
+            messages.error(request, 'Describe el error para poder reportarlo.')
+    return redirect(request.META.get('HTTP_REFERER', 'dashboard'))
 
 
 def _get_pixel_art_css_500():
@@ -660,6 +684,7 @@ def enviar_recordatorio_view(request):
 
             enviados = 0
             fallidos = 0
+            media_url = request.POST.get('media_url', '').strip()
 
             for tpl in selected_templates:
                 suscripcion_activa = cliente.suscripciones.filter(estado='activo').first()
@@ -670,12 +695,16 @@ def enviar_recordatorio_view(request):
                     precio=f'${suscripcion_activa.plan.precio:,.2f}' if suscripcion_activa else '',
                 )
 
+                payload = {'number': cliente.telefono, 'message': mensaje}
+                if media_url:
+                    payload['media'] = {'url': media_url}
+
                 import requests as _wa_req
                 try:
                     resp = _wa_req.post(
                         settings.WHATSAPP_API_URL,
-                        json={'number': cliente.telefono, 'message': mensaje},
-                        timeout=10,
+                        json=payload,
+                        timeout=15,
                     )
                     ok = resp.ok
                 except Exception as e:

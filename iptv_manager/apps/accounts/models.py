@@ -264,6 +264,23 @@ class Tarea(models.Model):
         return self.titulo
 
 
+class ErrorReport(models.Model):
+    url = models.CharField('URL', max_length=500, blank=True, default='')
+    descripcion = models.TextField('Descripción del usuario')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Usuario')
+    ip_address = models.GenericIPAddressField('Dirección IP', blank=True, null=True)
+    user_agent = models.CharField('User-Agent', max_length=500, blank=True, default='')
+    created_at = models.DateTimeField('Creado', auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Reporte de error'
+        verbose_name_plural = 'Reportes de error'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f'Error reportado por {self.user or "Anónimo"} — {self.created_at.strftime("%d/%m/%Y %H:%M")}'
+
+
 class WhatsAppConfig(models.Model):
     STATUS_CHOICES = [
         ('disconnected', 'Desconectado'),
