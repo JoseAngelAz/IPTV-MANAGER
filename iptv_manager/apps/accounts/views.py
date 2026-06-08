@@ -812,6 +812,32 @@ def dashboard(request):
     temporal_labels = list(susc_por_dia.keys())[-30:]
     temporal_datos = [susc_por_dia[d] for d in temporal_labels]
 
+    # ── Messaging metrics ──────────────────────────────────────────
+    from apps.notifications.models import LogNotificacion
+    inicio_mes = hoy.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    msg_mes = LogNotificacion.objects.filter(fecha_envio__gte=inicio_mes)
+    msg_total_mes = msg_mes.count()
+    msg_ok_mes = msg_mes.filter(enviado_ok=True).count()
+    msg_tasa_exito = round(msg_ok_mes / msg_total_mes * 100, 1) if msg_total_mes else 0
+    msg_whatsapp_mes = msg_mes.filter(canal='whatsapp').count()
+    msg_email_mes = msg_mes.filter(canal='email').count()
+
+    # Daily messages last 30 days
+    desde_30 = hoy - timezone.timedelta(days=30)
+    msg_por_dia = OrderedDict()
+    for i in range(30, -1, -1):
+        dia = (hoy - timezone.timedelta(days=i)).strftime('%d/%m')
+        msg_por_dia[dia] = 0
+    for l in LogNotificacion.objects.filter(fecha_envio__gte=desde_30).values('fecha_envio', 'enviado_ok'):
+        dia = l['fecha_envio'].strftime('%d/%m') if hasattr(l['fecha_envio'], 'strftime') else l['fecha_envio']
+        if dia in msg_por_dia:
+            msg_por_dia[dia] += 1
+    msg_temporal_labels = list(msg_por_dia.keys())
+    msg_temporal_datos = list(msg_por_dia.values())
+
+    # Success/failure counts for pie chart
+    msg_fallidos_mes = msg_total_mes - msg_ok_mes
+
     user_groups = list(request.user.groups.values_list('name', flat=True))
     context = {
         'user_display_name': request.user.get_full_name() or request.user.username,
@@ -844,5 +870,15 @@ def dashboard(request):
 
         'chart_pred_labels': json.dumps(labels_prediccion),
         'chart_pred_datos': json.dumps([round(p, 2) for p in predicciones]),
+
+        # ── Messaging metrics ──
+        'msg_total_mes': msg_total_mes,
+        'msg_ok_mes': msg_ok_mes,
+        'msg_tasa_exito': msg_tasa_exito,
+        'msg_whatsapp_mes': msg_whatsapp_mes,
+        'msg_email_mes': msg_email_mes,
+        'msg_fallidos_mes': msg_fallidos_mes,
+        'chart_msg_labels': json.dumps(msg_temporal_labels),
+        'chart_msg_datos': json.dumps(msg_temporal_datos),
     }
     return render(request, 'dashboard.html', context)

@@ -61,6 +61,32 @@
     </div>
 </div>
 
+{# ── Messaging metric cards ── #}
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8">
+    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
+        <p class="text-gray-500 dark:text-gray-400 text-sm"><i class="fab fa-whatsapp text-green-500 mr-1"></i>Mensajes mes</p>
+        <p class="text-3xl font-bold">{{ msg_total_mes }}</p>
+    </div>
+    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
+        <p class="text-gray-500 dark:text-gray-400 text-sm"><i class="fas fa-check-circle text-green-500 mr-1"></i>Enviados OK</p>
+        <p class="text-3xl font-bold text-green-600">{{ msg_ok_mes }}</p>
+    </div>
+    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
+        <p class="text-gray-500 dark:text-gray-400 text-sm"><i class="fas fa-times-circle text-red-500 mr-1"></i>Fallidos</p>
+        <p class="text-3xl font-bold text-red-600">{{ msg_fallidos_mes }}</p>
+    </div>
+    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
+        <p class="text-gray-500 dark:text-gray-400 text-sm"><i class="fas fa-percent text-blue-500 mr-1"></i>% Éxito</p>
+        <p class="text-3xl font-bold {% if msg_tasa_exito >= 80 %}text-green-600{% elif msg_tasa_exito >= 50 %}text-yellow-600{% else %}text-red-600{% endif %}">
+            {{ msg_tasa_exito }}%
+        </p>
+    </div>
+    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
+        <p class="text-gray-500 dark:text-gray-400 text-sm"><i class="fas fa-envelope text-blue-500 mr-1"></i>Email / WhatsApp</p>
+        <p class="text-3xl font-bold">{{ msg_email_mes }} / {{ msg_whatsapp_mes }}</p>
+    </div>
+</div>
+
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
     <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
         <h3 class="font-bold mb-3"><i class="fas fa-chart-bar text-blue-500 mr-1"></i>{{ tr.ingresos_vs_egresos }}</h3>
@@ -77,6 +103,18 @@
     <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
         <h3 class="font-bold mb-3"><i class="fas fa-wave-square text-yellow-500 mr-1"></i>{{ tr.suscripciones_temporales }}</h3>
         <canvas id="chartTemp" height="200"></canvas>
+    </div>
+</div>
+
+{# ── Messaging charts ── #}
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
+        <h3 class="font-bold mb-3"><i class="fab fa-whatsapp text-green-500 mr-1"></i>Mensajes últimos 30 días</h3>
+        <canvas id="chartMsg" height="200"></canvas>
+    </div>
+    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
+        <h3 class="font-bold mb-3"><i class="fas fa-chart-pie text-blue-500 mr-1"></i>Éxito / Fracaso</h3>
+        <canvas id="chartMsgPie" height="200"></canvas>
     </div>
 </div>
 
@@ -153,6 +191,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (window.lineChart) window.lineChart.destroy();
         if (window.tempChart) window.tempChart.destroy();
         if (window.predChart) window.predChart.destroy();
+        if (window.msgChart) window.msgChart.destroy();
+        if (window.msgPieChart) window.msgPieChart.destroy();
 
         window.barChart = new Chart(document.getElementById('chartBar'), {
             type: 'bar',
@@ -206,6 +246,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 }]
             },
             options: { responsive: true, plugins: { legend: { labels: { color: c.text } } }, scales: { x: { ticks: { color: c.text } }, y: { ticks: { color: c.text }, grid: { color: c.grid } } } }
+        });
+
+        window.msgChart = new Chart(document.getElementById('chartMsg'), {
+            type: 'line',
+            data: {
+                labels: {{ chart_msg_labels|safe }},
+                datasets: [{ label: 'Mensajes', data: {{ chart_msg_datos|safe }}, borderColor: '#25D366', backgroundColor: 'rgba(37,211,102,0.1)', fill: true, tension: 0.3 }]
+            },
+            options: { responsive: true, plugins: { legend: { labels: { color: c.text } } }, scales: { x: { ticks: { color: c.text } }, y: { ticks: { color: c.text }, grid: { color: c.grid } } } }
+        });
+
+        window.msgPieChart = new Chart(document.getElementById('chartMsgPie'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Exitosos', 'Fallidos'],
+                datasets: [{ data: [{{ msg_ok_mes }}, {{ msg_fallidos_mes }}], backgroundColor: ['#10b981', '#ef4444'], borderWidth: 0 }]
+            },
+            options: { responsive: true, plugins: { legend: { labels: { color: c.text } } } }
         });
     }
 

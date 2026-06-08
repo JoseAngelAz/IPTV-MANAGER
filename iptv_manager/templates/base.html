@@ -85,12 +85,12 @@
     <script src="/static/vendor/cdn-fallback.js" defer></script>
     {% block extra_head %}{% endblock %}
 </head>
-<body class="bg-custom text-custom min-h-screen flex transition-colors{% if theme_pixel_bg and theme_pixel_bg != 'none' %} bg-pixel-{{ theme_pixel_bg }}{% endif %}">
+<body class="bg-custom text-custom h-screen overflow-hidden flex transition-colors{% if theme_pixel_bg and theme_pixel_bg != 'none' %} bg-pixel-{{ theme_pixel_bg }}{% endif %}">
 
 {% if user.is_authenticated %}
 <div id="sidebar-overlay" class="sidebar-overlay" onclick="toggleSidebarMobile()"></div>
 
-<aside id="sidebar" class="sidebar-custom text-white min-h-screen p-4 flex flex-col sidebar-transition overflow-hidden" style="width:250px">
+<aside id="sidebar" class="sidebar-custom text-white h-screen p-4 flex flex-col sidebar-transition overflow-hidden" style="width:250px">
     <div class="flex items-center justify-between mb-4 sidebar-brand">
         <h1 class="text-xl font-bold">IPTV Manager</h1>
         <button onclick="toggleSidebar()" class="text-gray-400 hover:text-white p-1 rounded transition sidebar-toggle-collapse hidden md:block">
@@ -238,18 +238,22 @@
 </button>
 {% endif %}
 
-<main class="flex-1 p-6">
+<main class="flex-1 flex flex-col overflow-hidden">
     {% if messages %}
-    <div class="mb-4 space-y-2">
-        {% for msg in messages %}
-        <div class="px-4 py-2 rounded text-white {% if msg.tags == 'success' %}btn-primary{% elif msg.tags == 'error' %}bg-red-600{% else %}btn-secondary{% endif %}">
-            <i class="fas fa-{% if msg.tags == 'success' %}check-circle{% elif msg.tags == 'error' %}exclamation-circle{% else %}info-circle{% endif %} mr-2"></i>
-            {{ msg }}
+    <div class="p-6 pb-0 shrink-0">
+        <div class="space-y-2">
+            {% for msg in messages %}
+            <div class="px-4 py-2 rounded text-white {% if msg.tags == 'success' %}btn-primary{% elif msg.tags == 'error' %}bg-red-600{% else %}btn-secondary{% endif %}">
+                <i class="fas fa-{% if msg.tags == 'success' %}check-circle{% elif msg.tags == 'error' %}exclamation-circle{% else %}info-circle{% endif %} mr-2"></i>
+                {{ msg }}
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
     {% endif %}
-    {% block content %}{% endblock %}
+    <div class="flex-1 overflow-y-auto p-6" id="scrollable-content">
+        {% block content %}{% endblock %}
+    </div>
 </main>
 
 <div id="session-warning" class="session-warning">
