@@ -36,24 +36,24 @@
 </div>
 {% endif %}
 
-<div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
-    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
+<div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8 dashboard-metric-grid">
+    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow responsive-card dashboard-metric-card">
         <p class="text-gray-500 dark:text-gray-400 text-sm"><i class="fas fa-users text-blue-500 mr-1"></i>{{ tr.clientes_activos }}</p>
         <p class="text-3xl font-bold">{{ total_clientes }}</p>
     </div>
-    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
+    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow responsive-card dashboard-metric-card">
         <p class="text-gray-500 dark:text-gray-400 text-sm"><i class="fas fa-clipboard-check text-green-500 mr-1"></i>{{ tr.suscripciones_activas }}</p>
         <p class="text-3xl font-bold">{{ suscripciones_activas }}</p>
     </div>
-    <div class="bg-yellow-50 dark:bg-yellow-900 border border-yellow-200 dark:border-yellow-700 p-4 rounded shadow">
+    <div class="bg-yellow-50 dark:bg-yellow-900 border border-yellow-200 dark:border-yellow-700 p-4 rounded shadow responsive-card dashboard-metric-card">
         <p class="text-yellow-700 dark:text-yellow-300 text-sm"><i class="fas fa-clock mr-1"></i>{{ tr.por_vencer }}</p>
         <p class="text-3xl font-bold text-yellow-700 dark:text-yellow-300">{{ por_vencer }}</p>
     </div>
-    <div class="bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-700 p-4 rounded shadow">
+    <div class="bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-700 p-4 rounded shadow responsive-card dashboard-metric-card">
         <p class="text-red-700 dark:text-red-300 text-sm"><i class="fas fa-times-circle mr-1"></i>{{ tr.vencidas }}</p>
         <p class="text-3xl font-bold text-red-700 dark:text-red-300">{{ vencidas }}</p>
     </div>
-    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
+    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow responsive-card dashboard-metric-card">
         <p class="text-gray-500 dark:text-gray-400 text-sm"><i class="fas fa-coins text-green-500 mr-1"></i>{{ tr.saldo_del_mes }}</p>
         <p class="text-3xl font-bold {% if ingresos_mes >= egresos_mes %}text-green-600{% else %}text-red-600{% endif %}">
             ${{ ingresos_mes|add:egresos_mes|floatformat:2 }}
@@ -62,69 +62,69 @@
 </div>
 
 {# ── Messaging metric cards ── #}
-<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8">
-    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
-        <p class="text-gray-500 dark:text-gray-400 text-sm"><i class="fab fa-whatsapp text-green-500 mr-1"></i>Mensajes mes</p>
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8 dashboard-metric-grid">
+    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow responsive-card dashboard-metric-card">
+        <p class="text-gray-500 dark:text-gray-400 text-sm"><i class="fab fa-whatsapp text-green-500 mr-1"></i>{{ tr.mensajes_mes }}</p>
         <p class="text-3xl font-bold">{{ msg_total_mes }}</p>
     </div>
-    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
-        <p class="text-gray-500 dark:text-gray-400 text-sm"><i class="fas fa-check-circle text-green-500 mr-1"></i>Enviados OK</p>
+    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow responsive-card dashboard-metric-card">
+        <p class="text-gray-500 dark:text-gray-400 text-sm"><i class="fas fa-check-circle text-green-500 mr-1"></i>{{ tr.enviados_ok }}</p>
         <p class="text-3xl font-bold text-green-600">{{ msg_ok_mes }}</p>
     </div>
-    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
-        <p class="text-gray-500 dark:text-gray-400 text-sm"><i class="fas fa-times-circle text-red-500 mr-1"></i>Fallidos</p>
+    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow responsive-card dashboard-metric-card">
+        <p class="text-gray-500 dark:text-gray-400 text-sm"><i class="fas fa-times-circle text-red-500 mr-1"></i>{{ tr.fallidos }}</p>
         <p class="text-3xl font-bold text-red-600">{{ msg_fallidos_mes }}</p>
     </div>
-    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
-        <p class="text-gray-500 dark:text-gray-400 text-sm"><i class="fas fa-percent text-blue-500 mr-1"></i>% Éxito</p>
+    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow responsive-card dashboard-metric-card">
+        <p class="text-gray-500 dark:text-gray-400 text-sm"><i class="fas fa-percent text-blue-500 mr-1"></i>{{ tr.por_ciento_exito }}</p>
         <p class="text-3xl font-bold {% if msg_tasa_exito >= 80 %}text-green-600{% elif msg_tasa_exito >= 50 %}text-yellow-600{% else %}text-red-600{% endif %}">
             {{ msg_tasa_exito }}%
         </p>
     </div>
-    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
-        <p class="text-gray-500 dark:text-gray-400 text-sm"><i class="fas fa-envelope text-blue-500 mr-1"></i>Email / WhatsApp</p>
+    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow responsive-card dashboard-metric-card">
+        <p class="text-gray-500 dark:text-gray-400 text-sm"><i class="fas fa-envelope text-blue-500 mr-1"></i>{{ tr.email_whatsapp }}</p>
         <p class="text-3xl font-bold">{{ msg_email_mes }} / {{ msg_whatsapp_mes }}</p>
     </div>
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
+    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow responsive-card">
         <h3 class="font-bold mb-3"><i class="fas fa-chart-bar text-blue-500 mr-1"></i>{{ tr.ingresos_vs_egresos }}</h3>
-        <canvas id="chartBar" height="200"></canvas>
+        <div class="chart-container"><canvas id="chartBar"></canvas></div>
     </div>
-    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
+    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow responsive-card">
         <h3 class="font-bold mb-3"><i class="fas fa-chart-pie text-purple-500 mr-1"></i>{{ tr.distribucion_por_plan }}</h3>
-        <canvas id="chartPie" height="200"></canvas>
+        <div class="chart-container"><canvas id="chartPie"></canvas></div>
     </div>
-    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
+    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow responsive-card">
         <h3 class="font-bold mb-3"><i class="fas fa-chart-line text-green-500 mr-1"></i>{{ tr.neto_mensual }}</h3>
-        <canvas id="chartLine" height="200"></canvas>
+        <div class="chart-container"><canvas id="chartLine"></canvas></div>
     </div>
-    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
+    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow responsive-card">
         <h3 class="font-bold mb-3"><i class="fas fa-wave-square text-yellow-500 mr-1"></i>{{ tr.suscripciones_temporales }}</h3>
-        <canvas id="chartTemp" height="200"></canvas>
+        <div class="chart-container"><canvas id="chartTemp"></canvas></div>
     </div>
 </div>
 
 {# ── Messaging charts ── #}
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
-        <h3 class="font-bold mb-3"><i class="fab fa-whatsapp text-green-500 mr-1"></i>Mensajes últimos 30 días</h3>
-        <canvas id="chartMsg" height="200"></canvas>
+    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow responsive-card">
+        <h3 class="font-bold mb-3"><i class="fab fa-whatsapp text-green-500 mr-1"></i>{{ tr.mensajes_ultimos_30_dias }}</h3>
+        <div class="chart-container"><canvas id="chartMsg"></canvas></div>
     </div>
-    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
-        <h3 class="font-bold mb-3"><i class="fas fa-chart-pie text-blue-500 mr-1"></i>Éxito / Fracaso</h3>
-        <canvas id="chartMsgPie" height="200"></canvas>
+    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow responsive-card">
+        <h3 class="font-bold mb-3"><i class="fas fa-chart-pie text-blue-500 mr-1"></i>{{ tr.exito_fracaso }}</h3>
+        <div class="chart-container"><canvas id="chartMsgPie"></canvas></div>
     </div>
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
+    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow responsive-card">
         <h3 class="font-bold mb-3"><i class="fas fa-chart-simple text-indigo-500 mr-1"></i>{{ tr.prediccion_de_gananciasperdidas }}</h3>
         <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">{{ tr.basado_en_regresion_lineal_simple_sobre_los_ultimos_6_meses }}</p>
-        <canvas id="chartPred" height="200"></canvas>
+        <div class="chart-container"><canvas id="chartPred"></canvas></div>
     </div>
-    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
+    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow responsive-card">
         <h3 class="font-bold mb-3"><i class="fas fa-file-lines text-gray-500 mr-1"></i>{{ tr.resumen_ejecutivo }}</h3>
         <div class="space-y-3 text-sm">
             <div class="flex justify-between"><span>{{ tr.ingresos_este_mes }}</span><span class="font-bold text-green-600">${{ ingresos_mes|floatformat:2 }}</span></div>
@@ -141,7 +141,7 @@
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
     <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
         <h3 class="font-bold mb-3"><i class="fas fa-arrows-spin text-blue-500 mr-1"></i>{{ tr.ultimos_movimientos }}</h3>
-        <table class="w-full text-sm">
+        <div class="responsive-table"><table class="w-full text-sm">
             <thead><tr class="text-left border-b dark:border-gray-600"><th>{{ tr.tipo }}</th><th>{{ tr.monto }}</th><th>{{ tr.fecha }}</th></tr></thead>
             <tbody>
                 {% for m in ultimos_movimientos %}
@@ -153,11 +153,11 @@
                 {% empty %}<tr><td colspan="3" class="text-gray-400 text-center py-2">{{ tr.sin_movimientos }}</td></tr>
                 {% endfor %}
             </tbody>
-        </table>
+        </table></div>
     </div>
     <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
         <h3 class="font-bold mb-3"><i class="fas fa-user-plus text-green-500 mr-1"></i>{{ tr.ultimos_clientes }}</h3>
-        <table class="w-full text-sm">
+        <div class="responsive-table"><table class="w-full text-sm">
             <thead><tr class="text-left border-b dark:border-gray-600"><th>{{ tr.nombre }}</th><th>{{ tr.telefono }}</th><th>{{ tr.registro }}</th></tr></thead>
             <tbody>
                 {% for c in ultimos_clientes %}
@@ -169,7 +169,7 @@
                 {% empty %}<tr><td colspan="3" class="text-gray-400 text-center py-2">{{ tr.sin_clientes }}</td></tr>
                 {% endfor %}
             </tbody>
-        </table>
+        </table></div>
     </div>
 </div>
 
@@ -219,7 +219,7 @@ document.addEventListener('DOMContentLoaded', function() {
             type: 'line',
             data: {
                 labels: {{ chart_labels_meses|safe }},
-                datasets: [{ label: 'Neto mensual', data: {{ chart_netos|safe }}, borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.1)', fill: true, tension: 0.3 }]
+                datasets: [{ label: '{{ tr.neto_mensual_chart|escapejs }}', data: {{ chart_netos|safe }}, borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.1)', fill: true, tension: 0.3 }]
             },
             options: { responsive: true, plugins: { legend: { labels: { color: c.text } } }, scales: { x: { ticks: { color: c.text } }, y: { ticks: { color: c.text }, grid: { color: c.grid } } } }
         });
@@ -228,7 +228,7 @@ document.addEventListener('DOMContentLoaded', function() {
             type: 'line',
             data: {
                 labels: {{ chart_temp_labels|safe }},
-                datasets: [{ label: 'Suscripciones', data: {{ chart_temp_datos|safe }}, borderColor: '#f59e0b', backgroundColor: 'rgba(245,158,11,0.1)', fill: true, tension: 0.3 }]
+                datasets: [{ label: '{{ tr.suscripciones_chart|escapejs }}', data: {{ chart_temp_datos|safe }}, borderColor: '#f59e0b', backgroundColor: 'rgba(245,158,11,0.1)', fill: true, tension: 0.3 }]
             },
             options: { responsive: true, plugins: { legend: { labels: { color: c.text } } }, scales: { x: { ticks: { color: c.text } }, y: { ticks: { color: c.text }, grid: { color: c.grid } } } }
         });
@@ -238,7 +238,7 @@ document.addEventListener('DOMContentLoaded', function() {
             data: {
                 labels: {{ chart_pred_labels|safe }},
                 datasets: [{
-                    label: 'Predicción neto ($)',
+                    label: '{{ tr.prediccion_neto_chart|escapejs }}',
                     data: {{ chart_pred_datos|safe }},
                     backgroundColor: 'rgba(139,92,246,0.6)',
                     borderColor: '#8b5cf6',
@@ -252,7 +252,7 @@ document.addEventListener('DOMContentLoaded', function() {
             type: 'line',
             data: {
                 labels: {{ chart_msg_labels|safe }},
-                datasets: [{ label: 'Mensajes', data: {{ chart_msg_datos|safe }}, borderColor: '#25D366', backgroundColor: 'rgba(37,211,102,0.1)', fill: true, tension: 0.3 }]
+                datasets: [{ label: '{{ tr.mensajes_chart|escapejs }}', data: {{ chart_msg_datos|safe }}, borderColor: '#25D366', backgroundColor: 'rgba(37,211,102,0.1)', fill: true, tension: 0.3 }]
             },
             options: { responsive: true, plugins: { legend: { labels: { color: c.text } } }, scales: { x: { ticks: { color: c.text } }, y: { ticks: { color: c.text }, grid: { color: c.grid } } } }
         });
@@ -260,7 +260,7 @@ document.addEventListener('DOMContentLoaded', function() {
         window.msgPieChart = new Chart(document.getElementById('chartMsgPie'), {
             type: 'doughnut',
             data: {
-                labels: ['Exitosos', 'Fallidos'],
+                labels: ['{{ tr.exitosos|escapejs }}', '{{ tr.fallidos|escapejs }}'],
                 datasets: [{ data: [{{ msg_ok_mes }}, {{ msg_fallidos_mes }}], backgroundColor: ['#10b981', '#ef4444'], borderWidth: 0 }]
             },
             options: { responsive: true, plugins: { legend: { labels: { color: c.text } } } }

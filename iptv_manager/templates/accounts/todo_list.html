@@ -1,26 +1,26 @@
 {% extends 'base.html' %}
-{% block title %} — Tareas{% endblock %}
+{% block title %} — {{ tr.tareas }}{% endblock %}
 {% block content %}
 <div class="flex justify-between items-center mb-4">
-    <h2 class="text-2xl font-bold"><i class="fas fa-tasks text-green-500 mr-2"></i>Lista de Tareas</h2>
+    <h2 class="text-2xl font-bold"><i class="fas fa-tasks text-green-500 mr-2"></i>{{ tr.lista_de_tareas }}</h2>
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
     <div class="lg:col-span-1">
         <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
-            <h3 class="font-bold mb-3">Nueva tarea</h3>
+            <h3 class="font-bold mb-3">{{ tr.nueva_tarea }}</h3>
             <form method="post" action="{% url 'todo_create' %}">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <button type="submit" class="mt-3 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">Crear tarea</button>
+                <button type="submit" class="mt-3 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">{{ tr.crear_tarea }}</button>
             </form>
         </div>
         <div class="bg-white dark:bg-gray-800 p-4 rounded shadow mt-4">
-            <h3 class="font-bold mb-3">Filtros</h3>
+            <h3 class="font-bold mb-3">{{ tr.filtros }}</h3>
             <div class="space-y-2">
-                <a href="?filtro=todas" class="block px-3 py-2 rounded text-sm {% if filtro == 'todas' %}bg-blue-100 text-blue-700{% else %}hover:bg-gray-100{% endif %}">Todas</a>
-                <a href="?filtro=pendientes" class="block px-3 py-2 rounded text-sm {% if filtro == 'pendientes' %}bg-blue-100 text-blue-700{% else %}hover:bg-gray-100{% endif %}">Pendientes</a>
-                <a href="?filtro=completadas" class="block px-3 py-2 rounded text-sm {% if filtro == 'completadas' %}bg-blue-100 text-blue-700{% else %}hover:bg-gray-100{% endif %}">Completadas</a>
+                <a href="?filtro=todas" class="block px-3 py-2 rounded text-sm {% if filtro == 'todas' %}bg-blue-100 text-blue-700{% else %}hover:bg-gray-100{% endif %}">{{ tr.todas }}</a>
+                <a href="?filtro=pendientes" class="block px-3 py-2 rounded text-sm {% if filtro == 'pendientes' %}bg-blue-100 text-blue-700{% else %}hover:bg-gray-100{% endif %}">{{ tr.pendientes }}</a>
+                <a href="?filtro=completadas" class="block px-3 py-2 rounded text-sm {% if filtro == 'completadas' %}bg-blue-100 text-blue-700{% else %}hover:bg-gray-100{% endif %}">{{ tr.completadas }}</a>
             </div>
         </div>
     </div>
@@ -52,7 +52,7 @@
                         </div>
                     </div>
                 </div>
-                <form method="post" action="{% url 'todo_delete' tarea.pk %}" onsubmit="return confirm('¿Eliminar tarea?')" class="ml-2">
+                <form method="post" action="{% url 'todo_delete' tarea.pk %}" onsubmit="return confirm('{{ tr.eliminar_tarea_modal|escapejs }}')" class="ml-2">
                     {% csrf_token %}
                     <button type="submit" class="text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></button>
                 </form>
@@ -60,7 +60,7 @@
             {% empty %}
             <div class="p-6 text-center text-gray-400">
                 <i class="fas fa-clipboard-list text-4xl mb-2"></i>
-                <p>No hay tareas{% if filtro != 'todas' %} {{ filtro }}{% endif %}</p>
+                <p>{{ tr.no_hay_tareas }}{% if filtro != 'todas' %} {{ filtro }}{% endif %}</p>
             </div>
             {% endfor %}
         </div>

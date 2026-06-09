@@ -1,44 +1,45 @@
 {% extends 'base.html' %}
-{% block title %} — Documentación{% endblock %}
+{% load i18n_tags %}
+{% block title %} — {{ tr.documentacion }}{% endblock %}
 {% block content %}
 <div class="max-w-5xl mx-auto space-y-6">
 
 <div class="card-custom p-6 rounded shadow">
-    <h2 class="text-2xl font-bold mb-2"><i class="fas fa-book text-blue-600 mr-2"></i>Documentación del Sistema</h2>
-    <p class="text-sm text-gray-500 dark:text-gray-400">Tecnologías, arquitectura y guía para desarrolladores.</p>
+    <h2 class="text-2xl font-bold mb-2"><i class="fas fa-book text-blue-600 mr-2"></i>{{ tr.documentacion }} del Sistema</h2>
+    <p class="text-sm text-gray-500 dark:text-gray-400">{% tr "Tecnologías, arquitectura y guía para desarrolladores." %}</p>
 </div>
 
 <div class="flex flex-wrap gap-2 mb-4">
     <a href="?seccion=tecnologia" class="px-4 py-2 rounded text-sm font-semibold transition {% if section == 'tecnologia' %}btn-primary{% else %}bg-gray-200 dark:bg-gray-700{% endif %}">
-        <i class="fas fa-microchip mr-1"></i>Tecnologías
+        <i class="fas fa-microchip mr-1"></i>{% tr "Tecnologías" %}
     </a>
     <a href="?seccion=arquitectura" class="px-4 py-2 rounded text-sm font-semibold transition {% if section == 'arquitectura' %}btn-primary{% else %}bg-gray-200 dark:bg-gray-700{% endif %}">
-        <i class="fas fa-sitemap mr-1"></i>Arquitectura
+        <i class="fas fa-sitemap mr-1"></i>{% tr "Arquitectura" %}
     </a>
     <a href="?seccion=desarrollador" class="px-4 py-2 rounded text-sm font-semibold transition {% if section == 'desarrollador' %}btn-primary{% else %}bg-gray-200 dark:bg-gray-700{% endif %}">
-        <i class="fas fa-code mr-1"></i>Guía Dev
+        <i class="fas fa-code mr-1"></i>{% tr "Guía Dev" %}
     </a>
     <a href="?seccion=seguridad" class="px-4 py-2 rounded text-sm font-semibold transition {% if section == 'seguridad' %}btn-primary{% else %}bg-gray-200 dark:bg-gray-700{% endif %}">
-        <i class="fas fa-shield-alt mr-1"></i>Seguridad
+        <i class="fas fa-shield-alt mr-1"></i>{% tr "Seguridad" %}
     </a>
     <a href="?seccion=modelos" class="px-4 py-2 rounded text-sm font-semibold transition {% if section == 'modelos' %}btn-primary{% else %}bg-gray-200 dark:bg-gray-700{% endif %}">
-        <i class="fas fa-database mr-1"></i>Modelos
+        <i class="fas fa-database mr-1"></i>{% tr "Modelos" %}
     </a>
     <a href="?seccion=mantenimiento" class="px-4 py-2 rounded text-sm font-semibold transition {% if section == 'mantenimiento' %}btn-primary{% else %}bg-gray-200 dark:bg-gray-700{% endif %}">
-        <i class="fas fa-tools mr-1"></i>Mantenimiento
+        <i class="fas fa-tools mr-1"></i>{% tr "Mantenimiento" %}
     </a>
 </div>
 
 {% if section == 'tecnologia' %}
 <div class="card-custom p-6 rounded shadow">
-    <h3 class="font-bold text-lg mb-4"><i class="fas fa-microchip text-blue-500 mr-2"></i>Stack Tecnológico</h3>
+    <h3 class="font-bold text-lg mb-4"><i class="fas fa-microchip text-blue-500 mr-2"></i>{% tr "Stack Tecnológico" %}</h3>
 
-    <h4 class="font-semibold text-blue-600 dark:text-blue-400 mb-3"><i class="fas fa-server mr-2"></i>Backend</h4>
+    <h4 class="font-semibold text-blue-600 dark:text-blue-400 mb-3"><i class="fas fa-server mr-2"></i>{% tr "Backend" %}</h4>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm mb-6">
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer">
             <summary class="flex items-start gap-3 list-none">
                 <div class="text-2xl flex-shrink-0"><i class="fab fa-python text-blue-500"></i></div>
-                <div class="flex-1"><strong>Python 3.11+ / 3.12</strong><br><span class="text-xs text-gray-500">Lenguaje principal del backend.</span></div>
+                <div class="flex-1"><strong>Python 3.11+ / 3.12</strong><br><span class="text-xs text-gray-500">{% tr "Lenguaje principal del backend." %}</span></div>
                 <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform mt-1"></i>
             </summary>
             <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 space-y-1 pl-12">
@@ -48,7 +49,7 @@
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer">
             <summary class="flex items-start gap-3 list-none">
                 <div class="text-2xl flex-shrink-0"><i class="fas fa-leaf text-green-600"></i></div>
-                <div class="flex-1"><strong>Django 5.1.7</strong><br><span class="text-xs text-gray-500">Framework web MTV con ORM.</span></div>
+                <div class="flex-1"><strong>Django 5.1.7</strong><br><span class="text-xs text-gray-500">{% tr "Framework web MTV con ORM." %}</span></div>
                 <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform mt-1"></i>
             </summary>
             <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 space-y-1 pl-12">
@@ -58,7 +59,7 @@
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer">
             <summary class="flex items-start gap-3 list-none">
                 <div class="text-2xl flex-shrink-0"><i class="fas fa-tachometer-alt text-purple-500"></i></div>
-                <div class="flex-1"><strong>Gunicorn 23.0.0</strong><br><span class="text-xs text-gray-500">WSGI server para producción.</span></div>
+                <div class="flex-1"><strong>Gunicorn 23.0.0</strong><br><span class="text-xs text-gray-500">{% tr "WSGI server para producción." %}</span></div>
                 <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform mt-1"></i>
             </summary>
             <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 space-y-1 pl-12">
@@ -68,7 +69,7 @@
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer">
             <summary class="flex items-start gap-3 list-none">
                 <div class="text-2xl flex-shrink-0"><i class="fas fa-wind text-gray-500"></i></div>
-                <div class="flex-1"><strong>WhiteNoise 6.8.2</strong><br><span class="text-xs text-gray-500">Sirve archivos estáticos.</span></div>
+                <div class="flex-1"><strong>WhiteNoise 6.8.2</strong><br><span class="text-xs text-gray-500">{% tr "Sirve archivos estáticos." %}</span></div>
                 <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform mt-1"></i>
             </summary>
             <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 space-y-1 pl-12">
@@ -78,7 +79,7 @@
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer">
             <summary class="flex items-start gap-3 list-none">
                 <div class="text-2xl flex-shrink-0"><i class="fas fa-bolt text-yellow-500"></i></div>
-                <div class="flex-1"><strong>django-htmx 1.19.0</strong><br><span class="text-xs text-gray-500">AJAX sin JavaScript.</span></div>
+                <div class="flex-1"><strong>django-htmx 1.19.0</strong><br><span class="text-xs text-gray-500">{% tr "AJAX sin JavaScript." %}</span></div>
                 <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform mt-1"></i>
             </summary>
             <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 space-y-1 pl-12">
@@ -88,7 +89,7 @@
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer">
             <summary class="flex items-start gap-3 list-none">
                 <div class="text-2xl flex-shrink-0"><i class="fas fa-shield text-red-500"></i></div>
-                <div class="flex-1"><strong>django-axes 6.0.2</strong><br><span class="text-xs text-gray-500">Protección fuerza bruta.</span></div>
+                <div class="flex-1"><strong>django-axes 6.0.2</strong><br><span class="text-xs text-gray-500">{% tr "Protección fuerza bruta." %}</span></div>
                 <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform mt-1"></i>
             </summary>
             <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 space-y-1 pl-12">
@@ -98,7 +99,7 @@
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer">
             <summary class="flex items-start gap-3 list-none">
                 <div class="text-2xl flex-shrink-0"><i class="fas fa-key text-gray-500"></i></div>
-                <div class="flex-1"><strong>python-decouple 3.8</strong><br><span class="text-xs text-gray-500">Variables de entorno.</span></div>
+                <div class="flex-1"><strong>python-decouple 3.8</strong><br><span class="text-xs text-gray-500">{% tr "Variables de entorno." %}</span></div>
                 <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform mt-1"></i>
             </summary>
             <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 space-y-1 pl-12">
@@ -108,7 +109,7 @@
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer">
             <summary class="flex items-start gap-3 list-none">
                 <div class="text-2xl flex-shrink-0"><i class="fas fa-code text-gray-500"></i></div>
-                <div class="flex-1"><strong>Requests 2.32.3</strong><br><span class="text-xs text-gray-500">Cliente HTTP.</span></div>
+                <div class="flex-1"><strong>Requests 2.32.3</strong><br><span class="text-xs text-gray-500">{% tr "Cliente HTTP." %}</span></div>
                 <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform mt-1"></i>
             </summary>
             <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 space-y-1 pl-12">
@@ -118,7 +119,7 @@
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer">
             <summary class="flex items-start gap-3 list-none">
                 <div class="text-2xl flex-shrink-0"><i class="fas fa-image text-green-500"></i></div>
-                <div class="flex-1"><strong>Pillow 12.2.0</strong><br><span class="text-xs text-gray-500">Procesamiento imágenes.</span></div>
+                <div class="flex-1"><strong>Pillow 12.2.0</strong><br><span class="text-xs text-gray-500">{% tr "Procesamiento imágenes." %}</span></div>
                 <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform mt-1"></i>
             </summary>
             <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 space-y-1 pl-12">
@@ -128,7 +129,7 @@
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer">
             <summary class="flex items-start gap-3 list-none">
                 <div class="text-2xl flex-shrink-0"><i class="fas fa-database text-blue-600"></i></div>
-                <div class="flex-1"><strong>psycopg2-binary 2.9.10</strong><br><span class="text-xs text-gray-500">Driver PostgreSQL.</span></div>
+                <div class="flex-1"><strong>psycopg2-binary 2.9.10</strong><br><span class="text-xs text-gray-500">{% tr "Driver PostgreSQL." %}</span></div>
                 <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform mt-1"></i>
             </summary>
             <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 space-y-1 pl-12">
@@ -137,12 +138,12 @@
         </details>
     </div>
 
-    <h4 class="font-semibold text-blue-600 dark:text-blue-400 mb-3"><i class="fas fa-desktop mr-2"></i>Frontend</h4>
+    <h4 class="font-semibold text-blue-600 dark:text-blue-400 mb-3"><i class="fas fa-desktop mr-2"></i>{% tr "Frontend" %}</h4>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm mb-6">
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer">
             <summary class="flex items-start gap-3 list-none">
                 <div class="text-2xl flex-shrink-0"><i class="fab fa-python text-blue-500"></i></div>
-                <div class="flex-1"><strong>Django Templates (DTL)</strong><br><span class="text-xs text-gray-500">Sistema de plantillas nativo.</span></div>
+                <div class="flex-1"><strong>Django Templates (DTL)</strong><br><span class="text-xs text-gray-500">{% tr "Sistema de plantillas nativo." %}</span></div>
                 <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform mt-1"></i>
             </summary>
             <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 space-y-1 pl-12">
@@ -152,7 +153,7 @@
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer">
             <summary class="flex items-start gap-3 list-none">
                 <div class="text-2xl flex-shrink-0"><i class="fas fa-code text-blue-400"></i></div>
-                <div class="flex-1"><strong>HTMX 1.9.12</strong><br><span class="text-xs text-gray-500">AJAX dinámico sin recargas.</span></div>
+                <div class="flex-1"><strong>HTMX 1.9.12</strong><br><span class="text-xs text-gray-500">{% tr "AJAX dinámico sin recargas." %}</span></div>
                 <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform mt-1"></i>
             </summary>
             <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 space-y-1 pl-12">
@@ -162,7 +163,7 @@
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer">
             <summary class="flex items-start gap-3 list-none">
                 <div class="text-2xl flex-shrink-0"><i class="fab fa-css3-alt text-blue-500"></i></div>
-                <div class="flex-1"><strong>Tailwind CSS 3.x</strong><br><span class="text-xs text-gray-500">Framework CSS utility-first.</span></div>
+                <div class="flex-1"><strong>Tailwind CSS 3.x</strong><br><span class="text-xs text-gray-500">{% tr "Framework CSS utility-first." %}</span></div>
                 <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform mt-1"></i>
             </summary>
             <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 space-y-1 pl-12">
@@ -172,7 +173,7 @@
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer">
             <summary class="flex items-start gap-3 list-none">
                 <div class="text-2xl flex-shrink-0"><i class="fas fa-chart-bar text-green-500"></i></div>
-                <div class="flex-1"><strong>Chart.js 4.4.7</strong><br><span class="text-xs text-gray-500">Gráficos interactivos.</span></div>
+                <div class="flex-1"><strong>Chart.js 4.4.7</strong><br><span class="text-xs text-gray-500">{% tr "Gráficos interactivos." %}</span></div>
                 <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform mt-1"></i>
             </summary>
             <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 space-y-1 pl-12">
@@ -182,7 +183,7 @@
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer">
             <summary class="flex items-start gap-3 list-none">
                 <div class="text-2xl flex-shrink-0"><i class="fas fa-icons text-gray-500"></i></div>
-                <div class="flex-1"><strong>Font Awesome 6.5.1</strong><br><span class="text-xs text-gray-500">Iconos vectoriales.</span></div>
+                <div class="flex-1"><strong>Font Awesome 6.5.1</strong><br><span class="text-xs text-gray-500">{% tr "Iconos vectoriales." %}</span></div>
                 <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform mt-1"></i>
             </summary>
             <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 space-y-1 pl-12">
@@ -191,12 +192,12 @@
         </details>
     </div>
 
-    <h4 class="font-semibold text-blue-600 dark:text-blue-400 mb-3"><i class="fas fa-cloud mr-2"></i>Infraestructura</h4>
+    <h4 class="font-semibold text-blue-600 dark:text-blue-400 mb-3"><i class="fas fa-cloud mr-2"></i>{% tr "Infraestructura" %}</h4>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer">
             <summary class="flex items-start gap-3 list-none">
                 <div class="text-2xl flex-shrink-0"><i class="fab fa-docker text-blue-500"></i></div>
-                <div class="flex-1"><strong>Docker 24+ / Compose v2</strong><br><span class="text-xs text-gray-500">Contenedores multi-servicio.</span></div>
+                <div class="flex-1"><strong>Docker 24+ / Compose v2</strong><br><span class="text-xs text-gray-500">{% tr "Contenedores multi-servicio." %}</span></div>
                 <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform mt-1"></i>
             </summary>
             <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 space-y-1 pl-12">
@@ -206,7 +207,7 @@
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer">
             <summary class="flex items-start gap-3 list-none">
                 <div class="text-2xl flex-shrink-0"><i class="fas fa-comment text-green-500"></i></div>
-                <div class="flex-1"><strong>WhatsApp API (whatsapp-web.js)</strong><br><span class="text-xs text-gray-500">API de mensajería WhatsApp.</span></div>
+                <div class="flex-1"><strong>WhatsApp API (whatsapp-web.js)</strong><br><span class="text-xs text-gray-500">{% tr "API de mensajería WhatsApp." %}</span></div>
                 <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform mt-1"></i>
             </summary>
             <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 space-y-1 pl-12">
@@ -218,7 +219,7 @@
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer">
             <summary class="flex items-start gap-3 list-none">
                 <div class="text-2xl flex-shrink-0"><i class="fab fa-nginx text-green-600"></i></div>
-                <div class="flex-1"><strong>Nginx 1.27</strong><br><span class="text-xs text-gray-500">Reverse proxy, SSL, estáticos.</span></div>
+                <div class="flex-1"><strong>Nginx 1.27</strong><br><span class="text-xs text-gray-500">{% tr "Reverse proxy, SSL, estáticos." %}</span></div>
                 <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform mt-1"></i>
             </summary>
             <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 space-y-1 pl-12">
@@ -228,7 +229,7 @@
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer">
             <summary class="flex items-start gap-3 list-none">
                 <div class="text-2xl flex-shrink-0"><i class="fas fa-database text-green-600"></i></div>
-                <div class="flex-1"><strong>PostgreSQL 16</strong><br><span class="text-xs text-gray-500">Base de datos relacional.</span></div>
+                <div class="flex-1"><strong>PostgreSQL 16</strong><br><span class="text-xs text-gray-500">{% tr "Base de datos relacional." %}</span></div>
                 <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform mt-1"></i>
             </summary>
             <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 space-y-1 pl-12">
@@ -238,7 +239,7 @@
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer">
             <summary class="flex items-start gap-3 list-none">
                 <div class="text-2xl flex-shrink-0"><i class="fas fa-database text-blue-600"></i></div>
-                <div class="flex-1"><strong>PostgreSQL 16</strong><br><span class="text-xs text-gray-500">BD relacional producción.</span></div>
+                <div class="flex-1"><strong>PostgreSQL 16</strong><br><span class="text-xs text-gray-500">{% tr "BD relacional producción." %}</span></div>
                 <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform mt-1"></i>
             </summary>
             <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 space-y-1 pl-12">
@@ -248,7 +249,7 @@
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer">
             <summary class="flex items-start gap-3 list-none">
                 <div class="text-2xl flex-shrink-0"><i class="fas fa-database text-gray-500"></i></div>
-                <div class="flex-1"><strong>SQLite 3</strong><br><span class="text-xs text-gray-500">BD ligera desarrollo local.</span></div>
+                <div class="flex-1"><strong>SQLite 3</strong><br><span class="text-xs text-gray-500">{% tr "BD ligera desarrollo local." %}</span></div>
                 <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform mt-1"></i>
             </summary>
             <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 space-y-1 pl-12">
@@ -260,7 +261,7 @@
 
 {% elif section == 'arquitectura' %}
 <div class="card-custom p-6 rounded shadow">
-    <h3 class="font-bold text-lg mb-4"><i class="fas fa-sitemap text-green-500 mr-2"></i>Arquitectura del Sistema</h3>
+    <h3 class="font-bold text-lg mb-4"><i class="fas fa-sitemap text-green-500 mr-2"></i>{% tr "Arquitectura del Sistema" %}</h3>
     <div class="text-sm space-y-4">
         <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded font-mono text-xs leading-relaxed overflow-x-auto">
 <pre>┌─────────────────────────────────────────────────────┐
@@ -301,7 +302,7 @@
 └─────────────────────────────────────────────────────┘</pre>
         </div>
 
-        <h4 class="font-semibold mt-4"><i class="fas fa-exchange-alt text-blue-500 mr-2"></i>Flujo de una petición</h4>
+        <h4 class="font-semibold mt-4"><i class="fas fa-exchange-alt text-blue-500 mr-2"></i>{% tr "Flujo de una petición" %}</h4>
         <ol class="list-decimal list-inside space-y-1 text-sm">
             <li>Browser → HTTPS → Nginx (puerto 443)</li>
             <li>Nginx sirve <code>/static/</code> directamente (o WhiteNoise)</li>
@@ -314,7 +315,7 @@
             <li>Respuesta viaja de vuelta al browser</li>
         </ol>
 
-        <h4 class="font-semibold mt-4"><i class="fas fa-cubes text-purple-500 mr-2"></i>Componentes del sistema</h4>
+        <h4 class="font-semibold mt-4"><i class="fas fa-cubes text-purple-500 mr-2"></i>{% tr "Componentes del sistema" %}</h4>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div class="bg-gray-50 dark:bg-gray-900 p-3 rounded">
                 <p class="font-bold text-blue-600"><i class="fas fa-user-shield mr-1"></i>accounts</p>
@@ -342,7 +343,7 @@
             </div>
         </div>
 
-        <h4 class="font-semibold mt-4"><i class="fas fa-chart-line text-green-500 mr-2"></i>Dashboard y Analítica</h4>
+        <h4 class="font-semibold mt-4"><i class="fas fa-chart-line text-green-500 mr-2"></i>{% tr "Dashboard y Analítica" %}</h4>
         <ul class="list-disc list-inside text-sm space-y-1">
             <li>KPI cards: total clientes, suscripciones activas, por vencer, vencidas</li>
             <li>Gráfico de ingresos vs egresos (6 meses, Chart.js barras)</li>
@@ -355,10 +356,10 @@
 
 {% elif section == 'desarrollador' %}
 <div class="card-custom p-6 rounded shadow">
-    <h3 class="font-bold text-lg mb-4"><i class="fas fa-code text-blue-500 mr-2"></i>Guía para Desarrolladores</h3>
+    <h3 class="font-bold text-lg mb-4"><i class="fas fa-code text-blue-500 mr-2"></i>{% tr "Guía para Desarrolladores" %}</h3>
 
     <details class="border dark:border-gray-600 rounded p-3 mb-3" open>
-        <summary class="font-semibold cursor-pointer"><i class="fas fa-file-code text-blue-500 mr-2"></i>Estructura de Archivos</summary>
+        <summary class="font-semibold cursor-pointer"><i class="fas fa-file-code text-blue-500 mr-2"></i>{% tr "Estructura de Archivos" %}</summary>
         <pre class="mt-2 bg-gray-50 dark:bg-gray-900 p-3 rounded text-xs leading-relaxed overflow-x-auto">
 iptv_manager/
 ├── config/                    # Configuración central
@@ -423,7 +424,7 @@ iptv_manager/
     </details>
 
     <details class="border dark:border-gray-600 rounded p-3 mb-3" open>
-        <summary class="font-semibold cursor-pointer"><i class="fas fa-plus-circle text-green-500 mr-2"></i>Agregar una funcionalidad nueva</summary>
+        <summary class="font-semibold cursor-pointer"><i class="fas fa-plus-circle text-green-500 mr-2"></i>{% tr "Agregar una funcionalidad nueva" %}</summary>
         <div class="mt-3 space-y-3 text-sm">
             <div>
                 <p class="font-bold">1. Modelo nuevo</p>
@@ -465,7 +466,7 @@ class MiListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     </details>
 
     <details class="border dark:border-gray-600 rounded p-3 mb-3" open>
-        <summary class="font-semibold cursor-pointer"><i class="fas fa-vial text-yellow-500 mr-2"></i>Tests</summary>
+        <summary class="font-semibold cursor-pointer"><i class="fas fa-vial text-yellow-500 mr-2"></i>{% tr "Tests" %}</summary>
         <div class="mt-2 text-sm space-y-2">
             <p>Ejecutar tests:</p>
             <pre class="bg-gray-50 dark:bg-gray-900 p-3 rounded text-xs">python manage.py test apps/accounts/tests.py --verbosity=2</pre>
@@ -482,7 +483,7 @@ class MiListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     </details>
 
     <details class="border dark:border-gray-600 rounded p-3" open>
-        <summary class="font-semibold cursor-pointer"><i class="fas fa-rocket text-purple-500 mr-2"></i>Arrancar en desarrollo</summary>
+        <summary class="font-semibold cursor-pointer"><i class="fas fa-rocket text-purple-500 mr-2"></i>{% tr "Arrancar en desarrollo" %}</summary>
         <div class="mt-2 text-sm">
             <pre class="bg-gray-50 dark:bg-gray-900 p-3 rounded text-xs"># 1. Crear .env con SECRET_KEY
 python -c "import secrets; print(secrets.token_urlsafe(50))"
@@ -501,15 +502,15 @@ python manage.py runserver 0.0.0.0:8000</pre>
 
 {% elif section == 'seguridad' %}
 <div class="card-custom p-6 rounded shadow">
-    <h3 class="font-bold text-lg mb-4"><i class="fas fa-shield-alt text-red-500 mr-2"></i>Seguridad</h3>
-    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Cada medida de seguridad implementada incluye una explicación de qué protege y cómo funciona. Haz clic en cada una para expandir.</p>
+    <h3 class="font-bold text-lg mb-4"><i class="fas fa-shield-alt text-red-500 mr-2"></i>{% tr "Seguridad" %}</h3>
+    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">{% tr "Cada medida de seguridad implementada incluye una explicación de qué protege y cómo funciona. Haz clic en cada una para expandir." %}</p>
 
     <div class="space-y-2 text-sm">
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer border-l-4 border-blue-500">
             <summary class="flex items-center gap-3 list-none">
                 <i class="fas fa-key text-blue-500 text-lg"></i>
-                <span class="font-semibold flex-1">Secret Key</span>
-                <span class="text-xs text-gray-400">Implementación: python-decouple, sin default en código</span>
+                <span class="font-semibold flex-1">{% tr "Secret Key" %}</span>
+                <span class="text-xs text-gray-400">{% tr "Implementación: python-decouple, sin default en código" %}</span>
                 <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform"></i>
             </summary>
             <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 space-y-2 pl-8">
@@ -521,8 +522,8 @@ python manage.py runserver 0.0.0.0:8000</pre>
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer border-l-4 border-red-500">
             <summary class="flex items-center gap-3 list-none">
                 <i class="fas fa-bug text-red-500 text-lg"></i>
-                <span class="font-semibold flex-1">DEBUG mode</span>
-                <span class="text-xs text-gray-400">Implementación: False por defecto vía env var</span>
+                <span class="font-semibold flex-1">{% tr "DEBUG mode" %}</span>
+                <span class="text-xs text-gray-400">{% tr "Implementación: False por defecto vía env var" %}</span>
                 <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform"></i>
             </summary>
             <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 space-y-2 pl-8">
@@ -534,8 +535,8 @@ python manage.py runserver 0.0.0.0:8000</pre>
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer border-l-4 border-yellow-500">
             <summary class="flex items-center gap-3 list-none">
                 <i class="fas fa-gavel text-yellow-500 text-lg"></i>
-                <span class="font-semibold flex-1">Fuerza Bruta (django-axes)</span>
-                <span class="text-xs text-gray-400">Implementación: 5 intentos, 1h cooloff, bloqueo IP+usuario</span>
+                <span class="font-semibold flex-1">{% tr "Fuerza Bruta (django-axes)" %}</span>
+                <span class="text-xs text-gray-400">{% tr "Implementación: 5 intentos, 1h cooloff, bloqueo IP+usuario" %}</span>
                 <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform"></i>
             </summary>
             <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 space-y-2 pl-8">
@@ -547,8 +548,8 @@ python manage.py runserver 0.0.0.0:8000</pre>
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer border-l-4 border-green-500">
             <summary class="flex items-center gap-3 list-none">
                 <i class="fas fa-lock text-green-500 text-lg"></i>
-                <span class="font-semibold flex-1">HSTS (HTTP Strict Transport Security)</span>
-                <span class="text-xs text-gray-400">Implementación: 31536000s (1 año), includeSubDomains, preload</span>
+                <span class="font-semibold flex-1">{% tr "HSTS (HTTP Strict Transport Security)" %}</span>
+                <span class="text-xs text-gray-400">{% tr "Implementación: 31536000s (1 año), includeSubDomains, preload" %}</span>
                 <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform"></i>
             </summary>
             <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 space-y-2 pl-8">
@@ -560,8 +561,8 @@ python manage.py runserver 0.0.0.0:8000</pre>
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer border-l-4 border-red-400">
             <summary class="flex items-center gap-3 list-none">
                 <i class="fas fa-shield text-red-400 text-lg"></i>
-                <span class="font-semibold flex-1">XSS (Cross-Site Scripting)</span>
-                <span class="text-xs text-gray-400">Implementación: SECURE_BROWSER_XSS_FILTER = True</span>
+                <span class="font-semibold flex-1">{% tr "XSS (Cross-Site Scripting)" %}</span>
+                <span class="text-xs text-gray-400">{% tr "Implementación: SECURE_BROWSER_XSS_FILTER = True" %}</span>
                 <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform"></i>
             </summary>
             <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 space-y-2 pl-8">
@@ -573,8 +574,8 @@ python manage.py runserver 0.0.0.0:8000</pre>
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer border-l-4 border-gray-500">
             <summary class="flex items-center gap-3 list-none">
                 <i class="fas fa-file text-gray-500 text-lg"></i>
-                <span class="font-semibold flex-1">Content Sniffing (MIME sniffing)</span>
-                <span class="text-xs text-gray-400">Implementación: SECURE_CONTENT_TYPE_NOSNIFF = True</span>
+                <span class="font-semibold flex-1">{% tr "Content Sniffing (MIME sniffing)" %}</span>
+                <span class="text-xs text-gray-400">{% tr "Implementación: SECURE_CONTENT_TYPE_NOSNIFF = True" %}</span>
                 <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform"></i>
             </summary>
             <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 space-y-2 pl-8">
@@ -586,8 +587,8 @@ python manage.py runserver 0.0.0.0:8000</pre>
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer border-l-4 border-purple-500">
             <summary class="flex items-center gap-3 list-none">
                 <i class="fas fa-window-close text-purple-500 text-lg"></i>
-                <span class="font-semibold flex-1">Clickjacking (Frame Options)</span>
-                <span class="text-xs text-gray-400">Implementación: X_FRAME_OPTIONS = 'DENY'</span>
+                <span class="font-semibold flex-1">{% tr "Clickjacking (Frame Options)" %}</span>
+                <span class="text-xs text-gray-400">{% tr "Implementación: X_FRAME_OPTIONS = 'DENY'" %}</span>
                 <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform"></i>
             </summary>
             <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 space-y-2 pl-8">
@@ -599,8 +600,8 @@ python manage.py runserver 0.0.0.0:8000</pre>
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer border-l-4 border-yellow-400">
             <summary class="flex items-center gap-3 list-none">
                 <i class="fas fa-cookie text-yellow-400 text-lg"></i>
-                <span class="font-semibold flex-1">Cookies Seguras (Secure + HttpOnly)</span>
-                <span class="text-xs text-gray-400">Implementación: SESSION_COOKIE_SECURE + CSRF_COOKIE_SECURE condicional a HTTPS</span>
+                <span class="font-semibold flex-1">{% tr "Cookies Seguras (Secure + HttpOnly)" %}</span>
+                <span class="text-xs text-gray-400">{% tr "Implementación: SESSION_COOKIE_SECURE + CSRF_COOKIE_SECURE condicional a HTTPS" %}</span>
                 <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform"></i>
             </summary>
             <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 space-y-2 pl-8">
@@ -612,8 +613,8 @@ python manage.py runserver 0.0.0.0:8000</pre>
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer border-l-4 border-green-400">
             <summary class="flex items-center gap-3 list-none">
                 <i class="fas fa-check-circle text-green-400 text-lg"></i>
-                <span class="font-semibold flex-1">Validación de Input (teléfono, MAC)</span>
-                <span class="text-xs text-gray-400">Implementación: RegexValidator para E.164 y XX:XX:XX:XX:XX:XX</span>
+                <span class="font-semibold flex-1">{% tr "Validación de Input (teléfono, MAC)" %}</span>
+                <span class="text-xs text-gray-400">{% tr "Implementación: RegexValidator para E.164 y XX:XX:XX:XX:XX:XX" %}</span>
                 <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform"></i>
             </summary>
             <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 space-y-2 pl-8">
@@ -625,8 +626,8 @@ python manage.py runserver 0.0.0.0:8000</pre>
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer border-l-4 border-blue-400">
             <summary class="flex items-center gap-3 list-none">
                 <i class="fas fa-user-tag text-blue-400 text-lg"></i>
-                <span class="font-semibold flex-1">RBAC (Control de Acceso por Roles)</span>
-                <span class="text-xs text-gray-400">Implementación: @login_required + PermissionRequiredMixin en TODAS las vistas</span>
+                <span class="font-semibold flex-1">{% tr "RBAC (Control de Acceso por Roles)" %}</span>
+                <span class="text-xs text-gray-400">{% tr "Implementación: @login_required + PermissionRequiredMixin en TODAS las vistas" %}</span>
                 <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform"></i>
             </summary>
             <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 space-y-2 pl-8">
@@ -638,8 +639,8 @@ python manage.py runserver 0.0.0.0:8000</pre>
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer border-l-4 border-gray-600">
             <summary class="flex items-center gap-3 list-none">
                 <i class="fas fa-database text-gray-600 text-lg"></i>
-                <span class="font-semibold flex-1">Protección SQLi / XSS en BD</span>
-                <span class="text-xs text-gray-400">Implementación: 100% ORM + auto-escape templates, sin mark_safe</span>
+                <span class="font-semibold flex-1">{% tr "Protección SQLi / XSS en BD" %}</span>
+                <span class="text-xs text-gray-400">{% tr "Implementación: 100% ORM + auto-escape templates, sin mark_safe" %}</span>
                 <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform"></i>
             </summary>
             <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 space-y-2 pl-8">
@@ -651,8 +652,8 @@ python manage.py runserver 0.0.0.0:8000</pre>
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer border-l-4 border-blue-500">
             <summary class="flex items-center gap-3 list-none">
                 <i class="fas fa-shield text-blue-500 text-lg"></i>
-                <span class="font-semibold flex-1">CSRF (Cross-Site Request Forgery)</span>
-                <span class="text-xs text-gray-400">Implementación: CsrfViewMiddleware + <code>{% templatetag openblock %} csrf_token {% templatetag closeblock %}</code> en todos los formularios</span>
+                <span class="font-semibold flex-1">{% tr "CSRF (Cross-Site Request Forgery)" %}</span>
+                <span class="text-xs text-gray-400">{% tr "Implementación: CsrfViewMiddleware + " %}<code>{% templatetag openblock %} csrf_token {% templatetag closeblock %}</code>{% tr " en todos los formularios" %}</span>
 
             </summary>
             <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 space-y-2 pl-8">
@@ -665,8 +666,8 @@ python manage.py runserver 0.0.0.0:8000</pre>
 
 {% elif section == 'modelos' %}
 <div class="card-custom p-6 rounded shadow">
-    <h3 class="font-bold text-lg mb-4"><i class="fas fa-database text-blue-500 mr-2"></i>Modelos y Relaciones</h3>
-    <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Diagrama entidad-relación del sistema. Las flechas indican relaciones ForeignKey.</p>
+    <h3 class="font-bold text-lg mb-4"><i class="fas fa-database text-blue-500 mr-2"></i>{% tr "Modelos y Relaciones" %}</h3>
+    <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">{% tr "Diagrama entidad-relación del sistema. Las flechas indican relaciones ForeignKey." %}</p>
 
     <div class="overflow-x-auto">
         <style>
@@ -908,22 +909,22 @@ python manage.py runserver 0.0.0.0:8000</pre>
 
 {% elif section == 'mantenimiento' %}
 <div class="card-custom p-6 rounded shadow">
-    <h3 class="font-bold text-lg mb-4"><i class="fas fa-tools text-orange-500 mr-2"></i>Mantenimiento</h3>
+    <h3 class="font-bold text-lg mb-4"><i class="fas fa-tools text-orange-500 mr-2"></i>{% tr "Mantenimiento" %}</h3>
     <div class="space-y-4 text-sm">
         <div>
-            <h4 class="font-bold"><i class="fas fa-terminal text-gray-500 mr-2"></i>Comandos diarios</h4>
+            <h4 class="font-bold"><i class="fas fa-terminal text-gray-500 mr-2"></i>{% tr "Comandos diarios" %}</h4>
             <pre class="bg-gray-50 dark:bg-gray-900 p-3 rounded text-xs mt-1">docker compose logs -f web       # Ver logs en vivo
 docker compose exec web python manage.py shell  # Shell interactivo
 docker compose exec db pg_dump -U iptv_user iptv_manager > backup.sql</pre>
         </div>
         <div>
-            <h4 class="font-bold"><i class="fas fa-sync-alt text-blue-500 mr-2"></i>Actualizar sistema</h4>
+            <h4 class="font-bold"><i class="fas fa-sync-alt text-blue-500 mr-2"></i>{% tr "Actualizar sistema" %}</h4>
             <pre class="bg-gray-50 dark:bg-gray-900 p-3 rounded text-xs mt-1">git pull origin main
 docker compose up -d --build
 docker compose exec web python manage.py migrate</pre>
         </div>
         <div>
-            <h4 class="font-bold"><i class="fas fa-database text-green-500 mr-2"></i>Respaldar / Restaurar</h4>
+            <h4 class="font-bold"><i class="fas fa-database text-green-500 mr-2"></i>{% tr "Respaldar / Restaurar" %}</h4>
             <pre class="bg-gray-50 dark:bg-gray-900 p-3 rounded text-xs mt-1"># Backup
 docker compose exec db pg_dump -U iptv_user iptv_manager > backup_$(date +%Y%m%d).sql
 
@@ -931,7 +932,7 @@ docker compose exec db pg_dump -U iptv_user iptv_manager > backup_$(date +%Y%m%d
 cat backup.sql | docker compose exec -T db psql -U iptv_user iptv_manager</pre>
         </div>
         <div>
-            <h4 class="font-bold"><i class="fas fa-shield-alt text-red-500 mr-2"></i>Monitoreo de seguridad</h4>
+            <h4 class="font-bold"><i class="fas fa-shield-alt text-red-500 mr-2"></i>{% tr "Monitoreo de seguridad" %}</h4>
             <pre class="bg-gray-50 dark:bg-gray-900 p-3 rounded text-xs mt-1">docker compose exec web python manage.py shell -c "
 from axes.models import AccessAttempt
 for a in AccessAttempt.objects.order_by('-attempt_time')[:10]:
@@ -939,7 +940,7 @@ for a in AccessAttempt.objects.order_by('-attempt_time')[:10]:
 "</pre>
         </div>
         <div>
-            <h4 class="font-bold"><i class="fas fa-envelope text-yellow-500 mr-2"></i>Variables de entorno (.env)</h4>
+            <h4 class="font-bold"><i class="fas fa-envelope text-yellow-500 mr-2"></i>{% tr "Variables de entorno (.env)" %}</h4>
             <table class="w-full border-collapse">
                 <tr class="border-b dark:border-gray-600"><td class="p-2"><code>SECRET_KEY</code></td><td class="p-2">Obligatorio. <code>python -c "import secrets; print(secrets.token_urlsafe(50))"</code></td></tr>
                 <tr class="border-b dark:border-gray-600"><td class="p-2"><code>DEBUG</code></td><td class="p-2"><code>False</code> en producción</td></tr>

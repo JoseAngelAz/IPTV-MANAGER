@@ -1,18 +1,18 @@
 {% extends 'base.html' %}
-{% block title %} — Registro de Actividad{% endblock %}
+{% block title %} — {{ tr.registro_de_actividad }}{% endblock %}
 {% block content %}
 <div class="max-w-6xl mx-auto">
     <div class="bg-white dark:bg-gray-800 p-6 rounded shadow">
         <div class="flex flex-wrap justify-between items-center mb-4 gap-2">
-            <h2 class="text-2xl font-bold"><i class="fas fa-history mr-2 text-blue-600"></i>Registro de Actividad del Sistema</h2>
+            <h2 class="text-2xl font-bold"><i class="fas fa-history mr-2 text-blue-600"></i>{{ tr.registro_de_actividad_del_sistema }}</h2>
             <div class="flex items-center gap-3">
-                <p class="text-sm text-gray-500">{{ logs.paginator.count }} registros</p>
+                <p class="text-sm text-gray-500">{{ logs.paginator.count }} {{ tr.registros }}</p>
                 {% if can_delete %}
                 <button onclick="toggleSelectAll()" class="text-xs px-3 py-1 rounded bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 font-semibold">
-                    <i class="fas fa-check-double mr-1"></i>Seleccionar todos
+                    <i class="fas fa-check-double mr-1"></i>{{ tr.seleccionar_todos }}
                 </button>
                 <button id="delete-selected-btn" onclick="confirmBulkDelete()" class="text-xs px-3 py-1 rounded bg-red-600 text-white hover:bg-red-700 font-semibold hidden">
-                    <i class="fas fa-trash mr-1"></i>Eliminar seleccionados
+                    <i class="fas fa-trash mr-1"></i>{{ tr.eliminar_seleccionados }}
                 </button>
                 {% endif %}
             </div>
@@ -25,12 +25,12 @@
                     <thead>
                         <tr class="border-b dark:border-gray-600 text-left">
                             {% if can_delete %}<th class="p-2 w-10"><input type="checkbox" id="select-all" onchange="toggleSelectAllCheckboxes()" class="cursor-pointer"></th>{% endif %}
-                            <th class="p-2">Usuario</th>
-                            <th class="p-2">Acción</th>
-                            <th class="p-2">Modelo</th>
-                            <th class="p-2">Objeto</th>
-                            <th class="p-2">IP</th>
-                            <th class="p-2">Fecha</th>
+                            <th class="p-2">{{ tr.usuario_tabla }}</th>
+                            <th class="p-2">{{ tr.accion }}</th>
+                            <th class="p-2">{{ tr.modelo }}</th>
+                            <th class="p-2">{{ tr.objeto }}</th>
+                            <th class="p-2">{{ tr.ip }}</th>
+                            <th class="p-2">{{ tr.fecha }}</th>
                             {% if can_delete %}<th class="p-2 w-20">Acción</th>{% endif %}
                         </tr>
                     </thead>
@@ -58,13 +58,13 @@
                             {% if can_delete %}
                             <td class="p-2">
                                 <button type="button" onclick="confirmSingleDelete({{ log.pk }})" class="text-red-500 hover:text-red-700 text-xs flex items-center gap-1">
-                                    <i class="fas fa-trash"></i> Eliminar
+                                    <i class="fas fa-trash"></i> {{ tr.eliminar }}
                                 </button>
                             </td>
                             {% endif %}
                         </tr>
                         {% empty %}
-                        <tr><td colspan="{% if can_delete %}8{% else %}7{% endif %}" class="p-4 text-center text-gray-500"><i class="fas fa-inbox mr-2"></i>No hay registros de actividad.</td></tr>
+                        <tr><td colspan="{% if can_delete %}8{% else %}7{% endif %}" class="p-4 text-center text-gray-500"><i class="fas fa-inbox mr-2"></i>{{ tr.no_hay_registros_de_actividad }}</td></tr>
                         {% endfor %}
                     </tbody>
                 </table>
@@ -119,8 +119,8 @@ function confirmBulkDelete(){
     var checked = document.querySelectorAll('.log-checkbox:checked').length;
     if(checked === 0) return;
     openModal(
-        '¿Eliminar ' + checked + ' registros?',
-        'Esta acción no se puede deshacer. Los registros seleccionados se eliminarán permanentemente.',
+        '{{ tr.eliminar_n_registros|escapejs }}'.replace('%d', checked),
+        '{{ tr.accion_no_se_puede_deshacer_bulk|escapejs }}',
         function(){ document.getElementById('log-form').submit(); }
     );
 }
@@ -128,8 +128,8 @@ function confirmBulkDelete(){
 function confirmSingleDelete(pk){
     singleDeletePk = pk;
     openModal(
-        '¿Eliminar este registro?',
-        'Esta acción no se puede deshacer. El registro se eliminará permanentemente.',
+        '{{ tr.estas_seguro|escapejs }}',
+        '{{ tr.accion_no_se_puede_deshacer|escapejs }}',
         function(){
             var form = document.createElement('form');
             form.method = 'post';

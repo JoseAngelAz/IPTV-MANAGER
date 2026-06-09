@@ -22,8 +22,8 @@
         </div>
         <div>
             <p class="text-lg font-semibold">{{ user.get_full_name|default:user.username }}</p>
-            <p class="text-sm text-gray-500">{% for g in user.groups.all %}{{ g.name }}{% if not forloop.last %}, {% endif %}{% empty %}Sin grupo{% endfor %}</p>
-            <p class="text-sm text-gray-500">{{ user.email|default:'Sin email' }}</p>
+            <p class="text-sm text-gray-500">{% for g in user.groups.all %}{{ g.name }}{% if not forloop.last %}, {% endif %}{% empty %}{{ tr.sin_grupo }}{% endfor %}</p>
+            <p class="text-sm text-gray-500">{{ user.email|default:tr.sin_email }}</p>
         </div>
     </div>
 

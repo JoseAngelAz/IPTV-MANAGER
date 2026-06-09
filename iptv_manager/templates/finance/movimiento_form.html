@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
-{% block title %} — Nuevo Movimiento{% endblock %}
+{% block title %} — {{ tr.nuevo_movimiento }}{% endblock %}
 {% block content %}
-<h2 class="text-2xl font-bold mb-4">Registrar Movimiento</h2>
+<h2 class="text-2xl font-bold mb-4">{{ tr.registrar_movimiento }}</h2>
 
 <div class="max-w-lg bg-white p-6 rounded shadow">
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <div class="mt-4 flex space-x-3">
-            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Guardar</button>
-            <a href="{% url 'movimiento_list' %}" class="px-4 py-2 border rounded hover:bg-gray-100">Cancelar</a>
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">{{ tr.guardar }}</button>
+            <a href="{% url 'movimiento_list' %}" class="px-4 py-2 border rounded hover:bg-gray-100">{{ tr.cancelar }}</a>
         </div>
     </form>
 </div>

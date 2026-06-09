@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
-{% block title %} — {% if editando %}Editar{% else %}Nueva{% endif %} Suscripción{% endblock %}
+{% block title %} — {% if editando %}{{ tr.editar }} {{ tr.suscripciones }}{% else %}{{ tr.nueva_suscripcion }}{% endif %}{% endblock %}
 {% block content %}
-<h2 class="text-2xl font-bold mb-4">{% if editando %}Editar{% else %}Nueva{% endif %} Suscripción</h2>
+<h2 class="text-2xl font-bold mb-4">{% if editando %}{{ tr.editar }} {{ tr.suscripciones }}{% else %}{{ tr.nueva_suscripcion }}{% endif %}</h2>
 
 <div class="max-w-lg bg-white p-6 rounded shadow">
     <form method="post" id="suscripcion-form">
@@ -14,13 +14,13 @@
         </div>
         {% endfor %}
         <div class="p-3 bg-gray-50 rounded mb-3">
-            <p class="text-sm"><strong>Precio del plan:</strong> <span id="plan-price">$0.00</span></p>
-            <p class="text-sm"><strong>Precio final:</strong> <span id="final-price">$0.00</span></p>
+            <p class="text-sm"><strong>{{ tr.precio_del_plan }}:</strong> <span id="plan-price">$0.00</span></p>
+            <p class="text-sm"><strong>{{ tr.precio_final }}:</strong> <span id="final-price">$0.00</span></p>
             <p id="discount-warning" class="text-red-500 text-xs mt-1 hidden"></p>
         </div>
         <div class="mt-4 flex space-x-3">
-            <button type="submit" id="submit-btn" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">{% if editando %}Actualizar{% else %}Guardar{% endif %}</button>
-            <a href="{% url 'suscripcion_list' %}" class="px-4 py-2 border rounded hover:bg-gray-100">Cancelar</a>
+            <button type="submit" id="submit-btn" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">{% if editando %}{{ tr.actualizar }}{% else %}{{ tr.guardar }}{% endif %}</button>
+            <a href="{% url 'suscripcion_list' %}" class="px-4 py-2 border rounded hover:bg-gray-100">{{ tr.cancelar }}</a>
         </div>
     </form>
 </div>
@@ -49,13 +49,13 @@ document.addEventListener('DOMContentLoaded', function(){
         var msg = '';
 
         if(valor < 0){
-            msg = 'El descuento no puede ser negativo.';
+            msg = '{{ tr.descuento_no_negativo|escapejs }}';
         } else if(tipo === 'porcentaje' && valor > 100){
-            msg = 'El descuento porcentual no puede superar el 100%.';
+            msg = '{{ tr.descuento_porcentual_no_supera_100|escapejs }}';
             descValor.value = 100;
             valor = 100;
         } else if(tipo === 'fijo' && valor > precio){
-            msg = 'El descuento fijo no puede superar el precio del plan ($' + precio.toFixed(2) + ').';
+            msg = '{{ tr.descuento_fijo_no_supera_plan|escapejs }}';
             descValor.value = precio;
             valor = precio;
         }

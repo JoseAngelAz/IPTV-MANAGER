@@ -8,10 +8,10 @@
     <h2 class="text-2xl font-bold">{{ cliente.nombre }}</h2>
     <div class="space-x-2">
         {% if perms.clients.change_cliente %}
-        <a href="{% url 'cliente_update' cliente.pk %}" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 text-sm">Editar</a>
+        <a href="{% url 'cliente_update' cliente.pk %}" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 text-sm">{{ tr.editar }}</a>
         {% endif %}
         {% if perms.clients.delete_cliente %}
-        <button onclick="confirmarDesactivacion({{ cliente.pk }})" class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-sm">Desactivar</button>
+        <button onclick="confirmarDesactivacion({{ cliente.pk }})" class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-sm">{{ tr.desactivar }}</button>
         {% endif %}
     </div>
 </div>
@@ -28,14 +28,14 @@
     </div>
 
     <div class="bg-white dark:bg-gray-800 p-4 rounded shadow lg:col-span-3">
-        <h3 class="font-bold mb-2">Datos</h3>
-        <div class="grid grid-cols-2 gap-3 text-sm">
-            <p><strong>Teléfono:</strong> {{ cliente.telefono }}</p>
-            <p><strong>Email:</strong> {{ cliente.email|default:"—" }}</p>
-            <p><strong>Dispositivo:</strong> <code>{{ cliente.dispositivo_id }}</code></p>
-            <p><strong>Documento:</strong> {{ cliente.documento_identidad|default:"—" }}</p>
-            <p><strong>Registro:</strong> {{ cliente.fecha_registro|date:"d/m/Y H:i" }}</p>
-            <p><strong>Activo:</strong> {{ cliente.activo|yesno:"Sí,No" }}</p>
+        <h3 class="font-bold mb-2">{{ tr.datos }}</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+            <p><strong>{{ tr.telefono }}</strong> {{ cliente.telefono }}</p>
+            <p><strong>{{ tr.email }}</strong> {{ cliente.email|default:"—" }}</p>
+            <p><strong>{{ tr.dispositivo_label }}</strong> <code>{{ cliente.dispositivo_id }}</code></p>
+            <p><strong>{{ tr.documento_label }}</strong> {{ cliente.documento_identidad|default:"—" }}</p>
+            <p><strong>{{ tr.registro_label }}</strong> {{ cliente.fecha_registro|date:"d/m/Y H:i" }}</p>
+            <p><strong>{{ tr.activo_label }}</strong> {{ cliente.activo|yesno:"Sí,No" }}</p>
         </div>
     </div>
 </div>
@@ -43,13 +43,13 @@
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
     <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
         <div class="flex justify-between items-center mb-3">
-            <h3 class="font-bold">Suscripciones</h3>
+            <h3 class="font-bold">{{ tr.suscripciones }}</h3>
             {% if perms.subscriptions.add_suscripcion %}
-            <a href="{% url 'suscripcion_create' %}?cliente={{ cliente.pk }}" class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700">+ Nueva</a>
+            <a href="{% url 'suscripcion_create' %}?cliente={{ cliente.pk }}" class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700">+ {{ tr.nueva }}</a>
             {% endif %}
         </div>
-        <table class="w-full text-sm">
-            <thead><tr class="text-left border-b dark:border-gray-600"><th>Plan</th><th>Inicio</th><th>Vencimiento</th><th>Estado</th><th>Método de pago</th><th></th></tr></thead>
+        <div class="responsive-table"><table class="w-full text-sm">
+            <thead><tr class="text-left border-b dark:border-gray-600"><th>{{ tr.plan }}</th><th>{{ tr.inicio }}</th><th>{{ tr.vencimiento }}</th><th>{{ tr.estado }}</th><th>{{ tr.metodo_pago }}</th><th></th></tr></thead>
             <tbody>
                 {% for s in suscripciones %}
                 <tr class="border-b dark:border-gray-600">
@@ -67,27 +67,27 @@
                     <td class="py-2 text-sm">{{ s.get_metodo_pago_display }}</td>
                     <td class="py-2">
                         {% if perms.subscriptions.change_suscripcion %}
-                        <a href="{% url 'suscripcion_cancel' s.pk %}" class="text-red-600 dark:text-red-400 text-xs hover:underline" onclick="return confirm('¿Cancelar esta suscripción?')">Cancelar</a>
+                        <a href="{% url 'suscripcion_cancel' s.pk %}" class="text-red-600 dark:text-red-400 text-xs hover:underline" onclick="return confirm('¿Cancelar esta suscripción?')">{{ tr.cancelar_btn }}</a>
                         {% endif %}
                         {% if perms.notifications.add_lognotificacion and s.estado == 'activo' %}
-                        <a href="{% url 'enviar_recordatorio' s.pk %}" class="text-blue-600 dark:text-blue-400 text-xs hover:underline ml-2">Recordatorio</a>
+                        <a href="{% url 'enviar_recordatorio' s.pk %}" class="text-blue-600 dark:text-blue-400 text-xs hover:underline ml-2">{{ tr.recordatorio }}</a>
                         {% endif %}
                     </td>
                 </tr>
                 {% empty %}
-                <tr><td colspan="6" class="py-2 text-center text-gray-400">Sin suscripciones</td></tr>
+                <tr><td colspan="6" class="py-2 text-center text-gray-400">{{ tr.sin_suscripciones }}</td></tr>
                 {% endfor %}
             </tbody>
-        </table>
+        </table></div>
     </div>
 
     <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
-        <h3 class="font-bold mb-3">Anotaciones</h3>
+        <h3 class="font-bold mb-3">{{ tr.anotaciones }}</h3>
         {% if perms.clients.change_cliente %}
         <form method="post" action="{% url 'nota_create' cliente.pk %}" class="mb-4 flex space-x-2">
             {% csrf_token %}
-            <input type="text" name="contenido" placeholder="Nueva anotación..." class="flex-1 px-3 py-2 border rounded dark:bg-gray-700 dark:text-white text-sm" required>
-            <button type="submit" class="bg-gray-700 text-white px-4 py-2 rounded text-sm hover:bg-gray-800">Agregar</button>
+            <input type="text" name="contenido" placeholder="{{ tr.nueva_anotacion }}" class="flex-1 px-3 py-2 border rounded dark:bg-gray-700 dark:text-white text-sm" required>
+            <button type="submit" class="bg-gray-700 text-white px-4 py-2 rounded text-sm hover:bg-gray-800">{{ tr.agregar }}</button>
         </form>
         {% endif %}
         <div class="space-y-2 max-h-60 overflow-y-auto">
@@ -110,19 +110,19 @@
                 {% endif %}
             </div>
             {% empty %}
-            <p class="text-gray-400 text-sm">Sin anotaciones</p>
+            <p class="text-gray-400 text-sm">{{ tr.sin_anotaciones }}</p>
             {% endfor %}
         </div>
     </div>
 </div>
 
 <div class="bg-white dark:bg-gray-800 p-4 rounded shadow mt-6">
-    <h3 class="font-bold mb-3">Historial</h3>
+    <h3 class="font-bold mb-3">{{ tr.historial }}</h3>
     {% if perms.clients.change_cliente %}
     <form method="post" action="{% url 'agregar_nota' cliente.pk %}" class="mb-4 flex space-x-2">
         {% csrf_token %}
-        <input type="text" name="nota" placeholder="Agregar nota al historial..." class="flex-1 px-3 py-2 border rounded dark:bg-gray-700 dark:text-white text-sm" required>
-        <button type="submit" class="bg-gray-700 text-white px-4 py-2 rounded text-sm hover:bg-gray-800">Agregar</button>
+        <input type="text" name="nota" placeholder="{{ tr.nueva_nota_historial }}" class="flex-1 px-3 py-2 border rounded dark:bg-gray-700 dark:text-white text-sm" required>
+        <button type="submit" class="bg-gray-700 text-white px-4 py-2 rounded text-sm hover:bg-gray-800">{{ tr.agregar }}</button>
     </form>
     {% endif %}
     <div class="space-y-2 max-h-60 overflow-y-auto">
@@ -133,7 +133,7 @@
             {% if h.usuario %}<span class="text-xs text-gray-400">({{ h.usuario.get_full_name|default:h.usuario.username }})</span>{% endif %}
         </div>
         {% empty %}
-        <p class="text-gray-400 text-sm">Sin historial</p>
+        <p class="text-gray-400 text-sm">{{ tr.sin_historial }}</p>
         {% endfor %}
     </div>
 </div>
@@ -141,11 +141,11 @@
 <script>
 function confirmarDesactivacion(pk) {
     var activas = {{ suscripciones_activas_count }};
-    var msg = '¿Desactivar este cliente?';
+    var msg = '{{ tr.desactivar_esta_cuenta|escapejs }}';
     if (activas > 0) {
-        msg = 'Este cliente tiene <strong>' + activas + ' suscripción(es) activa(s)</strong> que serán canceladas automáticamente. ¿Desactivar de todas formas?';
+        msg = '{{ tr.desactivar_confirm_msg|escapejs }}';
     }
-    openModal('Desactivar cliente', msg, function() {
+    openModal('{{ tr.desactivar_cliente_modal|escapejs }}', msg, function() {
         document.getElementById('delete-form').submit();
     });
 }

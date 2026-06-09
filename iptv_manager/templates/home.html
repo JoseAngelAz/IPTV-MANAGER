@@ -1,10 +1,11 @@
 {% load static %}
+{% load i18n_tags %}
 <!DOCTYPE html>
-<html lang="es">
+<html lang="{{ LANGUAGE_CODE|default:'es' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IPTV Manager — Sistema de Gestión</title>
+    <title>IPTV Manager — {{ tr.sistema_de_gestion_de_servicios_iptv }}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -19,15 +20,14 @@
 
     <div class="relative z-10 text-center px-6 max-w-4xl">
         <h1 class="text-5xl font-bold text-white mb-4 drop-shadow-lg">IPTV Manager</h1>
-        <p class="text-xl text-gray-200 mb-6">Sistema de Gestión de Servicios IPTV</p>
+        <p class="text-xl text-gray-200 mb-6">{{ tr.sistema_de_gestion_de_servicios_iptv }}</p>
 
         <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-8 border border-white/20">
             <p class="text-gray-200 text-lg leading-relaxed">
-                <strong class="text-white">IPTV Manager</strong> es un sistema integral para la administración de 
-                pequeñas y medianas empresas proveedoras de servicios IPTV. Centraliza la gestión de 
-                <strong class="text-blue-300">clientes</strong>, <strong class="text-green-300">suscripciones</strong>, 
-                <strong class="text-yellow-300">planes</strong>, <strong class="text-purple-300">finanzas</strong> 
-                y <strong class="text-pink-300">notificaciones</strong> en un solo panel de control moderno y seguro.
+                {% tr "IPTV Manager es un sistema integral para la administración de pequeñas y medianas empresas proveedoras de servicios IPTV. Centraliza la gestión de" %}
+                <strong class="text-blue-300">{{ tr.clientes }}</strong>, <strong class="text-green-300">{{ tr.suscripciones }}</strong>, 
+                <strong class="text-yellow-300">{{ tr.planes }}</strong>, <strong class="text-purple-300">{{ tr.finanzas }}</strong> 
+                y <strong class="text-pink-300">{{ tr.notificaciones }}</strong> {% tr "en un solo panel de control moderno y seguro." %}
             </p>
         </div>
 
@@ -37,7 +37,7 @@
                     <div class="text-3xl"><i class="fas fa-users text-blue-400"></i></div>
                     <div>
                         <p class="text-white text-lg font-bold">{{ stats.total_clientes }}</p>
-                        <p class="text-gray-400 text-sm">Clientes activos</p>
+                        <p class="text-gray-400 text-sm">{{ tr.clientes_activos_estadistica }}</p>
                     </div>
                 </div>
             </div>
@@ -46,7 +46,7 @@
                     <div class="text-3xl"><i class="fas fa-clipboard-check text-green-400"></i></div>
                     <div>
                         <p class="text-white text-lg font-bold">{{ stats.suscripciones_activas }}</p>
-                        <p class="text-gray-400 text-sm">Suscripciones activas</p>
+                        <p class="text-gray-400 text-sm">{{ tr.suscripciones_activas_estadistica }}</p>
                     </div>
                 </div>
             </div>
@@ -55,7 +55,7 @@
                     <div class="text-3xl"><i class="fas fa-tag text-yellow-400"></i></div>
                     <div>
                         <p class="text-white text-lg font-bold">{{ stats.total_planes }}</p>
-                        <p class="text-gray-400 text-sm">Planes disponibles</p>
+                        <p class="text-gray-400 text-sm">{{ tr.planes_disponibles }}</p>
                     </div>
                 </div>
             </div>
@@ -63,18 +63,18 @@
 
         <div class="flex flex-wrap justify-center gap-4 mb-8">
             <a href="{% url 'login' %}" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition shadow-lg flex items-center gap-2">
-                <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                <i class="fas fa-sign-in-alt"></i> {{ tr.iniciar_sesion_btn }}
             </a>
             <a href="{% url 'about' %}" class="bg-white/10 hover:bg-white/20 text-white px-8 py-3 rounded-lg font-semibold transition border border-white/30 flex items-center gap-2">
-                <i class="fas fa-info-circle"></i> Acerca de
+                <i class="fas fa-info-circle"></i> {{ tr.acerca_de_btn }}
             </a>
             <a href="{% url 'documentation' %}" class="bg-white/10 hover:bg-white/20 text-white px-8 py-3 rounded-lg font-semibold transition border border-white/30 flex items-center gap-2">
-                <i class="fas fa-book"></i> Documentación
+                <i class="fas fa-book"></i> {{ tr.documentacion_btn }}
             </a>
         </div>
 
         <div class="text-gray-400 text-sm max-w-2xl mx-auto mb-8">
-            <p><i class="fas fa-check-circle text-green-400 mr-2"></i>Gestiona clientes, asigna suscripciones, controla finanzas y automatiza recordatorios — todo desde un solo lugar.</p>
+            <p><i class="fas fa-check-circle text-green-400 mr-2"></i>{{ tr.gestiona_clientes_asigna_suscripciones_controla_finanzas_y_automatiza_recordatorios_todo_desde_un_solo_lugar }}</p>
         </div>
 
         <p class="text-xs text-gray-500">© 2026 José Ángel Azucena Méndez</p>

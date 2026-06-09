@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="es">
+<html lang="{{ LANGUAGE_CODE|default:'es' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -104,15 +104,15 @@
             <hr class="my-6 opacity-20">
             <div class="fade-in-d3">
                 <button onclick="toggleReportForm()" class="btn-500 btn-500-outline text-sm">
-                    <i class="fas fa-bug"></i> Reportar error
+                    <i class="fas fa-bug"></i> {{ tr.reportar_error }}
                 </button>
                 <div id="report-form" class="hidden mt-4 text-left">
                     <form method="post" action="{% url 'error_report' %}">
                         {% csrf_token %}
                         <input type="hidden" name="url" value="{{ error_url }}">
-                        <textarea name="descripcion" rows="3" placeholder="¿Qué estabas haciendo cuando ocurrió el error?" class="w-full px-3 py-2 rounded bg-white/10 border border-white/20 text-sm text-white placeholder-white/40 focus:outline-none focus:border-white/40" required></textarea>
+                        <textarea name="descripcion" rows="3" placeholder="{{ tr.que_estabas_haciendo }}" class="w-full px-3 py-2 rounded bg-white/10 border border-white/20 text-sm text-white placeholder-white/40 focus:outline-none focus:border-white/40" required></textarea>
                         <button type="submit" class="mt-2 btn-500 btn-500-primary text-sm w-full justify-center">
-                            <i class="fas fa-paper-plane"></i> Enviar reporte
+                            <i class="fas fa-paper-plane"></i> {{ tr.enviar_reporte }}
                         </button>
                     </form>
                 </div>
