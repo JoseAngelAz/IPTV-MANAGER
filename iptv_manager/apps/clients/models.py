@@ -116,6 +116,30 @@ class CustomField(models.Model):
         return self.nombre
 
 
+class BusinessTemplate(models.Model):
+    VERTICAL_CHOICES = CustomField.VERTICAL_CHOICES
+    vertical = models.CharField('Vertical de negocio', max_length=50, choices=VERTICAL_CHOICES, unique=True)
+    aplicado = models.BooleanField('Aplicado', default=False,
+        help_text='Indica si este preset ya fue aplicado para crear los campos personalizados.')
+    fecha_aplicado = models.DateTimeField('Fecha de aplicación', blank=True, null=True)
+
+    class Meta:
+        verbose_name = 'Plantilla de negocio'
+        verbose_name_plural = 'Plantillas de negocio'
+
+    def __str__(self):
+        return self.get_vertical_display()
+
+    def apply(self):
+        from .presets import apply_preset
+        created = apply_preset(self.vertical, clear_existing=False)
+        from django.utils.timezone import now
+        self.aplicado = True
+        self.fecha_aplicado = now()
+        self.save()
+        return created
+
+
 class Nota(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='notas', verbose_name='Cliente')
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, verbose_name='Creada por')
