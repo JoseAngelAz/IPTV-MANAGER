@@ -7,6 +7,7 @@ class ClienteAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'telefono', 'dispositivo_id', 'fecha_registro', 'activo')
     list_filter = ('activo',)
     search_fields = ('nombre', 'telefono', 'dispositivo_id', 'documento_identidad')
+    readonly_fields = ('fecha_registro',)
 
 
 @admin.register(HistorialCliente)

@@ -40,9 +40,11 @@ class Cliente(models.Model):
     nombre = models.CharField('Nombre', max_length=200)
     telefono = models.CharField('Teléfono', max_length=16, validators=[telefono_validator])
     email = models.EmailField('Email', blank=True, default='')
-    dispositivo_id = models.CharField('ID Dispositivo / MAC', max_length=20, validators=[mac_validator], unique=True)
+    dispositivo_id = models.CharField('ID Dispositivo / MAC', max_length=20, validators=[mac_validator], unique=True, null=True, blank=True)
     foto = models.ImageField('Foto', upload_to=_procesar_foto, blank=True, null=True)
     documento_identidad = models.CharField('Documento de identidad', max_length=100, blank=True, default='')
+    datos_extra = models.JSONField('Datos adicionales', blank=True, null=True, default=dict,
+        help_text='Almacena campos personalizados adicionales en formato JSON.')
     fecha_registro = models.DateTimeField('Fecha de registro', auto_now_add=True)
     activo = models.BooleanField('Activo', default=True)
 
@@ -57,7 +59,9 @@ class Cliente(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.nombre} ({self.dispositivo_id})'
+        if self.dispositivo_id:
+            return f'{self.nombre} ({self.dispositivo_id})'
+        return self.nombre
 
 
 class HistorialCliente(models.Model):

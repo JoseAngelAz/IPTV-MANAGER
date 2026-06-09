@@ -32,8 +32,18 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
             <p><strong>{{ tr.telefono }}</strong> {{ cliente.telefono }}</p>
             <p><strong>{{ tr.email }}</strong> {{ cliente.email|default:"—" }}</p>
-            <p><strong>{{ tr.dispositivo_label }}</strong> <code>{{ cliente.dispositivo_id }}</code></p>
+            <p><strong>{{ tr.dispositivo_label }}</strong> <code>{{ cliente.dispositivo_id|default:"—" }}</code></p>
             <p><strong>{{ tr.documento_label }}</strong> {{ cliente.documento_identidad|default:"—" }}</p>
+            {% if cliente.datos_extra %}
+            <div class="col-span-full mt-2 p-3 bg-gray-50 dark:bg-gray-700 rounded">
+                <h4 class="text-sm font-semibold mb-2">{{ tr.datos_adicionales }}</h4>
+                <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-sm">
+                    {% for k, v in cliente.datos_extra.items %}
+                    <div><dt class="text-gray-500 text-xs">{{ k }}</dt><dd>{{ v }}</dd></div>
+                    {% endfor %}
+                </dl>
+            </div>
+            {% endif %}
             <p><strong>{{ tr.registro_label }}</strong> {{ cliente.fecha_registro|date:"d/m/Y H:i" }}</p>
             <p><strong>{{ tr.activo_label }}</strong> {{ cliente.activo|yesno:"Sí,No" }}</p>
         </div>
