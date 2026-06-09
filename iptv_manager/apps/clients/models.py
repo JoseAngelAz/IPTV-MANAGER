@@ -79,6 +79,43 @@ class HistorialCliente(models.Model):
         return f'{self.cliente} — {self.fecha.strftime("%d/%m/%Y %H:%M")}'
 
 
+class CustomField(models.Model):
+    FIELD_TYPES = (
+        ('text', 'Texto / Text'),
+        ('number', 'Número / Number'),
+        ('boolean', 'Sí/No / Boolean'),
+        ('date', 'Fecha / Date'),
+        ('email', 'Email'),
+        ('select', 'Selección / Select'),
+    )
+    VERTICAL_CHOICES = (
+        ('', '— Global (todas las verticales)'),
+        ('iptv', 'IPTV'),
+        ('gimnasio', 'Gimnasio / Gym'),
+        ('escuela', 'Escuela / School'),
+        ('taller', 'Taller / Workshop'),
+        ('consultorio', 'Consultorio / Clinic'),
+        ('otro', 'Otro / Other'),
+    )
+    nombre = models.CharField('Nombre del campo', max_length=100)
+    field_type = models.CharField('Tipo de campo', max_length=20, choices=FIELD_TYPES, default='text')
+    required = models.BooleanField('Requerido', default=False)
+    options = models.TextField('Opciones', blank=True,
+        help_text='Para tipo "Selección", una opción por línea. / For "Select" type, one option per line.')
+    vertical = models.CharField('Vertical de negocio', max_length=50, choices=VERTICAL_CHOICES, blank=True, default='',
+        help_text='Dejar vacío para aplicar a todas las verticales. / Leave empty for all verticals.')
+    ordering = models.IntegerField('Orden', default=0)
+    activo = models.BooleanField('Activo', default=True)
+
+    class Meta:
+        verbose_name = 'Campo personalizado'
+        verbose_name_plural = 'Campos personalizados'
+        ordering = ['ordering', 'nombre']
+
+    def __str__(self):
+        return self.nombre
+
+
 class Nota(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='notas', verbose_name='Cliente')
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, verbose_name='Creada por')

@@ -1,20 +1,9 @@
 import json
 from django import forms
-from .models import Cliente
+from .models import Cliente, CustomField
 
 
 class ClienteForm(forms.ModelForm):
-    datos_extra_json = forms.CharField(
-        label='Datos adicionales (JSON)',
-        required=False,
-        widget=forms.Textarea(attrs={
-            'class': 'w-full px-3 py-2 border rounded dark:bg-gray-700 dark:text-white font-mono text-sm',
-            'rows': 4,
-            'placeholder': '{"campo_extra": "valor"}',
-        }),
-        help_text='Campos personalizados en formato JSON. Ej: {"membresia": "Premium", "tipo": "VIP"}'
-    )
-
     class Meta:
         model = Cliente
         fields = ('nombre', 'telefono', 'email', 'dispositivo_id', 'documento_identidad', 'foto')
@@ -29,28 +18,71 @@ class ClienteForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.instance and self.instance.pk:
-            if self.instance.datos_extra:
-                self.fields['datos_extra_json'].initial = json.dumps(
-                    self.instance.datos_extra, indent=2, ensure_ascii=False
-                )
         self.fields['dispositivo_id'].required = False
+        self._custom_field_names = []
 
-    def clean_datos_extra_json(self):
-        data = self.cleaned_data.get('datos_extra_json', '')
-        if not data or not data.strip():
-            return {}
-        try:
-            result = json.loads(data)
-            if not isinstance(result, dict):
-                raise forms.ValidationError('Debe ser un objeto JSON (diccionario).')
-            return result
-        except json.JSONDecodeError as e:
-            raise forms.ValidationError(f'JSON inválido: {e}')
+        extra_data = {}
+        if self.instance and self.instance.pk and self.instance.datos_extra:
+            extra_data = self.instance.datos_extra
+
+        custom_fields = CustomField.objects.filter(activo=True)
+        for cf in custom_fields:
+            field_name = f'_cf_{cf.pk}'
+            self._custom_field_names.append(field_name)
+            initial_val = extra_data.get(cf.nombre, '')
+            base_attrs = {'class': 'w-full px-3 py-2 border rounded dark:bg-gray-700 dark:text-white'}
+            required = cf.required
+
+            if cf.field_type == 'text':
+                self.fields[field_name] = forms.CharField(
+                    label=cf.nombre, required=required, initial=initial_val,
+                    widget=forms.TextInput(attrs=base_attrs))
+            elif cf.field_type == 'number':
+                self.fields[field_name] = forms.FloatField(
+                    label=cf.nombre, required=required, initial=initial_val,
+                    widget=forms.NumberInput(attrs=base_attrs))
+            elif cf.field_type == 'boolean':
+                self.fields[field_name] = forms.BooleanField(
+                    label=cf.nombre, required=False, initial=initial_val in (True, 'True', 'true', 1, '1'))
+            elif cf.field_type == 'date':
+                self.fields[field_name] = forms.DateField(
+                    label=cf.nombre, required=required, initial=initial_val or None,
+                    widget=forms.DateInput(attrs={**base_attrs, 'type': 'date'}))
+            elif cf.field_type == 'email':
+                self.fields[field_name] = forms.EmailField(
+                    label=cf.nombre, required=required, initial=initial_val,
+                    widget=forms.EmailInput(attrs=base_attrs))
+            elif cf.field_type == 'select' and cf.options:
+                choices = [('', '---------')] + [(o.strip(), o.strip()) for o in cf.options.split('\n') if o.strip()]
+                self.fields[field_name] = forms.ChoiceField(
+                    label=cf.nombre, required=required, initial=initial_val, choices=choices,
+                    widget=forms.Select(attrs=base_attrs))
+
+    def clean(self):
+        cleaned = super().clean()
+        extra = {}
+        for field_name in self._custom_field_names:
+            if field_name in cleaned and cleaned[field_name] not in (None, '', False):
+                # Strip the _cf_pk prefix to get back the original field name
+                val = cleaned[field_name]
+                if isinstance(val, bool):
+                    val = val
+                elif isinstance(val, float) and val == int(val):
+                    val = int(val)
+                # Find the CustomField to get the original nombre
+                pk = int(field_name.replace('_cf_', ''))
+                try:
+                    cf = CustomField.objects.get(pk=pk)
+                    extra[cf.nombre] = val
+                except CustomField.DoesNotExist:
+                    pass
+        cleaned['datos_extra'] = extra
+        return cleaned
 
     def save(self, commit=True):
         instance = super().save(commit=False)
-        instance.datos_extra = self.cleaned_data.get('datos_extra_json', {})
+        if hasattr(self, 'cleaned_data') and 'datos_extra' in self.cleaned_data:
+            instance.datos_extra = self.cleaned_data['datos_extra']
         if commit:
             instance.save()
         return instance
