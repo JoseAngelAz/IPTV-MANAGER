@@ -88,6 +88,19 @@
 </div>
 
 <div class="card-custom p-6 rounded shadow">
+    <h3 class="font-bold text-lg mb-4"><i class="fas fa-cubes text-indigo-500 mr-2"></i>{{ tr.personalizacion_erp }} (Campos personalizados)</h3>
+    <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">El sistema ahora funciona como ERP multipropósito. Puedes adaptarlo a cualquier tipo de negocio:</p>
+    <ol class="list-decimal list-inside space-y-2 text-sm">
+        <li><strong>Campos adicionales (JSON)</strong> — Al crear o editar un cliente, verás una sección "Datos adicionales" donde puedes agregar información extra en formato JSON.</li>
+        <li><strong>Campos personalizados (CustomField)</strong> — Ve al <span class="font-semibold">Admin de Django → Clients → Campos personalizados</span>. Crea campos con nombre, tipo (texto, número, booleano, fecha, email, selección), y asígnalos a una vertical de negocio.</li>
+        <li><strong>Verticales de negocio</strong> — Define qué tipo de negocio eres: IPTV, Gimnasio, Escuela, Taller, Consultorio u Otro. Los campos personalizados se muestran según la vertical seleccionada.</li>
+        <li><strong>Plantillas predefinidas</strong> — En el admin, ve a <span class="font-semibold">Clients → Plantillas de negocio</span>. Selecciona una plantilla (IPTV, Gimnasio, etc.) y usa la acción "Aplicar plantilla seleccionada" para crear automáticamente todos los campos recomendados para esa vertical.</li>
+        <li><strong>Formulario dinámico</strong> — Una vez creados los campos personalizados, el formulario de cliente los mostrará automáticamente en la sección "Datos adicionales".</li>
+        <li><strong>dispositivo_id opcional</strong> — El campo de MAC address ya no es obligatorio, permitiendo usar el sistema para negocios que no requieren dispositivos IPTV.</li>
+    </ol>
+</div>
+
+<div class="card-custom p-6 rounded shadow">
     <h3 class="font-bold text-lg mb-4"><i class="fas fa-shield-alt text-red-500 mr-2"></i>{{ tr.roles_y_permisos }}</h3>
     <div class="overflow-x-auto text-sm">
         <table class="w-full border-collapse">

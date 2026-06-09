@@ -740,9 +740,10 @@ python manage.py runserver 0.0.0.0:8000</pre>
                     <div class="er-title text-green-700">Cliente</div>
                     <div class="er-field"><span class="er-pk">PK</span> id</div>
                     <div class="er-field"><i class="fas fa-user text-gray-400 w-4"></i> nombre, telefono, email</div>
-                    <div class="er-field"><i class="fas fa-network-wired text-gray-400 w-4"></i> dispositivo_id (MAC, unique)</div>
+                    <div class="er-field"><i class="fas fa-network-wired text-gray-400 w-4"></i> dispositivo_id (MAC, opcional)</div>
                     <div class="er-field"><i class="fas fa-image text-green-400 w-4"></i> foto</div>
                     <div class="er-field"><i class="fas fa-calendar text-gray-400 w-4"></i> fecha_registro, activo</div>
+                    <div class="er-field"><i class="fas fa-database text-indigo-400 w-4"></i> datos_extra (JSON)</div>
                 </div>
             </div>
             <div class="er-line"></div>
@@ -885,6 +886,24 @@ python manage.py runserver 0.0.0.0:8000</pre>
                 <li>mensaje, enviado_ok</li>
                 <li>suscripcion (FK, unique+canal)</li>
                 <li>cliente (FK), fecha_envio</li>
+            </ul>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded">
+            <p class="font-bold text-violet-600 mb-2"><i class="fas fa-cubes mr-1"></i>CustomField</p>
+            <ul class="list-disc list-inside text-xs space-y-1">
+                <li>nombre, field_type (text/number/boolean/date/email/select)</li>
+                <li>required, options (for select), activo</li>
+                <li>vertical (IPTV, gimnasio, escuela, taller, consultorio, otro)</li>
+                <li>ordering (drag-free reorder via admin)</li>
+            </ul>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded">
+            <p class="font-bold text-indigo-600 mb-2"><i class="fas fa-file-invoice mr-1"></i>BusinessTemplate</p>
+            <ul class="list-disc list-inside text-xs space-y-1">
+                <li>vertical (unique, same choices as CustomField)</li>
+                <li>aplicado (boolean), fecha_aplicado</li>
+                <li>apply() method creates CustomField instances from presets</li>
+                <li>6 presets in presets.py (IPTV, gym, school, workshop, clinic, other)</li>
             </ul>
         </div>
         <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded">
