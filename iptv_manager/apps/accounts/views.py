@@ -280,12 +280,15 @@ def landing_page_config_view(request):
     if request.method == 'POST':
         form = LandingPageConfigForm(request.POST, request.FILES, instance=config)
         if form.is_valid():
-            form.save()
+            instance = form.save(commit=False)
+            instance.updated_by = request.user
+            instance.save()
             log_user_action(request.user, 'update', 'LandingPageConfig', 'Configuración de landing page',
                            details='Actualizó la configuración de la página de inicio',
                            request=request)
             messages.success(request, 'Configuración de página de inicio actualizada.')
             return redirect('landing_page_config')
+        messages.error(request, 'Corrige los errores en el formulario.')
     else:
         form = LandingPageConfigForm(instance=config)
     return render(request, 'accounts/landing_page_config.html', {'form': form, 'config': config})

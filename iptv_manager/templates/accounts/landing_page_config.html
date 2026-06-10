@@ -8,9 +8,17 @@
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
+        {% if form.errors %}
+        <div class="mb-4 p-3 bg-red-100 dark:bg-red-900/30 border border-red-400 dark:border-red-700 rounded text-red-700 dark:text-red-300 text-sm">
+            <i class="fas fa-exclamation-triangle mr-1"></i>
+            {{ tr.corrige_errores }}
+        </div>
+        {% endif %}
+
         <div class="mb-4">
             <label class="block text-sm font-medium mb-1">{{ form.background_image.label }}</label>
             {{ form.background_image }}
+            {% if form.background_image.errors %}<p class="text-red-500 text-xs mt-1">{{ form.background_image.errors.0 }}</p>{% endif %}
             {% if config.background_image %}
             <div class="mt-2">
                 <img src="{{ config.background_image.url }}" class="max-h-32 rounded border dark:border-gray-600">
@@ -24,11 +32,13 @@
             <div>
                 <label class="block text-sm font-medium mb-1">{{ form.gradient_from.label }}</label>
                 {{ form.gradient_from }}
+                {% if form.gradient_from.errors %}<p class="text-red-500 text-xs mt-1">{{ form.gradient_from.errors.0 }}</p>{% endif %}
                 <p class="text-xs text-gray-500 mt-1">{{ form.gradient_from.help_text }}</p>
             </div>
             <div>
                 <label class="block text-sm font-medium mb-1">{{ form.gradient_to.label }}</label>
                 {{ form.gradient_to }}
+                {% if form.gradient_to.errors %}<p class="text-red-500 text-xs mt-1">{{ form.gradient_to.errors.0 }}</p>{% endif %}
                 <p class="text-xs text-gray-500 mt-1">{{ form.gradient_to.help_text }}</p>
             </div>
         </div>
@@ -37,6 +47,7 @@
             <div>
                 <label class="block text-sm font-medium mb-1">{{ form.overlay_opacity.label }}</label>
                 {{ form.overlay_opacity }}
+                {% if form.overlay_opacity.errors %}<p class="text-red-500 text-xs mt-1">{{ form.overlay_opacity.errors.0 }}</p>{% endif %}
                 <p class="text-xs text-gray-500 mt-1">{{ form.overlay_opacity.help_text }}</p>
             </div>
             <div>

@@ -481,6 +481,8 @@ _TRANSLATIONS = {
         'xss_crosssite_scripting': 'XSS (Cross-Site Scripting)',
         'resetear_tiempo_sesion': 'Reiniciar tiempo de sesión',
         'tiempo_reiniciado': '¡Tiempo de sesión reiniciado!',
+        'reportes_error': 'Reportes de error',
+        'corrige_errores': 'Corrige los errores en el formulario.',
     },
     'en': {
         'dashboard': 'Dashboard',
@@ -962,6 +964,8 @@ _TRANSLATIONS = {
         'xss_crosssite_scripting': 'XSS (Cross-Site Scripting)',
         'resetear_tiempo_sesion': 'Reset session time',
         'tiempo_reiniciado': 'Session time reset!',
+        'reportes_error': 'Error Reports',
+        'corrige_errores': 'Fix the errors in the form.',
     },
 }
 

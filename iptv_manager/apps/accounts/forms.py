@@ -103,6 +103,10 @@ class LandingPageConfigForm(forms.ModelForm):
             'overlay_opacity': 'Opacidad del degradado (0 = transparente, 100 = sólido).',
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['overlay_opacity'].required = False
+
 
 class TareaForm(forms.ModelForm):
     class Meta:

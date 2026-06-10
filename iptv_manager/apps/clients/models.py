@@ -26,14 +26,17 @@ def _procesar_foto(instance, filename):
 def comprimir_foto(image_field, max_dim=400, quality=70):
     if not image_field:
         return
-    img = Image.open(image_field)
-    img = img.convert('RGB')
-    img.thumbnail((max_dim, max_dim), Image.LANCZOS)
-    buffer = BytesIO()
-    img.save(buffer, format='JPEG', quality=quality, optimize=True)
-    buffer.seek(0)
-    image_field.file = buffer
-    image_field.name = image_field.name.rsplit('.', 1)[0] + '.jpg'
+    try:
+        img = Image.open(image_field)
+        img = img.convert('RGB')
+        img.thumbnail((max_dim, max_dim), Image.LANCZOS)
+        buffer = BytesIO()
+        img.save(buffer, format='JPEG', quality=quality, optimize=True)
+        buffer.seek(0)
+        image_field.file = buffer
+        image_field.name = image_field.name.rsplit('.', 1)[0] + '.jpg'
+    except Exception:
+        pass
 
 
 class Cliente(models.Model):
@@ -54,8 +57,13 @@ class Cliente(models.Model):
         ordering = ['-fecha_registro']
 
     def save(self, *args, **kwargs):
+        if self.dispositivo_id == '':
+            self.dispositivo_id = None
         if self.foto:
-            comprimir_foto(self.foto)
+            try:
+                comprimir_foto(self.foto)
+            except Exception:
+                pass
         super().save(*args, **kwargs)
 
     def __str__(self):

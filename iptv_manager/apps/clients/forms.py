@@ -58,24 +58,29 @@ class ClienteForm(forms.ModelForm):
                     label=cf.nombre, required=required, initial=initial_val, choices=choices,
                     widget=forms.Select(attrs=base_attrs))
 
+    def clean_dispositivo_id(self):
+        value = self.cleaned_data.get('dispositivo_id', '')
+        if not value or value.strip() == '':
+            return None
+        return value
+
     def clean(self):
         cleaned = super().clean()
         extra = {}
         for field_name in self._custom_field_names:
-            if field_name in cleaned and cleaned[field_name] not in (None, '', False):
-                # Strip the _cf_pk prefix to get back the original field name
-                val = cleaned[field_name]
-                if isinstance(val, bool):
-                    val = val
-                elif isinstance(val, float) and val == int(val):
-                    val = int(val)
-                # Find the CustomField to get the original nombre
-                pk = int(field_name.replace('_cf_', ''))
-                try:
-                    cf = CustomField.objects.get(pk=pk)
-                    extra[cf.nombre] = val
-                except CustomField.DoesNotExist:
-                    pass
+            val = cleaned.get(field_name)
+            if val is None or val == '':
+                continue
+            if isinstance(val, bool) and val is False:
+                continue
+            if isinstance(val, float) and val == int(val):
+                val = int(val)
+            pk = int(field_name.replace('_cf_', ''))
+            try:
+                cf = CustomField.objects.get(pk=pk)
+                extra[cf.nombre] = val
+            except CustomField.DoesNotExist:
+                pass
         cleaned['datos_extra'] = extra
         return cleaned
 
