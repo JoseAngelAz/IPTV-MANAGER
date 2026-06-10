@@ -128,6 +128,27 @@
 </div>
 
 <div class="card-custom p-6 rounded shadow">
+    <h3 class="font-bold text-lg mb-4"><i class="fas fa-bug text-red-500 mr-2"></i>{{ tr.reportes_error }} (Página 500)</h3>
+    <ol class="list-decimal list-inside space-y-2 text-sm">
+        <li><strong>Página 500 personalizada</strong> — Cuando ocurre un error interno del servidor, se muestra una página 500 estilizada con el mensaje de error y el código de estado.</li>
+        <li><strong>Ver detalle técnico</strong> — Haz clic en "Ver detalle del error" para desplegar el traceback completo con la traza del error. Esta información es útil para reportar el problema al administrador.</li>
+        <li><strong>Reportar error</strong> — Usa el botón "Reportar error", describe qué estabas haciendo cuando ocurrió, y el reporte (incluyendo el traceback automático) se guarda en el sistema.</li>
+        <li><strong>Lista de reportes</strong> — Los superusuarios pueden ver todos los reportes de error en <span class="font-semibold">Páginas de Error → Reportes de Error</span> (sidebar). Ahí se listan el usuario, URL, descripción, IP y traceback de cada reporte.</li>
+    </ol>
+</div>
+
+<div class="card-custom p-6 rounded shadow">
+    <h3 class="font-bold text-lg mb-4"><i class="fas fa-home text-blue-500 mr-2"></i>Landing Page</h3>
+    <ol class="list-decimal list-inside space-y-2 text-sm">
+        <li><strong>Configuración</strong> — Los superusuarios pueden configurar la landing page (página principal pública) desde <span class="font-semibold">Landing Page</span> en el sidebar.</li>
+        <li><strong>Fondo de imagen</strong> — Sube una imagen de fondo y ajusta su opacidad de superposición (por defecto 40% para un balance entre imagen legible y texto visible).</li>
+        <li><strong>Fondo pixel art</strong> — Elige entre 9 fondos animados pixel art: Cyberpunk, Aurora Boreal, Galaxia, Sakura, Neón, Océano, Lava, Ciudad Nocturna o Bosque. Se muestran cuando no hay imagen de fondo.</li>
+        <li><strong>Estadísticas</strong> — Opcionalmente muestra estadísticas como total de clientes, suscripciones activas e ingresos del mes.</li>
+        <li><strong>Colores</strong> — Personaliza los colores del degradado de superposición (from/to).</li>
+    </ol>
+</div>
+
+<div class="card-custom p-6 rounded shadow">
     <h3 class="font-bold text-lg mb-4"><i class="fas fa-question-circle text-blue-500 mr-2"></i>{{ tr.solucion_de_problemas }}</h3>
     <div class="space-y-3 text-sm">
         <div>
@@ -141,6 +162,10 @@
         <div>
             <p class="font-semibold">El servidor no responde</p>
             <p class="text-xs text-gray-500">Asegúrate de que el servidor esté corriendo con <code>python manage.py runserver</code>. Verifica que el puerto 8000 esté libre.</p>
+        </div>
+        <div>
+            <p class="font-semibold">Error 500 al guardar cliente</p>
+            <p class="text-xs text-gray-500">Si ves un error 500 al crear o editar clientes, el sistema capturará automáticamente el error y te mostrará un mensaje descriptivo. Reporta el error usando el botón en la página 500 para que el administrador pueda revisar el traceback.</p>
         </div>
         <div>
             <p class="font-semibold">No se ve el sidebar</p>

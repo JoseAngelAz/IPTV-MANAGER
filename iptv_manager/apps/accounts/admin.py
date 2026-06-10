@@ -83,4 +83,4 @@ class ErrorReportAdmin(admin.ModelAdmin):
     list_display = ('user', 'url', 'created_at', 'ip_address')
     list_filter = ('created_at',)
     search_fields = ('descripcion', 'user__username')
-    readonly_fields = ('url', 'descripcion', 'user', 'ip_address', 'user_agent', 'created_at')
+    readonly_fields = ('url', 'descripcion', 'user', 'ip_address', 'user_agent', 'error_traceback', 'created_at')

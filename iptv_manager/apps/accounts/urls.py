@@ -35,4 +35,5 @@ urlpatterns = [
     path('plantillas-recordatorio/<int:pk>/eliminar/', views.recordatorio_template_delete, name='recordatorio_template_delete'),
     path('enviar-recordatorio/', views.enviar_recordatorio_view, name='enviar_recordatorio'),
     path('reportar-error/', views.error_report_view, name='error_report'),
+    path('reportes-error/', views.error_report_list_view, name='error_report_list'),
 ]

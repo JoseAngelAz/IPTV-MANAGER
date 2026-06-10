@@ -100,7 +100,18 @@
                 </a>
             </div>
 
-            {% if user.is_authenticated %}
+            {% if error_traceback %}
+            <hr class="my-6 opacity-20">
+            <div class="fade-in-d3">
+                <button onclick="toggleErrorDetail()" class="btn-500 btn-500-outline text-sm">
+                    <i class="fas fa-code"></i> {{ tr.ver_detalle_error }}
+                </button>
+                <div id="error-detail" class="hidden mt-4 text-left">
+                    <textarea readonly rows="8" class="w-full px-3 py-2 rounded bg-black/40 border border-red-500/30 text-xs text-red-300 font-mono focus:outline-none" style="resize:vertical;">{{ error_traceback }}</textarea>
+                </div>
+            </div>
+            {% endif %}
+
             <hr class="my-6 opacity-20">
             <div class="fade-in-d3">
                 <button onclick="toggleReportForm()" class="btn-500 btn-500-outline text-sm">
@@ -110,6 +121,7 @@
                     <form method="post" action="{% url 'error_report' %}">
                         {% csrf_token %}
                         <input type="hidden" name="url" value="{{ error_url }}">
+                        <input type="hidden" name="error_traceback" value="{{ error_traceback|escape }}">
                         <textarea name="descripcion" rows="3" placeholder="{{ tr.que_estabas_haciendo }}" class="w-full px-3 py-2 rounded bg-white/10 border border-white/20 text-sm text-white placeholder-white/40 focus:outline-none focus:border-white/40" required></textarea>
                         <button type="submit" class="mt-2 btn-500 btn-500-primary text-sm w-full justify-center">
                             <i class="fas fa-paper-plane"></i> {{ tr.enviar_reporte }}
@@ -117,7 +129,6 @@
                     </form>
                 </div>
             </div>
-            {% endif %}
 
             <div class="mt-6 flex justify-center gap-4 text-sm opacity-40">
                 <a href="{% url 'dashboard' %}" class="hover:opacity-80 transition"><i class="fas fa-chart-bar mr-1"></i>{{ tr.dashboard }}</a>
@@ -130,8 +141,10 @@
 
 <script>
 function toggleReportForm() {
-    var el = document.getElementById('report-form');
-    el.classList.toggle('hidden');
+    document.getElementById('report-form').classList.toggle('hidden');
+}
+function toggleErrorDetail() {
+    document.getElementById('error-detail').classList.toggle('hidden');
 }
 </script>
 </body>

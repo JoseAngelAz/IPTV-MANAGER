@@ -25,7 +25,10 @@ class ClienteForm(forms.ModelForm):
         if self.instance and self.instance.pk and self.instance.datos_extra:
             extra_data = self.instance.datos_extra
 
-        custom_fields = CustomField.objects.filter(activo=True)
+        try:
+            custom_fields = CustomField.objects.filter(activo=True)
+        except Exception:
+            custom_fields = []
         for cf in custom_fields:
             field_name = f'_cf_{cf.pk}'
             self._custom_field_names.append(field_name)

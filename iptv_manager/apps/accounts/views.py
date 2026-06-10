@@ -127,27 +127,40 @@ def error_page_preview(request):
 
 
 def custom_500(request, exception=None):
+    import traceback
+    import sys
     settings = ErrorPageSettings.get_settings()
     err_url = request.build_absolute_uri()
     err_user = request.user if request.user.is_authenticated else None
+
+    exc_type, exc_value, exc_tb = sys.exc_info()
+    if exc_value:
+        error_traceback = ''.join(traceback.format_exception(exc_type, exc_value, exc_tb))
+    elif exception:
+        error_traceback = ''.join(traceback.format_exception(type(exception), exception, exception.__traceback__))
+    else:
+        error_traceback = ''
+
     return render(request, '500.html', {
         'error_settings': settings,
         'pixel_css': _get_pixel_art_css_500() if settings.show_pixel_art_500 else '',
         'error_url': err_url,
         'error_user': err_user,
+        'error_traceback': error_traceback,
     }, status=500)
 
 
-@login_required
 def error_report_view(request):
     if request.method == 'POST':
         descripcion = request.POST.get('descripcion', '').strip()
         url = request.POST.get('url', '')
+        error_tb = request.POST.get('error_traceback', '').strip()
         if descripcion:
             from .models import ErrorReport
             ErrorReport.objects.create(
                 url=url or request.META.get('HTTP_REFERER', ''),
                 descripcion=descripcion,
+                error_traceback=error_tb,
                 user=request.user if request.user.is_authenticated else None,
                 ip_address=request.META.get('REMOTE_ADDR'),
                 user_agent=request.META.get('HTTP_USER_AGENT', '')[:500],
@@ -156,6 +169,13 @@ def error_report_view(request):
         else:
             messages.error(request, 'Describe el error para poder reportarlo.')
     return redirect(request.META.get('HTTP_REFERER', 'dashboard'))
+
+
+@login_required
+def error_report_list_view(request):
+    from .models import ErrorReport
+    reports = ErrorReport.objects.all()
+    return render(request, 'accounts/error_report_list.html', {'reports': reports})
 
 
 def _get_pixel_art_css_500():

@@ -62,7 +62,14 @@ class ClienteUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
         return reverse_lazy('cliente_detail', kwargs={'pk': self.object.pk})
 
     def form_valid(self, form):
-        resp = super().form_valid(form)
+        try:
+            resp = super().form_valid(form)
+        except Exception as e:
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.exception('Error al actualizar cliente')
+            messages.error(self.request, f'Error al actualizar cliente: {str(e)}')
+            return self.form_invalid(form)
         HistorialCliente.objects.create(
             cliente=self.object,
             usuario=self.request.user,

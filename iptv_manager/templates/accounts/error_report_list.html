@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %} — {{ tr.reportes_error }}{% endblock %}
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <div class="bg-white dark:bg-gray-800 p-6 rounded shadow">
+        <h2 class="text-2xl font-bold mb-4"><i class="fas fa-bug mr-2 text-red-500"></i>{{ tr.reportes_error }}</h2>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b dark:border-gray-600 text-left">
+                        <th class="p-2">{{ tr.usuario_tabla }}</th>
+                        <th class="p-2">URL</th>
+                        <th class="p-2">{{ tr.descripcion }}</th>
+                        <th class="p-2">IP</th>
+                        <th class="p-2">{{ tr.fecha }}</th>
+                        <th class="p-2">Traceback</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in reports %}
+                    <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
+                        <td class="p-2">{{ r.user|default:'—' }}</td>
+                        <td class="p-2 max-w-xs truncate"><a href="{{ r.url }}" class="text-blue-600 hover:underline" title="{{ r.url }}">{{ r.url|truncatechars:40 }}</a></td>
+                        <td class="p-2 max-w-xs">{{ r.descripcion|truncatechars:80 }}</td>
+                        <td class="p-2 text-xs">{{ r.ip_address|default:'—' }}</td>
+                        <td class="p-2 text-xs">{{ r.created_at|date:"d/m/Y H:i" }}</td>
+                        <td class="p-2">
+                            {% if r.error_traceback %}
+                            <button onclick="toggleTb({{ r.pk }})" class="text-xs text-red-500 hover:underline"><i class="fas fa-code"></i> {{ tr.ver }}</button>
+                            <div id="tb-{{ r.pk }}" class="hidden mt-2">
+                                <textarea readonly rows="4" class="w-full text-xs font-mono bg-black/10 dark:bg-black/30 p-2 rounded border border-red-200 dark:border-red-800" style="resize:vertical;">{{ r.error_traceback }}</textarea>
+                            </div>
+                            {% else %}—{% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="6" class="p-4 text-center text-gray-400">{{ tr.no_hay_reportes }}</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleTb(pk) {
+    var el = document.getElementById('tb-' + pk);
+    if (el) el.classList.toggle('hidden');
+}
+</script>
+{% endblock %}

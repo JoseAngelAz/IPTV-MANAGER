@@ -237,7 +237,7 @@
                     <a href="{% url 'error_page_500_settings' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700/50 text-sm {% if '/error-page-500' in request.path %}bg-gray-700/50{% endif %}">
                         <i class="fas fa-fire w-4 text-center"></i><span class="nav-label">{{ tr.personalizar_pagina_500 }}</span>
                     </a>
-                    <a href="/admin/accounts/errorreport/" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700/50 text-sm">
+                    <a href="{% url 'error_report_list' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700/50 text-sm {% if '/reportes-error' in request.path %}bg-gray-700/50{% endif %}">
                         <i class="fas fa-bug w-4 text-center"></i><span class="nav-label">{{ tr.reportes_error }}</span>
                     </a>
                 </div>

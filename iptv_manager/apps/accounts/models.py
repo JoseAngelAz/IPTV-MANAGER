@@ -315,6 +315,7 @@ class ErrorReport(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Usuario')
     ip_address = models.GenericIPAddressField('Dirección IP', blank=True, null=True)
     user_agent = models.CharField('User-Agent', max_length=500, blank=True, default='')
+    error_traceback = models.TextField('Traceback del error', blank=True, default='')
     created_at = models.DateTimeField('Creado', auto_now_add=True)
 
     class Meta:
