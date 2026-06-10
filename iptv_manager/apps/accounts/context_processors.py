@@ -1,4 +1,4 @@
-from .models import ThemeSettings, SessionConfig
+from .models import ThemeSettings, SessionConfig, LandingPageConfig
 
 _TRANSLATIONS = {
     'es': {
@@ -158,6 +158,11 @@ _TRANSLATIONS = {
         'buscar_por_nombre_telefono': 'Buscar por nombre o teléfono...',
         'datos_adicionales': 'Datos adicionales',
         'informacion_basica': 'Información básica',
+        'configuracion_landing_page': 'Configurar página de inicio',
+        'configuracion_landing_page_desc': 'Personaliza la apariencia de la página de inicio del sistema (landing page). Visible para usuarios no autenticados.',
+        'imagen_actual': 'Imagen actual.',
+        'vista_previa': 'Vista previa',
+        'tiny_erp_manager_preview': 'Tiny ERP Manager — Vista previa',
         'dispositivo': 'Dispositivo',
         'acciones': 'Acciones',
         'ver': 'Ver',
@@ -634,6 +639,11 @@ _TRANSLATIONS = {
         'buscar_por_nombre_telefono': 'Search by name or phone...',
         'datos_adicionales': 'Additional Data',
         'informacion_basica': 'Basic Information',
+        'configuracion_landing_page': 'Landing Page Settings',
+        'configuracion_landing_page_desc': 'Customize the appearance of the system landing page. Visible to unauthenticated users.',
+        'imagen_actual': 'Current image.',
+        'vista_previa': 'Preview',
+        'tiny_erp_manager_preview': 'Tiny ERP Manager — Preview',
         'dispositivo': 'Device',
         'acciones': 'Actions',
         'ver': 'View',
@@ -1000,6 +1010,11 @@ def theme_context(request):
         try:
             cfg = SessionConfig.get_config()
             ctx['session_timeout_minutes'] = cfg.timeout_minutes
+        except Exception:
+            pass
+        try:
+            landing = LandingPageConfig.get_config()
+            ctx['landing_config'] = landing
         except Exception:
             pass
 

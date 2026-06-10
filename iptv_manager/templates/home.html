@@ -10,13 +10,18 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="min-h-screen flex items-center justify-center relative overflow-hidden">
-    {% with bg_img='/static/img/bg.webp' %}
+    {% if landing_config.background_image %}
     <div class="absolute inset-0 bg-cover bg-center bg-no-repeat z-0"
-         style="background-image: url('{{ bg_img }}');"
+         style="background-image: url('{{ landing_config.background_image.url }}');">
+    </div>
+    {% else %}
+    <div class="absolute inset-0 bg-cover bg-center bg-no-repeat z-0"
+         style="background-image: url('/static/img/bg.webp');"
          onerror="this.style.display='none'">
     </div>
-    {% endwith %}
-    <div class="absolute inset-0 bg-gradient-to-br from-gray-900/95 via-gray-800/85 to-blue-900/90 z-0"></div>
+    {% endif %}
+    <div class="absolute inset-0 z-0"
+         style="background: linear-gradient(135deg, {{ landing_config.gradient_from|default:'#111827' }}{{ ', ' }}{{ landing_config.gradient_to|default:'#1e3a5f' }}); opacity: {{ landing_config.overlay_opacity|default:85 }}%;"></div>
 
     <div class="relative z-10 text-center px-6 max-w-4xl">
         <h1 class="text-5xl font-bold text-white mb-4 drop-shadow-lg">Tiny ERP Manager</h1>
@@ -24,13 +29,14 @@
 
         <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-8 border border-white/20">
             <p class="text-gray-200 text-lg leading-relaxed">
-                {% tr "Tiny ERP Manager es un sistema integral para la administración de pequeñas y medianas empresas proveedoras de servicios IPTV. Centraliza la gestión de" %}
+                {% tr "Tiny ERP Manager es un sistema ERP multipropósito para la administración de todo tipo de negocios. Centraliza la gestión de" %}
                 <strong class="text-blue-300">{{ tr.clientes }}</strong>, <strong class="text-green-300">{{ tr.suscripciones }}</strong>, 
                 <strong class="text-yellow-300">{{ tr.planes }}</strong>, <strong class="text-purple-300">{{ tr.finanzas }}</strong> 
-                y <strong class="text-pink-300">{{ tr.notificaciones }}</strong> {% tr "en un solo panel de control moderno y seguro." %}
+                y <strong class="text-pink-300">{{ tr.notificaciones }}</strong> {% tr "en un solo panel de control moderno y seguro. Adaptable a IPTV, gimnasios, escuelas, talleres, consultorios y más." %}
             </p>
         </div>
 
+{% if landing_config.show_stats or not landing_config.pk %}
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 text-left">
             <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
                 <div class="flex items-center gap-3">
@@ -60,6 +66,7 @@
                 </div>
             </div>
         </div>
+        {% endif %}
 
         <div class="flex flex-wrap justify-center gap-4 mb-8">
             <a href="{% url 'login' %}" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition shadow-lg flex items-center gap-2">

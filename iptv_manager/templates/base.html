@@ -242,6 +242,9 @@
             <a href="{% url 'session_config' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700/50 {% if '/session-config' in request.path %}bg-gray-700/50{% endif %}">
                 <i class="fas fa-clock w-5 text-center"></i><span class="nav-label">{{ tr.tiempo_de_sesion }}</span>
             </a>
+            <a href="{% url 'landing_page_config' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700/50 {% if '/landing-page-config' in request.path %}bg-gray-700/50{% endif %}">
+                <i class="fas fa-home w-5 text-center"></i><span class="nav-label">{{ tr.configuracion_landing_page }}</span>
+            </a>
             <a href="{% url 'whatsapp_config' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700/50 {% if '/whatsapp' in request.path and not '/enviar-recordatorio' in request.path %}bg-gray-700/50{% endif %}">
                 <i class="fab fa-whatsapp w-5 text-center text-green-400"></i><span class="nav-label">{{ tr.whatsapp_config }}</span>
             </a>

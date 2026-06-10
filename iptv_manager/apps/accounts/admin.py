@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import User, ThemeSettings, UserActivityLog, CustomPreset, ErrorPageSettings, SessionConfig, Tarea, WhatsAppConfig, RecordatorioTemplate, ErrorReport
+from .models import User, ThemeSettings, UserActivityLog, CustomPreset, ErrorPageSettings, SessionConfig, LandingPageConfig, Tarea, WhatsAppConfig, RecordatorioTemplate, ErrorReport
 
 
 @admin.register(User)
@@ -44,6 +44,19 @@ class ErrorPageSettingsAdmin(admin.ModelAdmin):
 @admin.register(SessionConfig)
 class SessionConfigAdmin(admin.ModelAdmin):
     list_display = ('timeout_minutes', 'updated_at')
+
+
+@admin.register(LandingPageConfig)
+class LandingPageConfigAdmin(admin.ModelAdmin):
+    list_display = ('background_image_preview', 'show_stats', 'updated_at')
+    readonly_fields = ('updated_at',)
+
+    def background_image_preview(self, obj):
+        if obj.background_image:
+            return f'<img src="{obj.background_image.url}" style="max-height:40px;border-radius:4px">'
+        return '(ninguna)'
+    background_image_preview.short_description = 'Fondo'
+    background_image_preview.allow_tags = True
 
 
 @admin.register(Tarea)
