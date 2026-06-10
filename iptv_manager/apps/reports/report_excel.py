@@ -79,7 +79,7 @@ def generate_report_excel(sections, data, date_start, date_end, user):
             ws = wb.create_sheet(title=labels.get(key, key))
 
         _style_sheet(ws)
-        title = f'IPTV Manager — Reporte de {labels.get(key, key)}'
+        title = f'Tiny ERP Manager — Reporte de {labels.get(key, key)}'
         _write_header(ws, title, date_start, date_end)
 
         if key == 'clientes':

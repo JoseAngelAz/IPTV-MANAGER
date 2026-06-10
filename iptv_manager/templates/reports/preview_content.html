@@ -47,7 +47,7 @@
 {% endif %}
 
 <div class="rpt-header">
-    <h1><i class="fas fa-tv mr-2"></i>IPTV Manager</h1>
+    <h1><i class="fas fa-tv mr-2"></i>Tiny ERP Manager</h1>
     <div class="meta">
         {{ now|date:"d/m/Y H:i" }} &mdash;
         Generado por: {{ user.get_full_name|default:user.username }}
@@ -195,5 +195,5 @@
 {% endfor %}
 
 <div class="rpt-footer">
-    <i class="far fa-copyright mr-1"></i>IPTV Manager &mdash; Reporte generado el {{ now|date:"d/m/Y" }} a las {{ now|date:"H:i" }}
+    <i class="far fa-copyright mr-1"></i>Tiny ERP Manager &mdash; Reporte generado el {{ now|date:"d/m/Y" }} a las {{ now|date:"H:i" }}
 </div>

@@ -110,7 +110,7 @@ class ReportPDF:
         c = self.colors
         pw = self.page_size[0]
         t = Table([
-            [Paragraph('IPTV Manager',
+            [Paragraph('Tiny ERP Manager',
                         self._style('_hdr1', fontSize=16, textColor=white, fontName=self.font_name)),
              Paragraph(datetime.now().strftime('%d/%m/%Y %H:%M'),
                        self._style('_hdr2', fontSize=8, textColor=HexColor('#cbd5e1'), alignment=TA_RIGHT))]
@@ -407,7 +407,7 @@ class ReportPDF:
         c = self.colors
         self.elements.append(HRFlowable(width='100%', thickness=0.5, color=c['line'], spaceAfter=4))
         self.elements.append(Paragraph(
-            f'IPTV Manager &mdash; Reporte generado el {datetime.now().strftime("%d/%m/%Y a las %H:%M")}',
+            f'Tiny ERP Manager &mdash; Reporte generado el {datetime.now().strftime("%d/%m/%Y a las %H:%M")}',
             self._footer()))
         return self.elements
 
