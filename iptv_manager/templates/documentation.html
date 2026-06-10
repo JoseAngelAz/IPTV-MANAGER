@@ -974,6 +974,30 @@ for a in AccessAttempt.objects.order_by('-attempt_time')[:10]:
 </div>
 {% endif %}
 
+<div class="card-custom p-6 rounded shadow">
+    <h3 class="font-bold text-lg mb-4"><i class="fas fa-bolt text-yellow-500 mr-2"></i>{% tr "Nuevas funcionalidades" %}</h3>
+    <div class="space-y-4 text-sm">
+        <div>
+            <h4 class="font-bold"><i class="fas fa-bug text-red-500 mr-2"></i>Sistema de Reporte de Errores (500)</h4>
+            <p class="mt-1 text-gray-600 dark:text-gray-400">La página 500 ahora captura automáticamente el traceback del error usando <code>sys.exc_info()</code> y lo pasa al template. Los usuarios pueden ver el detalle técnico expandiendo "Ver detalle del error". El formulario de reporte envía el traceback junto con la descripción del usuario.</p>
+            <pre class="bg-gray-50 dark:bg-gray-900 p-3 rounded text-xs mt-2">Modelo: ErrorReport
+Campos: url, descripcion, user, ip_address, user_agent, error_traceback, created_at
+Vistas: error_report_view (POST), error_report_list_view (GET, login required)
+URLs:  /reportar-error/  /reportes-error/
+Template: accounts/error_report_list.html</pre>
+        </div>
+        <div>
+            <h4 class="font-bold"><i class="fas fa-home text-blue-500 mr-2"></i>Landing Page Configurable</h4>
+            <p class="mt-1 text-gray-600 dark:text-gray-400">Los superusuarios pueden configurar la página principal pública desde el sidebar. Soporta imagen de fondo, colores de degradado con opacidad ajustable, fondos pixel art animados (9 variantes), y visualización opcional de estadísticas.</p>
+            <pre class="bg-gray-50 dark:bg-gray-900 p-3 rounded text-xs mt-2">Modelo: LandingPageConfig
+Campos: background_image, gradient_from/to, overlay_opacity, pixel_bg, show_stats
+View:   landing_page_config_view (superuser)
+URL:    /landing-page-config/
+CSS:    static/css/pixel-bg.css (9 animaciones)</pre>
+        </div>
+    </div>
+</div>
+
 <div class="card-custom p-6 rounded shadow text-center text-sm text-gray-500">
     <p><i class="far fa-copyright mr-1"></i>2026 José Ángel Azucena Méndez — Creado con Claude Code</p>
 </div>

@@ -52,7 +52,8 @@ Sistema web ERP multipropósito basado en Django 5.1. Originalmente diseñado pa
 - CSS personalizado
 - Modo oscuro
 - Efectos de texto (negrita, cursiva, subrayado, tachado, borde)
-- Fondos pixel art animados
+- Fondos pixel art animados (sidebar y landing page)
+- Configuración de landing page: imagen de fondo + degradado ajustable + estadísticas
 
 ### 📄 Reportes
 - Generación de PDF y Excel
@@ -76,7 +77,8 @@ Sistema web ERP multipropósito basado en Django 5.1. Originalmente diseñado pa
 ### 📝 Otras funcionalidades
 - Lista de tareas (To-Do) personal con prioridades, categorías y fecha de vencimiento
 - Páginas de error 404/500 personalizables (título, mensaje, color, arte pixelado)
-- Formulario de reporte de errores en la página 500
+- Página 500 con visor de traceback técnico y formulario de reporte de errores (para todos los usuarios)
+- Vista dedicada de reportes de error con traceback capturado automáticamente
 - Galería de fotos
 - Configuración de tiempo de sesión
 - Logs de actividad con filtros y eliminación masiva
