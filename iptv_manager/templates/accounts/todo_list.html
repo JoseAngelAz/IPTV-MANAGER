@@ -52,10 +52,13 @@
                         </div>
                     </div>
                 </div>
-                <form method="post" action="{% url 'todo_delete' tarea.pk %}" onsubmit="return confirm('{{ tr.eliminar_tarea_modal|escapejs }}')" class="ml-2">
-                    {% csrf_token %}
-                    <button type="submit" class="text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></button>
-                </form>
+                <div class="flex items-center gap-2 ml-2">
+                    <a href="{% url 'todo_update' tarea.pk %}" class="text-blue-500 hover:text-blue-700"><i class="fas fa-edit"></i></a>
+                    <form method="post" action="{% url 'todo_delete' tarea.pk %}" onsubmit="return confirm('{{ tr.eliminar_tarea_modal|escapejs }}')">
+                        {% csrf_token %}
+                        <button type="submit" class="text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></button>
+                    </form>
+                </div>
             </div>
             {% empty %}
             <div class="p-6 text-center text-gray-400">

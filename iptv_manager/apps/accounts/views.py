@@ -514,6 +514,20 @@ def todo_toggle(request, pk):
 
 
 @login_required
+def todo_update(request, pk):
+    tarea = get_object_or_404(Tarea, pk=pk, usuario=request.user)
+    if request.method == 'POST':
+        form = TareaForm(request.POST, instance=tarea)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Tarea actualizada.')
+            return redirect('todo_list')
+    else:
+        form = TareaForm(instance=tarea)
+    return render(request, 'accounts/todo_edit.html', {'form': form, 'tarea': tarea})
+
+
+@login_required
 def todo_delete(request, pk):
     tarea = get_object_or_404(Tarea, pk=pk, usuario=request.user)
     if request.method == 'POST':

@@ -23,6 +23,7 @@ urlpatterns = [
     path('tareas/', views.todo_list, name='todo_list'),
     path('tareas/nueva/', views.todo_create, name='todo_create'),
     path('tareas/<int:pk>/toggle/', views.todo_toggle, name='todo_toggle'),
+    path('tareas/<int:pk>/editar/', views.todo_update, name='todo_update'),
     path('tareas/<int:pk>/eliminar/', views.todo_delete, name='todo_delete'),
     path('set-language/', views.set_language_view, name='set_language'),
     path('whatsapp/', views.whatsapp_config_view, name='whatsapp_config'),
