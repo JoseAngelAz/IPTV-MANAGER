@@ -10,8 +10,8 @@ from django.db.models import Count, Sum
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.http import JsonResponse, HttpResponseNotAllowed
-from .forms import LoginForm, ProfileForm, ThemeForm, CustomPresetForm, SessionConfigForm, TareaForm, RecordatorioTemplateForm
-from .models import ThemeSettings, UserActivityLog, CustomPreset, ErrorPageSettings, SessionConfig, WhatsAppConfig, RecordatorioTemplate, log_user_action, Tarea, User
+from .forms import LoginForm, ProfileForm, ThemeForm, CustomPresetForm, SessionConfigForm, LandingPageConfigForm, TareaForm, RecordatorioTemplateForm
+from .models import ThemeSettings, UserActivityLog, CustomPreset, ErrorPageSettings, SessionConfig, LandingPageConfig, WhatsAppConfig, RecordatorioTemplate, log_user_action, Tarea, User
 from apps.clients.models import Cliente
 from apps.subscriptions.models import Suscripcion, Plan
 from apps.finance.models import MovimientoFinanciero
@@ -269,6 +269,26 @@ def session_config_view(request):
     else:
         form = SessionConfigForm(instance=config)
     return render(request, 'accounts/session_config.html', {'form': form, 'config': config})
+
+
+@login_required
+def landing_page_config_view(request):
+    if not (request.user.is_superuser or request.user.groups.filter(name__in=['Gerente', 'Superadmin']).exists()):
+        messages.error(request, 'Solo administradores y gerentes pueden configurar la página de inicio.')
+        return redirect('dashboard')
+    config = LandingPageConfig.get_config()
+    if request.method == 'POST':
+        form = LandingPageConfigForm(request.POST, request.FILES, instance=config)
+        if form.is_valid():
+            form.save()
+            log_user_action(request.user, 'update', 'LandingPageConfig', 'Configuración de landing page',
+                           details='Actualizó la configuración de la página de inicio',
+                           request=request)
+            messages.success(request, 'Configuración de página de inicio actualizada.')
+            return redirect('landing_page_config')
+    else:
+        form = LandingPageConfigForm(instance=config)
+    return render(request, 'accounts/landing_page_config.html', {'form': form, 'config': config})
 
 
 @login_required

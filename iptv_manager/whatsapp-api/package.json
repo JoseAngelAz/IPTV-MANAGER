@@ -1,7 +1,7 @@
 {
   "name": "whatsapp-api",
   "version": "1.0.0",
-  "description": "WhatsApp API service for IPTV Manager notifications",
+  "description": "WhatsApp API service for Tiny ERP Manager notifications",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"

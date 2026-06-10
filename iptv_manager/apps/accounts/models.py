@@ -232,6 +232,32 @@ class SessionConfig(models.Model):
         return obj
 
 
+class LandingPageConfig(models.Model):
+    background_image = models.ImageField('Imagen de fondo', upload_to='landing_bg/', blank=True, null=True,
+        help_text='Imagen para el fondo de la página de inicio. Se recomienda 1920x1080px.')
+    gradient_from = models.CharField('Degradado inicial', max_length=50, default='#111827',
+        help_text='Color inicial del degradado (formato hex, rgb, o Tailwind: gray-900/95)')
+    gradient_to = models.CharField('Degradado final', max_length=50, default='#1e3a5f',
+        help_text='Color final del degradado (formato hex, rgb, o Tailwind: blue-900/90)')
+    overlay_opacity = models.IntegerField('Opacidad de la capa', default=85,
+        help_text='Opacidad del degradado superpuesto (0-100)')
+    show_stats = models.BooleanField('Mostrar estadísticas', default=True)
+    updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Configuración de página de inicio'
+        verbose_name_plural = 'Configuración de página de inicio'
+
+    def __str__(self):
+        return 'Configuración de Landing Page'
+
+    @classmethod
+    def get_config(cls):
+        obj, _ = cls.objects.get_or_create(pk=1)
+        return obj
+
+
 class Tarea(models.Model):
     class Prioridad(models.TextChoices):
         BAJA = 'baja', 'Baja'

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IPTV Manager{% block title %}{% endblock %}</title>
+    <title>Tiny ERP Manager{% block title %}{% endblock %}</title>
     <link rel="icon" type="image/svg+xml" href="/static/img/favicon.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -41,6 +41,36 @@
                 {% if theme_text_strikethrough == 'true' %}line-through{% endif %};
             {% endif %}
         }
+        /* ── Responsive utilities ── */
+        .responsive-table { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .responsive-table table { min-width: 500px; }
+        .responsive-card { min-width: 0; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; }
+        .chart-container { position: relative; width: 100%; max-width: 100%; overflow: hidden; }
+        .chart-container canvas { max-width: 100%; height: auto !important; }
+
+        @media (max-width: 480px) {
+            #scrollable-content { padding: 0.75rem !important; }
+            .sidebar-toggle-btn-mobile { top: 0.5rem !important; left: 0.5rem !important; padding: 0.5rem !important; }
+            .responsive-stack { flex-direction: column !important; }
+            .responsive-text-sm { font-size: 0.75rem !important; }
+            .responsive-gap { gap: 0.5rem !important; }
+            .dashboard-metric-card { padding: 0.75rem !important; }
+            .dashboard-metric-card .text-3xl { font-size: 1.5rem !important; }
+            .dashboard-metric-card .text-sm { font-size: 0.65rem !important; }
+            .dashboard-chart-grid { grid-template-columns: 1fr !important; }
+            .user-info { flex-direction: column !important; text-align: center !important; }
+            .user-info .flex-1 { text-align: center !important; }
+            .p-6 { padding: 0.75rem !important; }
+            .gap-6 { gap: 0.75rem !important; }
+            .mb-8 { margin-bottom: 1rem !important; }
+            .text-2xl { font-size: 1.25rem !important; }
+            .card-custom.p-6 { padding: 0.75rem !important; }
+        }
+        @media (max-width: 360px) {
+            .p-6 { padding: 0.5rem !important; }
+            .text-2xl { font-size: 1.1rem !important; }
+        }
+
         .btn-primary { background-color: var(--primary); color: white; border-radius: var(--radius); }
         .btn-primary:hover { filter: brightness(1.1); }
         .btn-secondary { background-color: var(--secondary); color: white; border-radius: var(--radius); }
@@ -71,10 +101,32 @@
         .session-timer-sidebar i { margin-right: 0.25rem; }
         .session-timer-bar { height: 3px; background: #374151; border-radius: 2px; margin-top: 0.25rem; overflow: hidden; }
         .session-timer-bar-fill { height: 100%; background: linear-gradient(90deg, #10b981, #fbbf24, #ef4444); border-radius: 2px; transition: width 1s linear; }
+        .reset-clock { cursor: pointer; transition: all 0.2s; }
+        .reset-clock:hover { color: #60a5fa !important; }
+        .reset-clock.spin { animation: clockSpin 0.6s ease-in-out; }
+        .reset-clock.glow { animation: clockGlow 0.6s ease-in-out; }
+        @keyframes clockSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes clockGlow { 0% { filter: drop-shadow(0 0 0 #60a5fa); } 50% { filter: drop-shadow(0 0 12px #60a5fa); } 100% { filter: drop-shadow(0 0 0 #60a5fa); } }
+        .session-reset-toast { position: fixed; bottom: 5rem; right: 1rem; z-index: 101; background: #065f46; color: white; padding: 0.75rem 1.25rem; border-radius: 0.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.3); font-size: 0.875rem; display: none; align-items: center; gap: 0.5rem; }
+        .session-reset-toast.show { display: flex; animation: toastFadeIn 0.3s ease; }
+        @keyframes toastFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         @media (max-width: 767px) {
-            .sidebar-mobile { position: fixed; left: -300px; top: 0; bottom: 0; z-index: 50; transition: left 0.3s ease; }
-            .sidebar-mobile.open { left: 0; }
+            #sidebar { position: fixed; left: -100%; top: 0; bottom: 0; z-index: 50; width: 250px !important; transition: left 0.3s ease; }
+            #sidebar.open { left: 0; }
+            #sidebar.mobile-collapsed { width: 60px !important; padding-left: 0.5rem !important; padding-right: 0.5rem !important; overflow-x: hidden; }
+            #sidebar.mobile-collapsed .nav-label,
+            #sidebar.mobile-collapsed .sidebar-brand h1,
+            #sidebar.mobile-collapsed .user-info .flex-1,
+            #sidebar.mobile-collapsed .sidebar-footer > div:not(.lang-switch-wrap):not(#session-reset-toast),
+            #sidebar.mobile-collapsed #sidebar-session-time,
+            #sidebar.mobile-collapsed .sidebar-timer-label,
+            #sidebar.mobile-collapsed .session-timer-bar { display: none !important; }
+            #sidebar.mobile-collapsed .sidebar-footer { padding-top: 0.5rem !important; }
+            #sidebar.mobile-collapsed .sidebar-footer .lang-switch-wrap { flex-direction: column; gap: 0.25rem; }
+            #sidebar.mobile-collapsed .sidebar-toggle-collapse-mobile { display: flex !important; }
+            .sidebar-toggle-collapse-mobile { display: none; justify-content: center; margin-bottom: 1rem; }
+            .sidebar-mobile-header { display: flex !important; } /* overrides inline style */
             .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 40; }
             .sidebar-overlay.open { display: block; }
             .main-content { margin-left: 0 !important; }
@@ -98,7 +150,7 @@
 
 <aside id="sidebar" class="sidebar-custom text-white h-screen p-4 flex flex-col sidebar-transition overflow-y-auto" style="width:250px">
     <div class="flex items-center justify-between mb-4 sidebar-brand">
-        <h1 class="text-xl font-bold">IPTV Manager</h1>
+        <h1 class="text-xl font-bold">Tiny ERP Manager</h1>
         <button onclick="toggleSidebar()" class="text-gray-400 hover:text-white p-1 rounded transition sidebar-toggle-collapse hidden md:block">
             <i class="fas fa-bars"></i>
         </button>
@@ -106,11 +158,19 @@
     <button onclick="toggleSidebar()" class="sidebar-toggle-expand text-gray-400 hover:text-white p-2 rounded transition">
         <i class="fas fa-chevron-right"></i>
     </button>
-    <div class="flex md:hidden items-center justify-between mb-4">
-        <h1 class="text-lg font-bold">IPTV Manager</h1>
-        <button onclick="toggleSidebarMobile()" class="text-gray-400 hover:text-white p-1">
-            <i class="fas fa-times"></i>
-        </button>
+    <button onclick="toggleSidebarMobileCollapse()" class="sidebar-toggle-collapse-mobile text-gray-400 hover:text-white p-2 rounded transition">
+        <i class="fas fa-chevron-left"></i>
+    </button>
+    <div class="sidebar-mobile-header items-center justify-between mb-4" style="display:none">
+        <h1 class="text-lg font-bold">Tiny ERP Manager</h1>
+        <div class="flex items-center gap-1">
+            <button onclick="toggleSidebarMobileCollapse()" class="text-gray-400 hover:text-white p-1 rounded" title="Colapsar">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button onclick="toggleSidebarMobile()" class="text-gray-400 hover:text-white p-1" title="Cerrar">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
     </div>
 
     <div class="sidebar-content flex flex-col flex-1 min-w-0">
@@ -182,6 +242,9 @@
             <a href="{% url 'session_config' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700/50 {% if '/session-config' in request.path %}bg-gray-700/50{% endif %}">
                 <i class="fas fa-clock w-5 text-center"></i><span class="nav-label">{{ tr.tiempo_de_sesion }}</span>
             </a>
+            <a href="{% url 'landing_page_config' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700/50 {% if '/landing-page-config' in request.path %}bg-gray-700/50{% endif %}">
+                <i class="fas fa-home w-5 text-center"></i><span class="nav-label">{{ tr.configuracion_landing_page }}</span>
+            </a>
             <a href="{% url 'whatsapp_config' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700/50 {% if '/whatsapp' in request.path and not '/enviar-recordatorio' in request.path %}bg-gray-700/50{% endif %}">
                 <i class="fab fa-whatsapp w-5 text-center text-green-400"></i><span class="nav-label">{{ tr.whatsapp_config }}</span>
             </a>
@@ -210,10 +273,11 @@
 
         <div class="sidebar-footer border-t border-gray-700 pt-4 space-y-2">
             <div class="session-timer-sidebar">
-                <i class="fas fa-hourglass-half"></i><span id="sidebar-session-time">--:--</span>
+                <i class="fas fa-clock reset-clock" id="reset-clock-btn" title="{{ tr.resetear_tiempo_sesion }}" onclick="resetSessionClick()"></i><span id="sidebar-session-time">--:--</span>
                 <div class="session-timer-bar"><div class="session-timer-bar-fill" id="sidebar-session-bar" style="width:100%"></div></div>
             </div>
-            <div class="flex items-center justify-center gap-2 pt-1">
+            <div id="session-reset-toast" class="session-reset-toast"><i class="fas fa-check-circle text-green-300"></i> {{ tr.tiempo_reiniciado }}</div>
+            <div class="lang-switch-wrap flex items-center justify-center gap-2 pt-1">
                 <a href="{% url 'set_language' %}?lang=es&next={{ request.path }}" class="lang-btn{% if LANGUAGE_CODE == 'es' or not LANGUAGE_CODE %} lang-btn-active{% endif %}" title="Español">
                     <svg width="22" height="16" viewBox="0 0 22 16" style="border-radius:2px;vertical-align:middle;"><rect width="22" height="16" fill="#003366"/><rect y="4" width="22" height="4" fill="#fff"/><rect y="8" width="22" height="4" fill="#003366"/><rect y="12" width="22" height="4" fill="#fff"/></svg>
                     <span style="font-size:0.6rem;margin-left:0.2rem;">ES</span>
@@ -345,8 +409,16 @@ function toggleSidebarMobile(){
     var o = document.getElementById('sidebar-overlay');
     var b = document.getElementById('sidebar-mobile-toggle');
     s.classList.toggle('open');
+    s.classList.remove('mobile-collapsed');
     o.classList.toggle('open');
     if(b) b.classList.toggle('hidden');
+    document.body.style.overflow = s.classList.contains('open') ? 'hidden' : '';
+}
+
+function toggleSidebarMobileCollapse(){
+    var s = document.getElementById('sidebar');
+    if(!s.classList.contains('open')) return;
+    s.classList.toggle('mobile-collapsed');
 }
 
 function openModal(title, message, confirmCallback){
@@ -375,6 +447,17 @@ function extendSession(){
             localStorage.setItem('sessionStart', Date.now());
             resetSessionTimer();
         });
+}
+
+function resetSessionClick(){
+    var icon = document.getElementById('reset-clock-btn');
+    icon.classList.remove('spin', 'glow');
+    void icon.offsetWidth;
+    icon.classList.add('spin', 'glow');
+    extendSession();
+    var toast = document.getElementById('session-reset-toast');
+    toast.classList.add('show');
+    setTimeout(function(){ toast.classList.remove('show'); }, 3000);
 }
 
 function updateSidebarTimer(remainingMs){
@@ -446,14 +529,15 @@ document.addEventListener('DOMContentLoaded', function(){
     var mobileToggle = document.getElementById('sidebar-mobile-toggle');
     if(mobileToggle && window.innerWidth < 768) mobileToggle.classList.remove('hidden');
     window.addEventListener('resize', function(){
-        if(window.innerWidth < 768){
+        if(window.innerWidth >= 768){
             var s = document.getElementById('sidebar');
-            if(s) s.classList.remove('open');
+            if(s){ s.classList.remove('open', 'mobile-collapsed'); }
             var o = document.getElementById('sidebar-overlay');
             if(o) o.classList.remove('open');
-            if(mobileToggle) mobileToggle.classList.remove('hidden');
-        } else {
             if(mobileToggle) mobileToggle.classList.add('hidden');
+            document.body.style.overflow = '';
+        } else {
+            if(mobileToggle) mobileToggle.classList.remove('hidden');
         }
     });
 

@@ -1,4 +1,4 @@
-# Instrucciones de Despliegue — IPTV Manager
+# Instrucciones de Despliegue — Tiny ERP Manager (antes IPTV Manager)
 
 ## Requisitos
 - Servidor VPS con Docker y Docker Compose (mínimo 1 GB RAM, 10 GB disco)
@@ -28,8 +28,8 @@ exit
 scp -r iptv_manager/ usuario@vps:/home/usuario/
 
 # Opción B: clonar desde Git
-git clone https://github.com/tuusuario/iptv_manager.git
-cd iptv_manager
+git clone https://github.com/JoseAngelAz/IPTV-MANAGER.git
+cd IPTV-MANAGER/iptv_manager
 ```
 
 ## 3. Configurar variables de entorno

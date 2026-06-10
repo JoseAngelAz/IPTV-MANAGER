@@ -17,6 +17,7 @@ urlpatterns = [
     path('error-page-500-settings/', views.error_page_500_settings_view, name='error_page_500_settings'),
     path('error-page-500-settings/preview/', views.error_page_500_preview, name='error_page_500_preview'),
     path('session-config/', views.session_config_view, name='session_config'),
+    path('landing-page-config/', views.landing_page_config_view, name='landing_page_config'),
     path('extend-session/', views.extend_session, name='extend_session'),
     path('usuarios/', views.user_list_view, name='user_list'),
     path('tareas/', views.todo_list, name='todo_list'),

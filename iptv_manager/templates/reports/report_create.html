@@ -1,17 +1,17 @@
 {% extends 'base.html' %}
-{% block title %} — Generar Reporte{% endblock %}
+{% block title %} — {{ tr.generar_reporte }}{% endblock %}
 {% block content %}
 <div class="max-w-4xl mx-auto space-y-6">
     <div class="card-custom p-6 rounded shadow">
-        <h2 class="text-2xl font-bold mb-2"><i class="fas fa-file-alt text-blue-600 mr-2"></i>Generar Reporte</h2>
-        <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Selecciona las secciones, el formato y el diseño para tu reporte.</p>
+        <h2 class="text-2xl font-bold mb-2"><i class="fas fa-file-alt text-blue-600 mr-2"></i>{{ tr.generar_reporte }}</h2>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">{{ tr.selecciona_las_secciones_el_formato_y_el_diseno_para_tu_reporte }}</p>
     </div>
 
     <form method="post" id="report-form">
         {% csrf_token %}
 
         <div class="card-custom p-6 rounded shadow">
-            <h3 class="font-bold text-lg mb-4"><i class="fas fa-check-square text-green-500 mr-2"></i>Secciones</h3>
+            <h3 class="font-bold text-lg mb-4"><i class="fas fa-check-square text-green-500 mr-2"></i>{{ tr.secciones }}</h3>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {% for s in sections %}
                 <label class="flex items-center gap-3 p-4 border rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition">
@@ -31,32 +31,32 @@
         </div>
 
         <div class="card-custom p-6 rounded shadow">
-            <h3 class="font-bold text-lg mb-4"><i class="fas fa-calendar text-blue-500 mr-2"></i>Período (opcional)</h3>
+            <h3 class="font-bold text-lg mb-4"><i class="fas fa-calendar text-blue-500 mr-2"></i>{{ tr.periodo_opcional }}</h3>
             <div class="flex flex-wrap gap-4 items-end">
                 <div>
-                    <label class="block text-sm font-medium mb-1">Desde</label>
+                    <label class="block text-sm font-medium mb-1">{{ tr.desde }}</label>
                     <input type="date" name="date_start" value="" class="px-3 py-2 border rounded dark:bg-gray-700 dark:text-white">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium mb-1">Hasta</label>
+                    <label class="block text-sm font-medium mb-1">{{ tr.hasta }}</label>
                     <input type="date" name="date_end" value="" class="px-3 py-2 border rounded dark:bg-gray-700 dark:text-white">
                 </div>
             </div>
         </div>
 
         <div class="card-custom p-6 rounded shadow">
-            <h3 class="font-bold text-lg mb-4"><i class="fas fa-palette text-purple-500 mr-2"></i>Formato y Diseño</h3>
+            <h3 class="font-bold text-lg mb-4"><i class="fas fa-palette text-purple-500 mr-2"></i>{{ tr.formato_y_diseno }}</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
-                    <label class="block text-sm font-medium mb-1">Formato de salida</label>
+                    <label class="block text-sm font-medium mb-1">{{ tr.formato_de_salida }}</label>
                     <select name="format" id="id_format" class="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:text-white" onchange="toggleFormat(this.value)">
-                        <option value="pdf">PDF</option>
-                        <option value="excel">Excel</option>
-                        <option value="jpg">JPG (Vista Previa)</option>
+                        <option value="pdf">{{ tr.pdf }}</option>
+                        <option value="excel">{{ tr.excel }}</option>
+                        <option value="jpg">{{ tr.jpg_vista_previa }}</option>
                     </select>
                 </div>
             </div>
-            <h4 class="font-semibold mb-3 text-sm">Plantilla PDF</h4>
+            <h4 class="font-semibold mb-3 text-sm">{{ tr.plantilla_pdf }}</h4>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="template-selector">
                 {% for tid, tpl in templates.items %}
                 <label class="template-card block border-2 rounded-lg p-4 cursor-pointer hover:shadow-md transition text-center {% if tid == 1 %}border-blue-500{% else %}border-gray-200 dark:border-gray-600{% endif %}">
@@ -74,55 +74,55 @@
         </div>
 
         <div class="card-custom p-6 rounded shadow pdf-options">
-            <h3 class="font-bold text-lg mb-4"><i class="fas fa-sliders-h text-orange-500 mr-2"></i>Ajustes PDF</h3>
+            <h3 class="font-bold text-lg mb-4"><i class="fas fa-sliders-h text-orange-500 mr-2"></i>{{ tr.ajustes_pdf }}</h3>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
-                    <label class="block text-sm font-medium mb-1">Márgenes</label>
+                    <label class="block text-sm font-medium mb-1">{{ tr.margenes }}</label>
                     <select name="report_margin" class="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:text-white">
-                        <option value="small">Pequeños (1.5 cm)</option>
-                        <option value="normal" selected>Normales (2.54 cm)</option>
-                        <option value="large">Grandes (3.0 cm)</option>
+                        <option value="small">{{ tr.pequenos_15_cm }}</option>
+                        <option value="normal" selected>{{ tr.normales_254_cm }}</option>
+                        <option value="large">{{ tr.grandes_30_cm }}</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium mb-1">Tipografía</label>
+                    <label class="block text-sm font-medium mb-1">{{ tr.tipografia }}</label>
                     <select name="report_font" class="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:text-white">
-                        <option value="helvetica" selected>Helvetica (Arial)</option>
-                        <option value="times">Times Roman</option>
-                        <option value="courier">Courier</option>
+                        <option value="helvetica" selected>{{ tr.helvetica_arial }}</option>
+                        <option value="times">{{ tr.times_roman }}</option>
+                        <option value="courier">{{ tr.courier }}</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium mb-1">Espaciado</label>
+                    <label class="block text-sm font-medium mb-1">{{ tr.espaciado }}</label>
                     <select name="report_padding" class="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:text-white">
-                        <option value="compact">Compacto</option>
-                        <option value="normal" selected>Normal</option>
-                        <option value="spacious">Espacioso</option>
+                        <option value="compact">{{ tr.compacto }}</option>
+                        <option value="normal" selected>{{ tr.normal }}</option>
+                        <option value="spacious">{{ tr.espacioso }}</option>
                     </select>
                 </div>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
                 <div>
-                    <label class="block text-sm font-medium mb-1">Tipo de gráfico</label>
+                    <label class="block text-sm font-medium mb-1">{{ tr.tipo_de_grafico }}</label>
                     <select name="report_chart" class="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:text-white">
-                        <option value="bar">Barras</option>
-                        <option value="pie">Pastel (Pie)</option>
+                        <option value="bar">{{ tr.barras }}</option>
+                        <option value="pie">{{ tr.pastel_pie }}</option>
                     </select>
                 </div>
                 <div class="flex items-end">
                     <label class="flex items-center gap-2 cursor-pointer">
                         <input type="checkbox" name="report_landscape" class="w-5 h-5 text-blue-600">
-                        <span class="text-sm font-medium">Orientación horizontal (Landscape)</span>
+                        <span class="text-sm font-medium">{{ tr.orientacion_horizontal_landscape }}</span>
                     </label>
                 </div>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                 <div>
-                    <label class="block text-sm font-medium mb-1">Color de ingresos (gráfico)</label>
+                    <label class="block text-sm font-medium mb-1">{{ tr.color_ingresos }}</label>
                     <input type="color" name="chart_ingreso_color" value="#22c55e" class="w-full h-10 p-1 border rounded cursor-pointer">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium mb-1">Color de egresos (gráfico)</label>
+                    <label class="block text-sm font-medium mb-1">{{ tr.color_egresos }}</label>
                     <input type="color" name="chart_egreso_color" value="#ef4444" class="w-full h-10 p-1 border rounded cursor-pointer">
                 </div>
             </div>
@@ -130,10 +130,10 @@
 
         <div class="flex gap-3">
             <button type="submit" name="action" value="preview" class="btn-primary px-6 py-3 font-semibold rounded">
-                <i class="fas fa-eye mr-2"></i>Vista Previa
+                <i class="fas fa-eye mr-2"></i>{{ tr.vista_previa_btn }}
             </button>
             <button type="submit" name="action" value="download" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 font-semibold rounded">
-                <i class="fas fa-download mr-2"></i>Descargar
+                <i class="fas fa-download mr-2"></i>{{ tr.descargar }}
             </button>
         </div>
     </form>

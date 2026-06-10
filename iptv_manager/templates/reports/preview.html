@@ -1,19 +1,19 @@
 {% extends 'base.html' %}
-{% block title %} — Vista Previa Reporte{% endblock %}
+{% block title %} — {{ tr.vista_previa_reporte }}{% endblock %}
 {% block content %}
 <div class="max-w-5xl mx-auto space-y-4">
     <div class="flex flex-wrap items-center justify-between gap-4">
-        <h2 class="text-2xl font-bold"><i class="fas fa-eye text-blue-600 mr-2"></i>Vista Previa</h2>
+        <h2 class="text-2xl font-bold"><i class="fas fa-eye text-blue-600 mr-2"></i>{{ tr.vista_previa }}</h2>
         <div class="flex gap-2">
             <a href="{% url 'reports:report_create' %}" class="px-4 py-2 rounded bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 font-semibold text-sm">
-                <i class="fas fa-arrow-left mr-1"></i>Atrás
+                <i class="fas fa-arrow-left mr-1"></i>{{ tr.atras }}
             </a>
         </div>
     </div>
 
     <div id="report-container" class="bg-white dark:bg-gray-800 rounded shadow overflow-hidden">
         <div class="bg-gray-100 dark:bg-gray-900 px-4 py-2 text-xs text-gray-500 flex items-center gap-4 border-b flex-wrap">
-            <span><i class="far fa-file-pdf mr-1"></i>PDF — {{ template.nombre }}</span>
+            <span><i class="far fa-file-pdf mr-1"></i>{{ tr.pdf }} — {{ template.nombre }}</span>
             <span><i class="far fa-calendar mr-1"></i>{{ now|date:"d/m/Y H:i" }}</span>
             {% if date_start and date_end %}
             <span><i class="far fa-clock mr-1"></i>{{ date_start }} al {{ date_end }}</span>
@@ -28,7 +28,7 @@
                     <input type="hidden" name="format" value="pdf">
                     <input type="hidden" name="action" value="download">
                     <button type="submit" class="text-blue-600 hover:underline font-semibold text-xs">
-                        <i class="fas fa-download mr-1"></i>PDF
+                        <i class="fas fa-download mr-1"></i>{{ tr.pdf }}
                     </button>
                 </form>
                 <form method="post" action="{% url 'reports:report_create' %}" class="inline">
@@ -40,11 +40,11 @@
                     <input type="hidden" name="format" value="excel">
                     <input type="hidden" name="action" value="download">
                     <button type="submit" class="text-green-600 hover:underline font-semibold text-xs">
-                        <i class="fas fa-file-excel mr-1"></i>Excel
+                        <i class="fas fa-file-excel mr-1"></i>{{ tr.excel }}
                     </button>
                 </form>
                 <button onclick="downloadJPG()" class="text-purple-600 hover:underline font-semibold text-xs">
-                    <i class="fas fa-image mr-1"></i>JPG
+                    <i class="fas fa-image mr-1"></i>{{ tr.jpg_vista_previa }}
                 </button>
             </span>
         </div>

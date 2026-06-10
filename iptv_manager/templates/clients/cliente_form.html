@@ -1,21 +1,46 @@
 {% extends 'base.html' %}
-{% block title %} — {% if form.instance.pk %}Editar{% else %}Nuevo{% endif %} Cliente{% endblock %}
+{% block title %} — {% if form.instance.pk %}{{ tr.editar }} {{ tr.clientes }}{% else %}{{ tr.nuevo_cliente }}{% endif %}{% endblock %}
 {% block content %}
-<h2 class="text-2xl font-bold mb-4">{% if form.instance.pk %}Editar{% else %}Nuevo{% endif %} Cliente</h2>
+<h2 class="text-2xl font-bold mb-4">{% if form.instance.pk %}{{ tr.editar }} {{ tr.clientes }}{% else %}{{ tr.nuevo_cliente }}{% endif %}</h2>
 
-<div class="max-w-lg bg-white dark:bg-gray-800 p-6 rounded shadow">
+<div class="max-w-2xl bg-white dark:bg-gray-800 p-6 rounded shadow">
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {% for field in form %}
-        <div class="mb-3">
-            <label class="block text-sm font-medium mb-1">{{ field.label }}</label>
-            {{ field }}
-            {% if field.errors %}<p class="text-red-500 text-xs mt-1">{{ field.errors.0 }}</p>{% endif %}
-        </div>
-        {% endfor %}
+        <fieldset class="mb-6">
+            <legend class="text-lg font-semibold mb-3 pb-2 border-b dark:border-gray-600">{{ tr.informacion_basica }}</legend>
+            {% for field in form %}
+            {% if not field.name|slice:":4" == "_cf_" %}
+            <div class="mb-3">
+                <label class="block text-sm font-medium mb-1">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}<p class="text-gray-500 text-xs mt-1">{{ field.help_text }}</p>{% endif %}
+                {% if field.errors %}<p class="text-red-500 text-xs mt-1">{{ field.errors.0 }}</p>{% endif %}
+            </div>
+            {% endif %}
+            {% endfor %}
+        </fieldset>
+
+        {% with custom_fields=form._custom_field_names %}
+        {% if custom_fields %}
+        <fieldset class="mb-6">
+            <legend class="text-lg font-semibold mb-3 pb-2 border-b dark:border-gray-600">{{ tr.datos_adicionales }}</legend>
+            {% for field in form %}
+            {% if field.name|slice:":4" == "_cf_" %}
+            <div class="mb-3">
+                <label class="block text-sm font-medium mb-1">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}<p class="text-gray-500 text-xs mt-1">{{ field.help_text }}</p>{% endif %}
+                {% if field.errors %}<p class="text-red-500 text-xs mt-1">{{ field.errors.0 }}</p>{% endif %}
+            </div>
+            {% endif %}
+            {% endfor %}
+        </fieldset>
+        {% endif %}
+        {% endwith %}
+
         <div class="mt-4 flex space-x-3">
-            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Guardar</button>
-            <a href="{% url 'cliente_list' %}" class="px-4 py-2 border rounded hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-700">Cancelar</a>
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">{{ tr.guardar }}</button>
+            <a href="{% url 'cliente_list' %}" class="px-4 py-2 border rounded hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-700">{{ tr.cancelar }}</a>
         </div>
     </form>
 </div>

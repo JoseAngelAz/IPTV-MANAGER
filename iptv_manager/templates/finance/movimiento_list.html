@@ -1,18 +1,18 @@
 {% extends 'base.html' %}
-{% block title %} — Finanzas{% endblock %}
+{% block title %} — {{ tr.finanzas }}{% endblock %}
 {% block content %}
 <div class="flex justify-between items-center mb-4">
-    <h2 class="text-2xl font-bold">Movimientos Financieros</h2>
+    <h2 class="text-2xl font-bold">{{ tr.movimientos_financieros }}</h2>
     {% if perms.finance.add_movimientofinanciero %}
-    <a href="{% url 'movimiento_create' %}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">+ Nuevo Movimiento</a>
+    <a href="{% url 'movimiento_create' %}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">{{ tr.nuevo_movimiento }}</a>
     {% endif %}
 </div>
 
 <form method="get" class="mb-4">
     <select name="tipo" class="px-3 py-2 border rounded" onchange="this.form.submit()">
-        <option value="">Todos</option>
-        <option value="ingreso" {% if request.GET.tipo == 'ingreso' %}selected{% endif %}>Ingresos</option>
-        <option value="egreso" {% if request.GET.tipo == 'egreso' %}selected{% endif %}>Egresos</option>
+        <option value="">{{ tr.todos }}</option>
+        <option value="ingreso" {% if request.GET.tipo == 'ingreso' %}selected{% endif %}>{{ tr.ingresos }}</option>
+        <option value="egreso" {% if request.GET.tipo == 'egreso' %}selected{% endif %}>{{ tr.egresos }}</option>
     </select>
 </form>
 
@@ -20,10 +20,10 @@
     <table class="w-full">
         <thead>
             <tr class="bg-gray-50 text-left">
-                <th class="p-3">Tipo</th>
-                <th class="p-3">Monto</th>
-                <th class="p-3">Descripción</th>
-                <th class="p-3">Fecha</th>
+                <th class="p-3">{{ tr.tipo }}</th>
+                <th class="p-3">{{ tr.monto }}</th>
+                <th class="p-3">{{ tr.descripcion }}</th>
+                <th class="p-3">{{ tr.fecha }}</th>
                 {% if perms.finance.change_movimientofinanciero %}
                 <th class="p-3"></th>
                 {% endif %}
@@ -47,7 +47,7 @@
                 {% endif %}
             </tr>
             {% empty %}
-            <tr><td colspan="5" class="p-3 text-center text-gray-400">Sin movimientos</td></tr>
+            <tr><td colspan="5" class="p-3 text-center text-gray-400">{{ tr.sin_movimientos_financieros }}</td></tr>
             {% endfor %}
         </tbody>
     </table>

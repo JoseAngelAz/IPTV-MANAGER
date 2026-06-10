@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block title %} — {{ tr.configuracion_landing_page }}{% endblock %}
+{% block content %}
+<h2 class="text-2xl font-bold mb-4"><i class="fas fa-home text-blue-600 mr-2"></i>{{ tr.configuracion_landing_page }}</h2>
+
+<div class="max-w-2xl bg-white dark:bg-gray-800 p-6 rounded shadow">
+    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">{{ tr.configuracion_landing_page_desc }}</p>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="mb-4">
+            <label class="block text-sm font-medium mb-1">{{ form.background_image.label }}</label>
+            {{ form.background_image }}
+            {% if config.background_image %}
+            <div class="mt-2">
+                <img src="{{ config.background_image.url }}" class="max-h-32 rounded border dark:border-gray-600">
+                <p class="text-xs text-gray-500 mt-1">{{ tr.imagen_actual }}</p>
+            </div>
+            {% endif %}
+            <p class="text-xs text-gray-500 mt-1">{{ form.background_image.help_text }}</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+                <label class="block text-sm font-medium mb-1">{{ form.gradient_from.label }}</label>
+                {{ form.gradient_from }}
+                <p class="text-xs text-gray-500 mt-1">{{ form.gradient_from.help_text }}</p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-1">{{ form.gradient_to.label }}</label>
+                {{ form.gradient_to }}
+                <p class="text-xs text-gray-500 mt-1">{{ form.gradient_to.help_text }}</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+                <label class="block text-sm font-medium mb-1">{{ form.overlay_opacity.label }}</label>
+                {{ form.overlay_opacity }}
+                <p class="text-xs text-gray-500 mt-1">{{ form.overlay_opacity.help_text }}</p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-1">{{ form.show_stats.label }}</label>
+                <div class="mt-2">{{ form.show_stats }}</div>
+            </div>
+        </div>
+
+        <div class="mt-6 p-4 bg-gray-100 dark:bg-gray-700 rounded">
+            <p class="text-sm font-semibold mb-2">{{ tr.vista_previa }}</p>
+            <div class="relative h-32 rounded overflow-hidden border dark:border-gray-600" style="background: linear-gradient(135deg, var(--preview-from, #111827), var(--preview-to, #1e3a5f));">
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <span class="text-white/60 text-xs">{{ tr.tiny_erp_manager_preview }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-6 flex space-x-3">
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">{{ tr.guardar }}</button>
+            <a href="{% url 'dashboard' %}" class="px-4 py-2 border rounded hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-700">{{ tr.cancelar }}</a>
+        </div>
+    </form>
+</div>
+
+<script>
+(function() {
+    const fromInput = document.getElementById('{{ form.gradient_from.id_for_label }}');
+    const toInput = document.getElementById('{{ form.gradient_to.id_for_label }}');
+    const preview = document.querySelector('.relative.h-32');
+    if (fromInput && toInput && preview) {
+        function updatePreview() {
+            preview.style.setProperty('--preview-from', fromInput.value || '#111827');
+            preview.style.setProperty('--preview-to', toInput.value || '#1e3a5f');
+        }
+        fromInput.addEventListener('input', updatePreview);
+        toInput.addEventListener('input', updatePreview);
+        updatePreview();
+    }
+})();
+</script>
+{% endblock %}

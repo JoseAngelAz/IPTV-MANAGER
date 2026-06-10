@@ -40,9 +40,11 @@ class Cliente(models.Model):
     nombre = models.CharField('Nombre', max_length=200)
     telefono = models.CharField('Teléfono', max_length=16, validators=[telefono_validator])
     email = models.EmailField('Email', blank=True, default='')
-    dispositivo_id = models.CharField('ID Dispositivo / MAC', max_length=20, validators=[mac_validator], unique=True)
+    dispositivo_id = models.CharField('ID Dispositivo / MAC', max_length=20, validators=[mac_validator], unique=True, null=True, blank=True)
     foto = models.ImageField('Foto', upload_to=_procesar_foto, blank=True, null=True)
     documento_identidad = models.CharField('Documento de identidad', max_length=100, blank=True, default='')
+    datos_extra = models.JSONField('Datos adicionales', blank=True, null=True, default=dict,
+        help_text='Almacena campos personalizados adicionales en formato JSON.')
     fecha_registro = models.DateTimeField('Fecha de registro', auto_now_add=True)
     activo = models.BooleanField('Activo', default=True)
 
@@ -57,7 +59,9 @@ class Cliente(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.nombre} ({self.dispositivo_id})'
+        if self.dispositivo_id:
+            return f'{self.nombre} ({self.dispositivo_id})'
+        return self.nombre
 
 
 class HistorialCliente(models.Model):
@@ -73,6 +77,67 @@ class HistorialCliente(models.Model):
 
     def __str__(self):
         return f'{self.cliente} — {self.fecha.strftime("%d/%m/%Y %H:%M")}'
+
+
+class CustomField(models.Model):
+    FIELD_TYPES = (
+        ('text', 'Texto / Text'),
+        ('number', 'Número / Number'),
+        ('boolean', 'Sí/No / Boolean'),
+        ('date', 'Fecha / Date'),
+        ('email', 'Email'),
+        ('select', 'Selección / Select'),
+    )
+    VERTICAL_CHOICES = (
+        ('', '— Global (todas las verticales)'),
+        ('iptv', 'IPTV'),
+        ('gimnasio', 'Gimnasio / Gym'),
+        ('escuela', 'Escuela / School'),
+        ('taller', 'Taller / Workshop'),
+        ('consultorio', 'Consultorio / Clinic'),
+        ('otro', 'Otro / Other'),
+    )
+    nombre = models.CharField('Nombre del campo', max_length=100)
+    field_type = models.CharField('Tipo de campo', max_length=20, choices=FIELD_TYPES, default='text')
+    required = models.BooleanField('Requerido', default=False)
+    options = models.TextField('Opciones', blank=True,
+        help_text='Para tipo "Selección", una opción por línea. / For "Select" type, one option per line.')
+    vertical = models.CharField('Vertical de negocio', max_length=50, choices=VERTICAL_CHOICES, blank=True, default='',
+        help_text='Dejar vacío para aplicar a todas las verticales. / Leave empty for all verticals.')
+    ordering = models.IntegerField('Orden', default=0)
+    activo = models.BooleanField('Activo', default=True)
+
+    class Meta:
+        verbose_name = 'Campo personalizado'
+        verbose_name_plural = 'Campos personalizados'
+        ordering = ['ordering', 'nombre']
+
+    def __str__(self):
+        return self.nombre
+
+
+class BusinessTemplate(models.Model):
+    VERTICAL_CHOICES = CustomField.VERTICAL_CHOICES
+    vertical = models.CharField('Vertical de negocio', max_length=50, choices=VERTICAL_CHOICES, unique=True)
+    aplicado = models.BooleanField('Aplicado', default=False,
+        help_text='Indica si este preset ya fue aplicado para crear los campos personalizados.')
+    fecha_aplicado = models.DateTimeField('Fecha de aplicación', blank=True, null=True)
+
+    class Meta:
+        verbose_name = 'Plantilla de negocio'
+        verbose_name_plural = 'Plantillas de negocio'
+
+    def __str__(self):
+        return self.get_vertical_display()
+
+    def apply(self):
+        from .presets import apply_preset
+        created = apply_preset(self.vertical, clear_existing=False)
+        from django.utils.timezone import now
+        self.aplicado = True
+        self.fecha_aplicado = now()
+        self.save()
+        return created
 
 
 class Nota(models.Model):
