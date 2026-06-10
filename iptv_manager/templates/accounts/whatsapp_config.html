@@ -61,24 +61,22 @@
             <div class="space-y-3">
                 {% for tpl in templates %}
                 <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                    <div class="flex items-center justify-between mb-2">
-                        <h3 class="font-semibold flex items-center gap-2">
-                            {{ tpl.nombre }}
-                            <span class="text-xs bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 px-2 py-0.5 rounded-full">{{ tpl.get_categoria_display }}</span>
-                            {% if tpl.activo %}
-                            <span class="text-xs bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 px-2 py-0.5 rounded-full">{{ tr.activo }}</span>
-                            {% else %}
-                            <span class="text-xs bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 px-2 py-0.5 rounded-full">{{ tr.inactivo }}</span>
-                            {% endif %}
-                        </h3>
-                        <div class="flex gap-2 flex-shrink-0">
-                            <a href="{% url 'recordatorio_template_edit' tpl.pk %}" class="text-blue-600 hover:text-blue-800 whitespace-nowrap" title="{{ tr.editar }}">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <a href="{% url 'recordatorio_template_delete' tpl.pk %}" class="text-red-600 hover:text-red-800 whitespace-nowrap" title="{{ tr.eliminar }}">
-                                <i class="fas fa-trash"></i>
-                            </a>
-                        </div>
+                    <div class="flex flex-wrap items-center gap-x-2 gap-y-1 mb-2">
+                        <h3 class="font-semibold whitespace-nowrap">{{ tpl.nombre }}</h3>
+                        <span class="text-xs bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 px-2 py-0.5 rounded-full whitespace-nowrap">{{ tpl.get_categoria_display }}</span>
+                        {% if tpl.activo %}
+                        <span class="text-xs bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 px-2 py-0.5 rounded-full whitespace-nowrap">{{ tr.activo }}</span>
+                        {% else %}
+                        <span class="text-xs bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 px-2 py-0.5 rounded-full whitespace-nowrap">{{ tr.inactivo }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-2 mb-2">
+                        <a href="{% url 'recordatorio_template_edit' tpl.pk %}" class="w-full sm:w-auto text-center px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm whitespace-nowrap">
+                            <i class="fas fa-edit"></i> {{ tr.editar }}
+                        </a>
+                        <a href="{% url 'recordatorio_template_delete' tpl.pk %}" class="w-full sm:w-auto text-center px-3 py-2 bg-red-600 text-white rounded hover:bg-red-700 text-sm whitespace-nowrap">
+                            <i class="fas fa-trash"></i> {{ tr.eliminar }}
+                        </a>
                     </div>
                     <pre class="text-sm bg-gray-50 dark:bg-gray-900 p-2 rounded overflow-x-auto whitespace-pre-wrap">{{ tpl.mensaje }}</pre>
                 </div>
