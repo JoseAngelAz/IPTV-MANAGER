@@ -35,7 +35,14 @@ class ClienteCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
         return reverse_lazy('cliente_detail', kwargs={'pk': self.object.pk})
 
     def form_valid(self, form):
-        resp = super().form_valid(form)
+        try:
+            resp = super().form_valid(form)
+        except Exception as e:
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.exception('Error al crear cliente')
+            messages.error(self.request, f'Error al crear cliente: {str(e)}')
+            return self.form_invalid(form)
         HistorialCliente.objects.create(
             cliente=self.object,
             usuario=self.request.user,

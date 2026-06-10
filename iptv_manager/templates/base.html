@@ -544,7 +544,7 @@ document.addEventListener('DOMContentLoaded', function(){
         }
     });
 
-    if(!localStorage.getItem('sessionStart')) localStorage.setItem('sessionStart', Date.now());
+    localStorage.setItem('sessionStart', Date.now());
     resetSessionTimer();
 });
 </script>

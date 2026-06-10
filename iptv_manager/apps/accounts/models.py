@@ -43,7 +43,12 @@ class ThemeSettings(models.Model):
                                          ('grid', 'Cuadrícula'), ('checker', 'Ajedrez'),
                                          ('circuit', 'Circuitos'), ('diamond', 'Diamantes'),
                                          ('rain', 'Lluvia'), ('mountain', 'Montañas'),
-                                         ('nebula', 'Nebulosa'), ('matrix', 'Matrix')],
+                                         ('nebula', 'Nebulosa'), ('matrix', 'Matrix'),
+                                         ('cyberpunk', 'Cyberpunk — Neón'), ('aurora', 'Aurora Boreal'),
+                                         ('galaxy', 'Galaxia'), ('sakura', 'Cerezos / Sakura'),
+                                         ('neon', 'Neón'), ('ocean', 'Océano'),
+                                         ('lava', 'Lava'), ('city', 'Ciudad Nocturna'),
+                                         ('forest', 'Bosque')],
                                 default='none')
     text_border_color = models.CharField('Color del borde de texto', max_length=7, default='', blank=True)
     text_border_width = models.PositiveIntegerField('Grosor del borde de texto', default=0)
@@ -233,6 +238,19 @@ class SessionConfig(models.Model):
 
 
 class LandingPageConfig(models.Model):
+    PIXEL_CHOICES = [
+        ('none', 'Ninguno'),
+        ('stars', 'Estrellas'), ('grid', 'Cuadrícula'),
+        ('checker', 'Ajedrez'), ('circuit', 'Circuitos'),
+        ('diamond', 'Diamantes'), ('rain', 'Lluvia'),
+        ('mountain', 'Montañas'), ('nebula', 'Nebulosa'),
+        ('matrix', 'Matrix'),
+        ('cyberpunk', 'Cyberpunk — Neón'), ('aurora', 'Aurora Boreal'),
+        ('galaxy', 'Galaxia'), ('sakura', 'Cerezos / Sakura'),
+        ('neon', 'Neón'), ('ocean', 'Océano'),
+        ('lava', 'Lava'), ('city', 'Ciudad Nocturna'),
+        ('forest', 'Bosque'),
+    ]
     background_image = models.ImageField('Imagen de fondo', upload_to='landing_bg/', blank=True, null=True,
         help_text='Imagen para el fondo de la página de inicio. Se recomienda 1920x1080px.')
     gradient_from = models.CharField('Degradado inicial', max_length=50, default='#111827',
@@ -242,6 +260,7 @@ class LandingPageConfig(models.Model):
     overlay_opacity = models.IntegerField('Opacidad de la capa', default=85,
         help_text='Opacidad del degradado superpuesto (0-100)')
     show_stats = models.BooleanField('Mostrar estadísticas', default=True)
+    pixel_bg = models.CharField('Fondo pixel art', max_length=20, choices=PIXEL_CHOICES, default='none')
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True)
 

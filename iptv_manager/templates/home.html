@@ -8,12 +8,14 @@
     <title>Tiny ERP Manager — {{ tr.sistema_de_gestion_de_servicios_iptv }}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/css/pixel-bg.css">
 </head>
-<body class="min-h-screen flex items-center justify-center relative overflow-hidden">
+<body class="min-h-screen flex items-center justify-center relative overflow-hidden{% if landing_config.pixel_bg and landing_config.pixel_bg != 'none' and not landing_config.background_image %} bg-pixel-{{ landing_config.pixel_bg }}{% endif %}">
     {% if landing_config.background_image %}
     <div class="absolute inset-0 bg-cover bg-center bg-no-repeat z-0"
          style="background-image: url('{{ landing_config.background_image.url }}');">
     </div>
+    {% elif landing_config.pixel_bg and landing_config.pixel_bg != 'none' %}
     {% else %}
     <div class="absolute inset-0 bg-cover bg-center bg-no-repeat z-0"
          style="background-image: url('/static/img/bg.webp');"

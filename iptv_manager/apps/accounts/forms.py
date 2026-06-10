@@ -90,17 +90,19 @@ class SessionConfigForm(forms.ModelForm):
 class LandingPageConfigForm(forms.ModelForm):
     class Meta:
         model = LandingPageConfig
-        fields = ('background_image', 'gradient_from', 'gradient_to', 'overlay_opacity', 'show_stats')
+        fields = ('background_image', 'gradient_from', 'gradient_to', 'overlay_opacity', 'show_stats', 'pixel_bg')
         widgets = {
             'background_image': forms.FileInput(attrs={'class': 'w-full px-3 py-2 border rounded dark:bg-gray-700 dark:text-white'}),
             'gradient_from': forms.TextInput(attrs={'class': 'w-full px-3 py-2 border rounded dark:bg-gray-700 dark:text-white font-mono', 'placeholder': 'gray-900/95 o #111827'}),
             'gradient_to': forms.TextInput(attrs={'class': 'w-full px-3 py-2 border rounded dark:bg-gray-700 dark:text-white font-mono', 'placeholder': 'blue-900/90 o #1e3a5f'}),
             'overlay_opacity': forms.NumberInput(attrs={'class': 'w-full px-3 py-2 border rounded dark:bg-gray-700 dark:text-white', 'min': 0, 'max': 100}),
+            'pixel_bg': forms.Select(attrs={'class': 'w-full px-3 py-2 border rounded dark:bg-gray-700 dark:text-white'}),
         }
         help_texts = {
             'gradient_from': 'Color inicial del degradado. Usa formato Tailwind (gray-900/95) o hex (#111827).',
             'gradient_to': 'Color final del degradado. Usa formato Tailwind (blue-900/90) o hex.',
             'overlay_opacity': 'Opacidad del degradado (0 = transparente, 100 = sólido).',
+            'pixel_bg': 'Fondo pixel art animado. Se muestra si no hay imagen de fondo personalizada.',
         }
 
     def __init__(self, *args, **kwargs):

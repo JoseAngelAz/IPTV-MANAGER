@@ -56,6 +56,13 @@
             </div>
         </div>
 
+        <div class="mb-4">
+            <label class="block text-sm font-medium mb-1">{{ form.pixel_bg.label }}</label>
+            {{ form.pixel_bg }}
+            {% if form.pixel_bg.errors %}<p class="text-red-500 text-xs mt-1">{{ form.pixel_bg.errors.0 }}</p>{% endif %}
+            <p class="text-xs text-gray-500 mt-1">{{ form.pixel_bg.help_text }}</p>
+        </div>
+
         <div class="mt-6 p-4 bg-gray-100 dark:bg-gray-700 rounded">
             <p class="text-sm font-semibold mb-2">{{ tr.vista_previa }}</p>
             <div class="relative h-32 rounded overflow-hidden border dark:border-gray-600" style="background: linear-gradient(135deg, var(--preview-from, #111827), var(--preview-to, #1e3a5f));">

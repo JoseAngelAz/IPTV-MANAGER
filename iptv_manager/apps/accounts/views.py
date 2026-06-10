@@ -25,7 +25,11 @@ def home(request):
         'suscripciones_activas': Suscripcion.objects.filter(estado=Suscripcion.Estado.ACTIVO).count(),
         'total_clientes': Cliente.objects.filter(activo=True).count(),
     }
-    return render(request, 'home.html', {'stats': stats})
+    try:
+        landing_config = LandingPageConfig.get_config()
+    except Exception:
+        landing_config = None
+    return render(request, 'home.html', {'stats': stats, 'landing_config': landing_config})
 
 
 def login_view(request):
