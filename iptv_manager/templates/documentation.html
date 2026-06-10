@@ -323,7 +323,7 @@
             </div>
             <div class="bg-gray-50 dark:bg-gray-900 p-3 rounded">
                 <p class="font-bold text-green-600"><i class="fas fa-users mr-1"></i>clients</p>
-                <p class="text-xs">CRUD de clientes con fotos, notas, historial de cambios y validación de MAC/teléfono.</p>
+                <p class="text-xs">CRUD de clientes con fotos, notas, historial, datos JSON personalizados, campos personalizados por vertical de negocio y plantillas de negocio predefinidas.</p>
             </div>
             <div class="bg-gray-50 dark:bg-gray-900 p-3 rounded">
                 <p class="font-bold text-yellow-600"><i class="fas fa-clipboard-list mr-1"></i>subscriptions</p>
@@ -377,9 +377,10 @@ iptv_manager/
 │   │   ├── admin.py           # · Registro de modelos en admin Django
 │   │   └── tests.py           # · Tests: 62+ casos de prueba
 │   ├── clients/               # Gestión de clientes
-│   │   ├── models.py          # · Cliente, HistorialCliente, Nota
+│   │   ├── models.py          # · Cliente, HistorialCliente, Nota, CustomField, BusinessTemplate
 │   │   ├── views.py           # · CRUD clientes, notas, historial
-│   │   ├── forms.py           # · ClienteForm (con foto)
+│   │   ├── forms.py           # · ClienteForm (con foto + campos personalizados dinámicos)
+│   │   ├── presets.py         # · Definiciones de plantillas de negocio (6 verticales)
 │   │   └── urls.py            # · Rutas de clientes
 │   ├── subscriptions/         # Planes y suscripciones
 │   │   ├── models.py          # · Plan, Suscripcion
@@ -853,7 +854,8 @@ python manage.py runserver 0.0.0.0:8000</pre>
             <p class="font-bold text-gray-600 mb-2"><i class="fas fa-user-tie mr-1"></i>Cliente</p>
             <ul class="list-disc list-inside text-xs space-y-1">
                 <li>nombre, telefono, email</li>
-                <li>dispositivo_id (MAC, unique)</li>
+                <li>dispositivo_id (MAC, opcional)</li>
+                <li>datos_extra (JSON) — campos personalizados</li>
                 <li>foto (ImageField, auto 400px/70%)</li>
                 <li>fecha_registro, activo</li>
                 <li>→ HistorialCliente</li>
