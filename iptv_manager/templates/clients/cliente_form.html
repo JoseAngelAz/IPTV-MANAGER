@@ -20,7 +20,7 @@
             {% endfor %}
         </fieldset>
 
-        {% with custom_fields=form._custom_field_names %}
+        {% with custom_fields=form.custom_field_names %}
         {% if custom_fields %}
         <fieldset class="mb-6">
             <legend class="text-lg font-semibold mb-3 pb-2 border-b dark:border-gray-600">{{ tr.datos_adicionales }}</legend>

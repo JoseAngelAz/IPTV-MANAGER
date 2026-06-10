@@ -19,7 +19,7 @@ class ClienteForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['dispositivo_id'].required = False
-        self._custom_field_names = []
+        self.custom_field_names = []
 
         extra_data = {}
         if self.instance and self.instance.pk and self.instance.datos_extra:
@@ -31,7 +31,7 @@ class ClienteForm(forms.ModelForm):
             custom_fields = []
         for cf in custom_fields:
             field_name = f'_cf_{cf.pk}'
-            self._custom_field_names.append(field_name)
+            self.custom_field_names.append(field_name)
             initial_val = extra_data.get(cf.nombre, '')
             base_attrs = {'class': 'w-full px-3 py-2 border rounded dark:bg-gray-700 dark:text-white'}
             required = cf.required
@@ -70,7 +70,7 @@ class ClienteForm(forms.ModelForm):
     def clean(self):
         cleaned = super().clean()
         extra = {}
-        for field_name in self._custom_field_names:
+        for field_name in self.custom_field_names:
             val = cleaned.get(field_name)
             if val is None or val == '':
                 continue
