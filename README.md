@@ -1,6 +1,6 @@
-# IPTV Manager
+# Tiny ERP Manager
 
-Sistema web basado en Django 5.1 para la gestión integral de proveedores de servicios IPTV pequeños a medianos. Centraliza clientes, suscripciones, planes, finanzas y notificaciones en un panel de control moderno con integración a WhatsApp.
+Sistema web ERP multipropósito basado en Django 5.1. Originalmente diseñado para gestión IPTV, ahora expandido como ERP genérico adaptable a cualquier vertical de negocio: IPTV, gimnasios, escuelas, talleres, consultorios y más. Centraliza clientes, suscripciones/planes, finanzas, notificaciones y datos personalizados por vertical en un panel de control moderno con integración a WhatsApp.
 
 ## ✨ Funcionalidades
 
@@ -10,12 +10,16 @@ Sistema web basado en Django 5.1 para la gestión integral de proveedores de ser
 - Predicción de ganancias/pérdidas mediante regresión lineal simple
 - Métricas de mensajería: total de mensajes enviados, tasa de éxito, desglose WhatsApp/Email
 
-### 👥 Clientes
-- CRUD completo con búsqueda por nombre, teléfono y MAC address
+### 👥 Clientes (ERP Multi-vertical)
+- CRUD completo con búsqueda por nombre, teléfono, MAC address o documento
 - Foto de perfil con compresión automática y galería de fotos
 - Historial de cambios por usuario
 - Notas internas por cliente
 - Desactivación vía modal (con advertencia de suscripciones activas)
+- **Datos adicionales** (JSONField) — almacena campos personalizados por vertical de negocio
+- **Campos personalizados** (CustomField) — definidos desde el admin de Django, con tipos: texto, número, booleano, fecha, email, selección
+- **Plantillas de negocio** (BusinessTemplate) — presets predefinidos para IPTV, Gimnasio, Escuela, Taller, Consultorio y Otro
+- **dispositivo_id opcional** — MAC address ya no es obligatoria, permitiendo uso no-IPTV
 
 ### 📋 Suscripciones y Planes
 - Planes personalizables (nombre, precio, duración en días)
@@ -48,7 +52,8 @@ Sistema web basado en Django 5.1 para la gestión integral de proveedores de ser
 - CSS personalizado
 - Modo oscuro
 - Efectos de texto (negrita, cursiva, subrayado, tachado, borde)
-- Fondos pixel art animados
+- Fondos pixel art animados (sidebar y landing page)
+- Configuración de landing page: imagen de fondo + degradado ajustable + estadísticas
 
 ### 📄 Reportes
 - Generación de PDF y Excel
@@ -72,7 +77,8 @@ Sistema web basado en Django 5.1 para la gestión integral de proveedores de ser
 ### 📝 Otras funcionalidades
 - Lista de tareas (To-Do) personal con prioridades, categorías y fecha de vencimiento
 - Páginas de error 404/500 personalizables (título, mensaje, color, arte pixelado)
-- Formulario de reporte de errores en la página 500
+- Página 500 con visor de traceback técnico y formulario de reporte de errores (para todos los usuarios)
+- Vista dedicada de reportes de error con traceback capturado automáticamente
 - Galería de fotos
 - Configuración de tiempo de sesión
 - Logs de actividad con filtros y eliminación masiva
@@ -184,7 +190,7 @@ docker compose exec web python manage.py test
 docker compose exec web python manage.py test apps.accounts.tests.PermissionTest -v 2
 ```
 
-Actualmente **78 pruebas** cubren modelos, vistas, permisos, generación de PDF/Excel y flujos críticos.
+Actualmente **78 pruebas** (accounts + reports) cubren modelos, vistas, permisos, generación de PDF/Excel y flujos críticos. Los módulos de clients, subscriptions, finance y notifications no tienen tests unitarios dedicados aún.
 
 ## 📁 Estructura del Proyecto
 
@@ -192,7 +198,7 @@ Actualmente **78 pruebas** cubren modelos, vistas, permisos, generación de PDF/
 iptv_manager/
 ├── apps/
 │   ├── accounts/          # Usuarios, autenticación, tema, WhatsApp, plantillas, tareas
-│   ├── clients/           # Clientes, historial, notas
+│   ├── clients/           # Clientes, historial, notas, campos personalizados, presets
 │   ├── subscriptions/     # Planes, suscripciones, descuentos
 │   ├── finance/           # Movimientos financieros
 │   ├── notifications/     # Logs de notificaciones, recordatorios
