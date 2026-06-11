@@ -324,10 +324,13 @@
             .sidebar--collapsed .sidebar__submenu,
             .sidebar--collapsed .sidebar__footer > *:not(.sidebar__footer-compact),
             .sidebar--collapsed .sidebar__user { display: none; }
-            .sidebar--collapsed { padding-left: 0.5rem; padding-right: 0.5rem; }
+            .sidebar--collapsed { padding-left: 0.5rem; padding-right: 0.5rem; overflow: hidden; }
+            .sidebar--collapsed .sidebar__header { justify-content: center; }
             .sidebar--collapsed .sidebar__nav-link,
-            .sidebar--collapsed .sidebar__submenu-toggle { justify-content: center; padding: 0.5rem; }
-            .sidebar--collapsed .sidebar__nav-icon { width: auto; }
+            .sidebar--collapsed .sidebar__submenu-toggle { justify-content: center; padding: 0.5rem; min-width: 0; }
+            .sidebar--collapsed .sidebar__nav-icon { width: auto; margin: 0; }
+            .sidebar--collapsed .sidebar__nav-link > i,
+            .sidebar--collapsed .sidebar__submenu-toggle > i:first-child { margin-right: 0; }
             .sidebar__footer-compact { display: none; }
             .sidebar--collapsed .sidebar__footer-compact { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding-top: 0.5rem; }
         }
@@ -766,5 +769,20 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 </script>
 <script src="/static/js/effects.js" defer></script>
+<button id="back-to-top" onclick="document.getElementById('scrollable-content').scrollTo({top:0,behavior:'smooth'})" class="fixed bottom-4 right-4 z-40 w-8 h-8 rounded-full bg-gray-700/60 hover:bg-gray-600 text-white text-sm flex items-center justify-center shadow transition-opacity" style="opacity:0;pointer-events:none" title="Volver arriba">
+    <i class="fas fa-chevron-up"></i>
+</button>
+<script>
+(function(){
+    var btn = document.getElementById('back-to-top');
+    var el = document.getElementById('scrollable-content');
+    if(!btn || !el) return;
+    el.addEventListener('scroll', function(){
+        var show = el.scrollTop > 400;
+        btn.style.opacity = show ? '1' : '0';
+        btn.style.pointerEvents = show ? 'auto' : 'none';
+    });
+})();
+</script>
 </body>
 </html>

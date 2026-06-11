@@ -306,7 +306,7 @@ class ReportPDF:
             fecha_str = fecha_raw.strftime('%Y-%m-%d') if isinstance(fecha_raw, datetime) else (str(fecha_raw)[:10] if fecha_raw else '')
             rows.append([
                 str(i), m.get('tipo', ''), f'${float(m.get("monto", 0)):,.2f}',
-                fecha_str, m.get('descripcion', '')[:40]
+                fecha_str, m.get('descripcion', '')
             ])
         u = self.usable_width
         cw = [u * 0.06, u * 0.14, u * 0.14, u * 0.14, u * 0.52]

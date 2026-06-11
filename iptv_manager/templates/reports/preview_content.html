@@ -1,4 +1,16 @@
 {% load humanize %}
+<script>
+function toggleFinDesc(idx) {
+    var s = document.getElementById('fin-desc-' + idx);
+    var f = document.getElementById('fin-desc-full-' + idx);
+    var btn = s && s.parentNode.querySelector('.ver-mas-btn');
+    if (s && f) {
+        s.classList.toggle('hidden');
+        f.classList.toggle('hidden');
+        if (btn) btn.textContent = s.classList.contains('hidden') ? '{% if tr.ver_menos %}{{ tr.ver_menos }}{% else %}Ver menos{% endif %}' : '{% if tr.ver_mas %}{{ tr.ver_mas }}{% else %}Ver m\u00e1s{% endif %}';
+    }
+}
+</script>
 {% if template_id == 1 %}
 <style>
 .rpt-header { background:#1e293b; color:white; padding:16px 24px; border-radius:8px 8px 0 0; }
@@ -136,7 +148,15 @@
                 <td><span class="px-2 py-0.5 rounded text-xs {% if m.tipo == 'ingreso' %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-700{% endif %}">{{ m.tipo|capfirst }}</span></td>
                 <td>${{ m.monto|floatformat:2|intcomma }}</td>
                 <td>{{ m.fecha|date:"d/m/Y"|default:'—' }}</td>
-                <td>{{ m.descripcion|default:'—'|truncatechars:40 }}</td>
+                <td>
+                    {% if m.descripcion and m.descripcion|length > 40 %}
+                    <span id="fin-desc-{{ forloop.counter0 }}">{{ m.descripcion|truncatechars:40 }}</span>
+                    <span id="fin-desc-full-{{ forloop.counter0 }}" class="hidden">{{ m.descripcion }}</span>
+                    <button onclick="toggleFinDesc({{ forloop.counter0 }})" class="text-blue-600 hover:underline text-xs ml-1 ver-mas-btn">{% if tr.ver_mas %}{{ tr.ver_mas }}{% else %}Ver más{% endif %}</button>
+                    {% else %}
+                    {{ m.descripcion|default:'—' }}
+                    {% endif %}
+                </td>
             </tr>
             {% endfor %}
         </tbody>
