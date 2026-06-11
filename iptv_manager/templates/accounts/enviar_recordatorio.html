@@ -8,7 +8,7 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-            <form method="POST" id="send-form">
+            <form method="POST" id="send-form" enctype="multipart/form-data">
                 {% csrf_token %}
 
                 <div class="mb-4">
@@ -39,9 +39,8 @@
                 </div>
 
                 <div class="mb-4">
-                    <label class="block text-sm font-medium mb-1"><i class="fas fa-image mr-1 text-purple-500"></i>{{ tr.url_de_imagen_opcional }}</label>
-                    <input type="url" name="media_url" id="media-url" placeholder="{{ tr.url_ejemplo_placeholder }}" class="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:text-white">
-                    <p class="text-xs text-gray-500 mt-1">{{ tr.url_imagen_help }}</p>
+                    <label class="block text-sm font-medium mb-1"><i class="fas fa-image mr-1 text-purple-500"></i>{{ tr.imagen_opcional }}</label>
+                    <input type="file" name="media_upload" id="media-upload" accept="image/*" class="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:text-white">
                 </div>
 
                 <div class="mb-6">
@@ -77,6 +76,16 @@
 var clientes = {{ clientes_json|safe }};
 var templates = {{ templates_json|safe }};
 
+function readMediaFile(callback) {
+    var file = document.getElementById('media-upload').files[0];
+    if (!file) { callback(''); return; }
+    var reader = new FileReader();
+    reader.onload = function(e) { callback(e.target.result); };
+    reader.readAsDataURL(file);
+}
+
+var cachedMediaUrl = '';
+
 function actualizarPreview() {
     var clienteId = document.getElementById('cliente-select').value;
     var checkboxes = document.querySelectorAll('.template-checkbox:checked');
@@ -89,8 +98,6 @@ function actualizarPreview() {
 
     var cliente = clientes.find(function(c) { return c.id == clienteId; });
     if (!cliente) return;
-
-    var mediaUrl = document.getElementById('media-url').value.trim();
 
     var html = '';
     checkboxes.forEach(function(cb) {
@@ -113,8 +120,8 @@ function actualizarPreview() {
         html += '<i class="fab fa-whatsapp text-green-500 mt-0.5"></i>';
         html += '<div>';
         html += '<span>' + msg.replace(/\n/g, '<br>') + '</span>';
-        if (mediaUrl) {
-            html += '<div class="mt-2"><img src="' + mediaUrl + '" class="max-w-full h-32 rounded object-cover border" onerror="this.style.display=\'none\'" alt="Imagen adjunta"></div>';
+        if (cachedMediaUrl) {
+            html += '<div class="mt-2"><img src="' + cachedMediaUrl + '" class="max-w-full h-32 rounded object-cover border" alt="Imagen adjunta"></div>';
         }
         html += '</div>';
         html += '</div>';
@@ -130,12 +137,13 @@ function actualizarPreview() {
 }
 
 document.getElementById('cliente-select').addEventListener('change', actualizarPreview);
-document.getElementById('media-url').addEventListener('input', actualizarPreview);
+document.getElementById('media-upload').addEventListener('change', function() {
+    readMediaFile(function(url) { cachedMediaUrl = url; actualizarPreview(); });
+});
 document.querySelectorAll('.template-checkbox').forEach(function(cb) {
     cb.addEventListener('change', actualizarPreview);
 });
 
-// Inicializar preview si hay datos
 actualizarPreview();
 </script>
 {% endblock %}

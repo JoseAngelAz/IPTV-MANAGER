@@ -745,7 +745,21 @@ def enviar_recordatorio_view(request):
 
             enviados = 0
             fallidos = 0
-            media_url = request.POST.get('media_url', '').strip()
+            media_url = ''
+            if 'media_upload' in request.FILES:
+                uploaded = request.FILES['media_upload']
+                import uuid
+                ext = uploaded.name.rsplit('.', 1)[-1] if '.' in uploaded.name else 'jpg'
+                fname = f'whatsapp_{uuid.uuid4().hex}.{ext}'
+                from django.conf import settings
+                import os
+                media_path = settings.MEDIA_ROOT / 'whatsapp_uploads'
+                os.makedirs(str(media_path), exist_ok=True)
+                dest = media_path / fname
+                with open(str(dest), 'wb+') as f:
+                    for chunk in uploaded.chunks():
+                        f.write(chunk)
+                media_url = settings.MEDIA_URL + f'whatsapp_uploads/{fname}'
 
             for tpl in selected_templates:
                 suscripcion_activa = cliente.suscripciones.filter(estado='activo').first()

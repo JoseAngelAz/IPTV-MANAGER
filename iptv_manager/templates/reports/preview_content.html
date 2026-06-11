@@ -72,7 +72,8 @@
 
 {% if s == 'clientes' %}
     {% if data.clientes %}
-    <table class="rpt-table">
+    <div style="overflow-x:auto">
+    <table class="rpt-table" style="white-space:nowrap">
         <thead><tr><th>#</th><th>Nombre</th><th>Teléfono</th><th>Email</th><th>Dispositivo</th><th>Registro</th><th>Subs Activas</th><th>Total Gastado</th></tr></thead>
         <tbody>
             {% for c in data.clientes %}
@@ -89,6 +90,7 @@
             {% endfor %}
         </tbody>
     </table>
+    </div>
     <p class="rpt-summary">Total clientes: {{ data.clientes|length }}</p>
     {% else %}
     <p class="text-gray-400 text-sm"><i>No hay datos de clientes.</i></p>
@@ -124,6 +126,7 @@
     {% endif %}
     {% endif %}
     {% if data.finanzas %}
+    <div style="overflow-x:auto">
     <table class="rpt-table">
         <thead><tr><th>#</th><th>Tipo</th><th>Monto</th><th>Fecha</th><th>Descripción</th></tr></thead>
         <tbody>
@@ -138,12 +141,14 @@
             {% endfor %}
         </tbody>
     </table>
+    </div>
     {% else %}
     <p class="text-gray-400 text-sm"><i>No hay movimientos financieros.</i></p>
     {% endif %}
 
 {% elif s == 'notificaciones' %}
     {% if data.notificaciones %}
+    <div style="overflow-x:auto">
     <table class="rpt-table">
         <thead><tr><th>#</th><th>Canal</th><th>Destinatario</th><th>Cliente</th><th>Mensaje</th><th>Estado</th><th>Fecha</th></tr></thead>
         <tbody>
@@ -160,13 +165,15 @@
             {% endfor %}
         </tbody>
     </table>
+    </div>
     {% else %}
     <p class="text-gray-400 text-sm"><i>No hay notificaciones.</i></p>
     {% endif %}
 
 {% elif s == 'suscripciones' %}
     {% if data.suscripciones %}
-    <table class="rpt-table">
+    <div style="overflow-x:auto">
+    <table class="rpt-table" style="white-space:nowrap">
         <thead><tr><th>#</th><th>Cliente</th><th>Teléfono</th><th>Plan</th><th>Precio</th><th>Inicio</th><th>Vencimiento</th><th>Días Rest.</th><th>Estado</th><th>Método de pago</th></tr></thead>
         <tbody>
             {% for sub in data.suscripciones %}
@@ -185,6 +192,7 @@
             {% endfor %}
         </tbody>
     </table>
+    </div>
     <p class="rpt-summary">Total suscripciones: {{ data.suscripciones|length }}</p>
     {% else %}
     <p class="text-gray-400 text-sm"><i>No hay suscripciones.</i></p>

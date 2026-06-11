@@ -22,7 +22,13 @@
                     <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
                         <td class="p-2">{{ r.user|default:'—' }}</td>
                         <td class="p-2 max-w-xs truncate"><a href="{{ r.url }}" class="text-blue-600 hover:underline" title="{{ r.url }}">{{ r.url|truncatechars:40 }}</a></td>
-                        <td class="p-2"><div class="truncate" style="max-width:250px">{{ r.descripcion|truncatechars:80 }}</div></td>
+                        <td class="p-2">
+                            <div id="desc-{{ r.pk }}" class="truncate" style="max-width:250px">{{ r.descripcion|truncatechars:80 }}</div>
+                            {% if r.descripcion|length > 80 %}
+                            <button onclick="toggleDesc({{ r.pk }})" class="text-xs text-blue-500 hover:underline mt-1">{{ tr.ver_mas }}</button>
+                            <div id="desc-full-{{ r.pk }}" class="hidden text-xs mt-1">{{ r.descripcion }}</div>
+                            {% endif %}
+                        </td>
                         <td class="p-2 text-xs">{{ r.ip_address|default:'—' }}</td>
                         <td class="p-2 text-xs">{{ r.created_at|date:"d/m/Y H:i" }}</td>
                         <td class="p-2">
@@ -47,6 +53,12 @@
 function toggleTb(pk) {
     var el = document.getElementById('tb-' + pk);
     if (el) el.classList.toggle('hidden');
+}
+function toggleDesc(pk) {
+    var truncated = document.getElementById('desc-' + pk);
+    var full = document.getElementById('desc-full-' + pk);
+    if (truncated) truncated.classList.toggle('hidden');
+    if (full) full.classList.toggle('hidden');
 }
 </script>
 {% endblock %}

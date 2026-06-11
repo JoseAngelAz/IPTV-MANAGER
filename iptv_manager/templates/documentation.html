@@ -439,8 +439,7 @@ iptv_manager/
             </div>
             <div>
                 <p class="font-bold">2. Vista con permisos</p>
-                <pre class="bg-gray-50 dark:bg-gray-900 p-3 rounded text-xs">
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+                <pre class="bg-gray-50 dark:bg-gray-900 p-3 rounded text-xs overflow-x-auto whitespace-pre">from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic import ListView
 
 class MiListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
@@ -508,7 +507,7 @@ python manage.py runserver 0.0.0.0:8000</pre>
 
     <div class="space-y-2 text-sm">
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer border-l-4 border-blue-500">
-            <summary class="flex items-center gap-3 list-none">
+            <summary class="flex items-center gap-3 list-none flex-wrap">
                 <i class="fas fa-key text-blue-500 text-lg"></i>
                 <span class="font-semibold flex-1">{% tr "Secret Key" %}</span>
                 <span class="text-xs text-gray-400">{% tr "Implementación: python-decouple, sin default en código" %}</span>
@@ -521,7 +520,7 @@ python manage.py runserver 0.0.0.0:8000</pre>
         </details>
 
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer border-l-4 border-red-500">
-            <summary class="flex items-center gap-3 list-none">
+            <summary class="flex items-center gap-3 list-none flex-wrap">
                 <i class="fas fa-bug text-red-500 text-lg"></i>
                 <span class="font-semibold flex-1">{% tr "DEBUG mode" %}</span>
                 <span class="text-xs text-gray-400">{% tr "Implementación: False por defecto vía env var" %}</span>
@@ -534,7 +533,7 @@ python manage.py runserver 0.0.0.0:8000</pre>
         </details>
 
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer border-l-4 border-yellow-500">
-            <summary class="flex items-center gap-3 list-none">
+            <summary class="flex items-center gap-3 list-none flex-wrap">
                 <i class="fas fa-gavel text-yellow-500 text-lg"></i>
                 <span class="font-semibold flex-1">{% tr "Fuerza Bruta (django-axes)" %}</span>
                 <span class="text-xs text-gray-400">{% tr "Implementación: 5 intentos, 1h cooloff, bloqueo IP+usuario" %}</span>
@@ -547,7 +546,7 @@ python manage.py runserver 0.0.0.0:8000</pre>
         </details>
 
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer border-l-4 border-green-500">
-            <summary class="flex items-center gap-3 list-none">
+            <summary class="flex items-center gap-3 list-none flex-wrap">
                 <i class="fas fa-lock text-green-500 text-lg"></i>
                 <span class="font-semibold flex-1">{% tr "HSTS (HTTP Strict Transport Security)" %}</span>
                 <span class="text-xs text-gray-400">{% tr "Implementación: 31536000s (1 año), includeSubDomains, preload" %}</span>
@@ -560,7 +559,7 @@ python manage.py runserver 0.0.0.0:8000</pre>
         </details>
 
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer border-l-4 border-red-400">
-            <summary class="flex items-center gap-3 list-none">
+            <summary class="flex items-center gap-3 list-none flex-wrap">
                 <i class="fas fa-shield text-red-400 text-lg"></i>
                 <span class="font-semibold flex-1">{% tr "XSS (Cross-Site Scripting)" %}</span>
                 <span class="text-xs text-gray-400">{% tr "Implementación: SECURE_BROWSER_XSS_FILTER = True" %}</span>
@@ -573,7 +572,7 @@ python manage.py runserver 0.0.0.0:8000</pre>
         </details>
 
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer border-l-4 border-gray-500">
-            <summary class="flex items-center gap-3 list-none">
+            <summary class="flex items-center gap-3 list-none flex-wrap">
                 <i class="fas fa-file text-gray-500 text-lg"></i>
                 <span class="font-semibold flex-1">{% tr "Content Sniffing (MIME sniffing)" %}</span>
                 <span class="text-xs text-gray-400">{% tr "Implementación: SECURE_CONTENT_TYPE_NOSNIFF = True" %}</span>
@@ -586,7 +585,7 @@ python manage.py runserver 0.0.0.0:8000</pre>
         </details>
 
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer border-l-4 border-purple-500">
-            <summary class="flex items-center gap-3 list-none">
+            <summary class="flex items-center gap-3 list-none flex-wrap">
                 <i class="fas fa-window-close text-purple-500 text-lg"></i>
                 <span class="font-semibold flex-1">{% tr "Clickjacking (Frame Options)" %}</span>
                 <span class="text-xs text-gray-400">{% tr "Implementación: X_FRAME_OPTIONS = 'DENY'" %}</span>
@@ -599,7 +598,7 @@ python manage.py runserver 0.0.0.0:8000</pre>
         </details>
 
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer border-l-4 border-yellow-400">
-            <summary class="flex items-center gap-3 list-none">
+            <summary class="flex items-center gap-3 list-none flex-wrap">
                 <i class="fas fa-cookie text-yellow-400 text-lg"></i>
                 <span class="font-semibold flex-1">{% tr "Cookies Seguras (Secure + HttpOnly)" %}</span>
                 <span class="text-xs text-gray-400">{% tr "Implementación: SESSION_COOKIE_SECURE + CSRF_COOKIE_SECURE condicional a HTTPS" %}</span>
@@ -612,7 +611,7 @@ python manage.py runserver 0.0.0.0:8000</pre>
         </details>
 
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer border-l-4 border-green-400">
-            <summary class="flex items-center gap-3 list-none">
+            <summary class="flex items-center gap-3 list-none flex-wrap">
                 <i class="fas fa-check-circle text-green-400 text-lg"></i>
                 <span class="font-semibold flex-1">{% tr "Validación de Input (teléfono, MAC)" %}</span>
                 <span class="text-xs text-gray-400">{% tr "Implementación: RegexValidator para E.164 y XX:XX:XX:XX:XX:XX" %}</span>
@@ -625,7 +624,7 @@ python manage.py runserver 0.0.0.0:8000</pre>
         </details>
 
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer border-l-4 border-blue-400">
-            <summary class="flex items-center gap-3 list-none">
+            <summary class="flex items-center gap-3 list-none flex-wrap">
                 <i class="fas fa-user-tag text-blue-400 text-lg"></i>
                 <span class="font-semibold flex-1">{% tr "RBAC (Control de Acceso por Roles)" %}</span>
                 <span class="text-xs text-gray-400">{% tr "Implementación: @login_required + PermissionRequiredMixin en TODAS las vistas" %}</span>
@@ -638,7 +637,7 @@ python manage.py runserver 0.0.0.0:8000</pre>
         </details>
 
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer border-l-4 border-gray-600">
-            <summary class="flex items-center gap-3 list-none">
+            <summary class="flex items-center gap-3 list-none flex-wrap">
                 <i class="fas fa-database text-gray-600 text-lg"></i>
                 <span class="font-semibold flex-1">{% tr "Protección SQLi / XSS en BD" %}</span>
                 <span class="text-xs text-gray-400">{% tr "Implementación: 100% ORM + auto-escape templates, sin mark_safe" %}</span>
@@ -651,7 +650,7 @@ python manage.py runserver 0.0.0.0:8000</pre>
         </details>
 
         <details class="bg-gray-50 dark:bg-gray-900 p-4 rounded group cursor-pointer border-l-4 border-blue-500">
-            <summary class="flex items-center gap-3 list-none">
+            <summary class="flex items-center gap-3 list-none flex-wrap">
                 <i class="fas fa-shield text-blue-500 text-lg"></i>
                 <span class="font-semibold flex-1">{% tr "CSRF (Cross-Site Request Forgery)" %}</span>
                 <span class="text-xs text-gray-400">{% tr "Implementación: CsrfViewMiddleware + " %}<code>{% templatetag openblock %} csrf_token {% templatetag closeblock %}</code>{% tr " en todos los formularios" %}</span>
@@ -695,7 +694,7 @@ python manage.py runserver 0.0.0.0:8000</pre>
             <div class="er-arrow"><i class="fas fa-arrow-down"></i></div>
             <div class="er-label">OneToOne</div>
             <div class="er-line"></div>
-            <div class="flex gap-4">
+            <div class="flex gap-4 flex-nowrap">
                 <div class="er-box border-green-500 bg-green-50 dark:bg-green-900/20" style="width:14rem;">
                     <div class="er-title text-green-600">ThemeSettings</div>
                     <div class="er-field"><span class="er-pk">PK</span> id</div>
@@ -711,7 +710,7 @@ python manage.py runserver 0.0.0.0:8000</pre>
                     <div class="er-field"><i class="fas fa-paint-brush text-gray-400 w-4"></i> show_pixel_art</div>
                 </div>
             </div>
-            <div class="flex gap-4 mt-2">
+            <div class="flex gap-4 mt-2 flex-nowrap">
                 <div class="er-box border-purple-500 bg-purple-50 dark:bg-purple-900/20" style="width:14rem;">
                     <div class="er-title text-purple-600">UserActivityLog</div>
                     <div class="er-field"><span class="er-pk">PK</span> id</div>
@@ -736,7 +735,7 @@ python manage.py runserver 0.0.0.0:8000</pre>
             <div class="er-arrow"><i class="fas fa-arrow-down"></i></div>
             <div class="er-label">1 a muchos (FK)</div>
 
-            <div class="flex gap-4">
+            <div class="flex gap-4 flex-nowrap">
                 <div class="er-box border-green-600 bg-green-50 dark:bg-green-900/20" style="width:16rem;">
                     <div class="er-title text-green-700">Cliente</div>
                     <div class="er-field"><span class="er-pk">PK</span> id</div>
@@ -786,7 +785,7 @@ python manage.py runserver 0.0.0.0:8000</pre>
             <div class="er-line"></div>
             <div class="er-arrow"><i class="fas fa-arrow-down"></i></div>
 
-            <div class="flex gap-4">
+            <div class="flex gap-4 flex-nowrap">
                 <div class="er-box border-gray-500 bg-gray-50 dark:bg-gray-800" style="width:14rem;">
                     <div class="er-title text-gray-600 dark:text-gray-300">Plan</div>
                     <div class="er-field"><span class="er-pk">PK</span> id</div>
@@ -934,19 +933,19 @@ python manage.py runserver 0.0.0.0:8000</pre>
     <div class="space-y-4 text-sm">
         <div>
             <h4 class="font-bold"><i class="fas fa-terminal text-gray-500 mr-2"></i>{% tr "Comandos diarios" %}</h4>
-            <pre class="bg-gray-50 dark:bg-gray-900 p-3 rounded text-xs mt-1">docker compose logs -f web       # Ver logs en vivo
+            <pre class="bg-gray-50 dark:bg-gray-900 p-3 rounded text-xs mt-1 overflow-x-auto whitespace-pre">docker compose logs -f web       # Ver logs en vivo
 docker compose exec web python manage.py shell  # Shell interactivo
 docker compose exec db pg_dump -U iptv_user iptv_manager > backup.sql</pre>
         </div>
         <div>
             <h4 class="font-bold"><i class="fas fa-sync-alt text-blue-500 mr-2"></i>{% tr "Actualizar sistema" %}</h4>
-            <pre class="bg-gray-50 dark:bg-gray-900 p-3 rounded text-xs mt-1">git pull origin main
+            <pre class="bg-gray-50 dark:bg-gray-900 p-3 rounded text-xs mt-1 overflow-x-auto whitespace-pre">git pull origin main
 docker compose up -d --build
 docker compose exec web python manage.py migrate</pre>
         </div>
         <div>
             <h4 class="font-bold"><i class="fas fa-database text-green-500 mr-2"></i>{% tr "Respaldar / Restaurar" %}</h4>
-            <pre class="bg-gray-50 dark:bg-gray-900 p-3 rounded text-xs mt-1"># Backup
+            <pre class="bg-gray-50 dark:bg-gray-900 p-3 rounded text-xs mt-1 overflow-x-auto whitespace-pre"># Backup
 docker compose exec db pg_dump -U iptv_user iptv_manager > backup_$(date +%Y%m%d).sql
 
 # Restore
@@ -954,7 +953,7 @@ cat backup.sql | docker compose exec -T db psql -U iptv_user iptv_manager</pre>
         </div>
         <div>
             <h4 class="font-bold"><i class="fas fa-shield-alt text-red-500 mr-2"></i>{% tr "Monitoreo de seguridad" %}</h4>
-            <pre class="bg-gray-50 dark:bg-gray-900 p-3 rounded text-xs mt-1">docker compose exec web python manage.py shell -c "
+            <pre class="bg-gray-50 dark:bg-gray-900 p-3 rounded text-xs mt-1 overflow-x-auto whitespace-pre">docker compose exec web python manage.py shell -c "
 from axes.models import AccessAttempt
 for a in AccessAttempt.objects.order_by('-attempt_time')[:10]:
     print(a.ip_address, a.username, a.attempt_time, a.get_failures_since_start())
