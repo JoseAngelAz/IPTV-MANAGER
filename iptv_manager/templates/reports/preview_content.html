@@ -127,7 +127,7 @@
     {% endif %}
     {% if data.finanzas %}
     <div style="overflow-x:auto">
-    <table class="rpt-table">
+    <table class="rpt-table" style="white-space:nowrap">
         <thead><tr><th>#</th><th>Tipo</th><th>Monto</th><th>Fecha</th><th>Descripción</th></tr></thead>
         <tbody>
             {% for m in data.finanzas %}
@@ -149,7 +149,7 @@
 {% elif s == 'notificaciones' %}
     {% if data.notificaciones %}
     <div style="overflow-x:auto">
-    <table class="rpt-table">
+    <table class="rpt-table" style="white-space:nowrap">
         <thead><tr><th>#</th><th>Canal</th><th>Destinatario</th><th>Cliente</th><th>Mensaje</th><th>Estado</th><th>Fecha</th></tr></thead>
         <tbody>
             {% for n in data.notificaciones %}

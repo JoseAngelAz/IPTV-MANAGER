@@ -1,17 +1,17 @@
 {% extends 'base.html' %}
 {% block title %} — {{ tr.generar_reporte }}{% endblock %}
 {% block content %}
-<div class="max-w-4xl mx-auto space-y-6">
-    <div class="card-custom p-6 rounded shadow">
-        <h2 class="text-2xl font-bold mb-2"><i class="fas fa-file-alt text-blue-600 mr-2"></i>{{ tr.generar_reporte }}</h2>
-        <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">{{ tr.selecciona_las_secciones_el_formato_y_el_diseno_para_tu_reporte }}</p>
+<div class="max-w-4xl mx-auto space-y-4 md:space-y-6">
+    <div class="card-custom p-4 md:p-6 rounded shadow">
+        <h2 class="text-xl md:text-2xl font-bold mb-2"><i class="fas fa-file-alt text-blue-600 mr-2"></i>{{ tr.generar_reporte }}</h2>
+        <p class="text-sm text-gray-500 dark:text-gray-400">{{ tr.selecciona_las_secciones_el_formato_y_el_diseno_para_tu_reporte }}</p>
     </div>
 
     <form method="post" id="report-form">
         {% csrf_token %}
 
-        <div class="card-custom p-6 rounded shadow">
-            <h3 class="font-bold text-lg mb-4"><i class="fas fa-check-square text-green-500 mr-2"></i>{{ tr.secciones }}</h3>
+        <div class="card-custom p-4 md:p-6 rounded shadow">
+            <h3 class="font-bold text-base md:text-lg mb-4"><i class="fas fa-check-square text-green-500 mr-2"></i>{{ tr.secciones }}</h3>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {% for s in sections %}
                 <label class="flex items-center gap-3 p-4 border rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition">
@@ -30,8 +30,8 @@
             </div>
         </div>
 
-        <div class="card-custom p-6 rounded shadow">
-            <h3 class="font-bold text-lg mb-4"><i class="fas fa-calendar text-blue-500 mr-2"></i>{{ tr.periodo_opcional }}</h3>
+        <div class="card-custom p-4 md:p-6 rounded shadow">
+            <h3 class="font-bold text-base md:text-lg mb-4"><i class="fas fa-calendar text-blue-500 mr-2"></i>{{ tr.periodo_opcional }}</h3>
             <div class="flex flex-wrap gap-4 items-end">
                 <div>
                     <label class="block text-sm font-medium mb-1">{{ tr.desde }}</label>
@@ -44,8 +44,8 @@
             </div>
         </div>
 
-        <div class="card-custom p-6 rounded shadow">
-            <h3 class="font-bold text-lg mb-4"><i class="fas fa-palette text-purple-500 mr-2"></i>{{ tr.formato_y_diseno }}</h3>
+        <div class="card-custom p-4 md:p-6 rounded shadow">
+            <h3 class="font-bold text-base md:text-lg mb-4"><i class="fas fa-palette text-purple-500 mr-2"></i>{{ tr.formato_y_diseno }}</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
                     <label class="block text-sm font-medium mb-1">{{ tr.formato_de_salida }}</label>
@@ -73,8 +73,8 @@
             </div>
         </div>
 
-        <div class="card-custom p-6 rounded shadow pdf-options">
-            <h3 class="font-bold text-lg mb-4"><i class="fas fa-sliders-h text-orange-500 mr-2"></i>{{ tr.ajustes_pdf }}</h3>
+        <div class="card-custom p-4 md:p-6 rounded shadow pdf-options">
+            <h3 class="font-bold text-base md:text-lg mb-4"><i class="fas fa-sliders-h text-orange-500 mr-2"></i>{{ tr.ajustes_pdf }}</h3>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
                     <label class="block text-sm font-medium mb-1">{{ tr.margenes }}</label>

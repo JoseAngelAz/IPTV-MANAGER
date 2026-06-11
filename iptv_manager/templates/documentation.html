@@ -667,7 +667,7 @@ python manage.py runserver 0.0.0.0:8000</pre>
 {% elif section == 'modelos' %}
 <div class="card-custom p-6 rounded shadow">
     <h3 class="font-bold text-lg mb-4"><i class="fas fa-database text-blue-500 mr-2"></i>{% tr "Modelos y Relaciones" %}</h3>
-    <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">{% tr "Diagrama entidad-relación del sistema. Las flechas indican relaciones ForeignKey." %}</p>
+    <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">{% tr "Diagrama entidad-relación del sistema. Las flechas indican relaciones ForeignKey. Pasa el mouse sobre cada campo para ver su descripción." %}</p>
 
     <div class="overflow-x-auto">
         <style>
@@ -676,19 +676,20 @@ python manage.py runserver 0.0.0.0:8000</pre>
             .er-box .er-field { padding: 0.125rem 0; display: flex; align-items: center; gap: 0.25rem; }
             .er-box .er-field .er-pk { background: #fbbf24; color: #000; border-radius: 0.25rem; padding: 0 0.25rem; font-size: 0.6rem; font-weight: 700; }
             .er-box .er-field .er-fk { background: #93c5fd; color: #000; border-radius: 0.25rem; padding: 0 0.25rem; font-size: 0.6rem; font-weight: 700; }
+            .er-field:hover { filter: brightness(0.95); cursor: help; }
             .er-line { border-left: 2px solid #94a3b8; height: 1.5rem; margin: 0 auto; width: 0; }
             .er-arrow { display: flex; justify-content: center; color: #94a3b8; font-size: 0.8rem; margin: -0.25rem 0; }
             .er-label { font-size: 0.6rem; color: #94a3b8; text-align: center; }
         </style>
 
-        <div class="flex flex-col items-center text-sm">
+        <div class="flex flex-col items-start text-sm">
             <div class="er-box border-blue-500 bg-blue-50 dark:bg-blue-900/20" style="width:14rem;">
                 <div class="er-title text-blue-600">User (AbstractUser)</div>
-                <div class="er-field"><span class="er-pk">PK</span> id</div>
-                <div class="er-field"><i class="fas fa-user text-blue-400 w-4"></i> username, password</div>
-                <div class="er-field"><i class="fas fa-envelope text-gray-400 w-4"></i> email</div>
-                <div class="er-field"><i class="fas fa-image text-green-400 w-4"></i> profile_picture</div>
-                <div class="er-field"><span class="er-fk">FK</span> → groups (M:N)</div>
+                <div class="er-field" title="Identificador único auto-incremental"><span class="er-pk">PK</span> id</div>
+                <div class="er-field" title="Nombre de usuario y hash de contraseña"><i class="fas fa-user text-blue-400 w-4"></i> username, password</div>
+                <div class="er-field" title="Correo electrónico del usuario"><i class="fas fa-envelope text-gray-400 w-4"></i> email</div>
+                <div class="er-field" title="Foto de perfil (URL o ruta de archivo)"><i class="fas fa-image text-green-400 w-4"></i> profile_picture</div>
+                <div class="er-field" title="Relación muchos-a-muchos con grupos de permisos"><span class="er-fk">FK</span> → groups (M:N)</div>
             </div>
             <div class="er-line"></div>
             <div class="er-arrow"><i class="fas fa-arrow-down"></i></div>
@@ -697,37 +698,37 @@ python manage.py runserver 0.0.0.0:8000</pre>
             <div class="flex gap-4 flex-nowrap">
                 <div class="er-box border-green-500 bg-green-50 dark:bg-green-900/20" style="width:14rem;">
                     <div class="er-title text-green-600">ThemeSettings</div>
-                    <div class="er-field"><span class="er-pk">PK</span> id</div>
-                    <div class="er-field"><span class="er-fk">FK</span> → User (OneToOne)</div>
-                    <div class="er-field"><i class="fas fa-palette text-purple-400 w-4"></i> theme_name, colores</div>
-                    <div class="er-field"><i class="fas fa-code text-gray-400 w-4"></i> custom_css</div>
+                    <div class="er-field" title="Identificador único (relación 1:1 con User)"><span class="er-pk">PK</span> id</div>
+                    <div class="er-field" title="Enlace OneToOne al usuario propietario"><span class="er-fk">FK</span> → User (OneToOne)</div>
+                    <div class="er-field" title="Nombre del tema y colores personalizados"><i class="fas fa-palette text-purple-400 w-4"></i> theme_name, colores</div>
+                    <div class="er-field" title="CSS personalizado inyectado en el tema"><i class="fas fa-code text-gray-400 w-4"></i> custom_css</div>
                 </div>
                 <div class="er-box border-yellow-600 bg-yellow-50 dark:bg-yellow-900/20" style="width:14rem;">
                     <div class="er-title text-yellow-600">ErrorPageSettings</div>
-                    <div class="er-field"><span class="er-pk">PK</span> id (singleton pk=1)</div>
-                    <div class="er-field"><i class="fas fa-heading text-gray-400 w-4"></i> title, message</div>
-                    <div class="er-field"><i class="fas fa-paint-bucket text-gray-400 w-4"></i> bg_color, text_color</div>
-                    <div class="er-field"><i class="fas fa-paint-brush text-gray-400 w-4"></i> show_pixel_art</div>
+                    <div class="er-field" title="ID fijo = 1 (singleton)"><span class="er-pk">PK</span> id (singleton pk=1)</div>
+                    <div class="er-field" title="Título y mensaje de error personalizados"><i class="fas fa-heading text-gray-400 w-4"></i> title, message</div>
+                    <div class="er-field" title="Colores de fondo y texto de la página de error"><i class="fas fa-paint-bucket text-gray-400 w-4"></i> bg_color, text_color</div>
+                    <div class="er-field" title="Muestra/oculta el arte pixelado en errores"><i class="fas fa-paint-brush text-gray-400 w-4"></i> show_pixel_art</div>
                 </div>
             </div>
             <div class="flex gap-4 mt-2 flex-nowrap">
                 <div class="er-box border-purple-500 bg-purple-50 dark:bg-purple-900/20" style="width:14rem;">
                     <div class="er-title text-purple-600">UserActivityLog</div>
-                    <div class="er-field"><span class="er-pk">PK</span> id</div>
-                    <div class="er-field"><span class="er-fk">FK</span> → User (nullable)</div>
-                    <div class="er-field"><i class="fas fa-tag text-gray-400 w-4"></i> action, model_name</div>
-                    <div class="er-field"><i class="fas fa-clock text-gray-400 w-4"></i> timestamp</div>
+                    <div class="er-field" title="Identificador único del registro"><span class="er-pk">PK</span> id</div>
+                    <div class="er-field" title="Usuario que realizó la acción (puede ser nulo)"><span class="er-fk">FK</span> → User (nullable)</div>
+                    <div class="er-field" title="Acción realizada y modelo afectado"><i class="fas fa-tag text-gray-400 w-4"></i> action, model_name</div>
+                    <div class="er-field" title="Marca de tiempo de la acción"><i class="fas fa-clock text-gray-400 w-4"></i> timestamp</div>
                 </div>
                 <div class="er-box border-red-400 bg-red-50 dark:bg-red-900/20" style="width:14rem;">
                     <div class="er-title text-red-500">SessionConfig</div>
-                    <div class="er-field"><span class="er-pk">PK</span> id (singleton pk=1)</div>
-                    <div class="er-field"><i class="fas fa-hourglass text-gray-400 w-4"></i> timeout_minutes</div>
+                    <div class="er-field" title="ID fijo = 1 (singleton)"><span class="er-pk">PK</span> id (singleton pk=1)</div>
+                    <div class="er-field" title="Minutos de inactividad antes de cerrar sesión"><i class="fas fa-hourglass text-gray-400 w-4"></i> timeout_minutes</div>
                 </div>
                 <div class="er-box border-pink-500 bg-pink-50 dark:bg-pink-900/20" style="width:14rem;">
                     <div class="er-title text-pink-600">CustomPreset</div>
-                    <div class="er-field"><span class="er-pk">PK</span> id</div>
-                    <div class="er-field"><span class="er-fk">FK</span> → User</div>
-                    <div class="er-field"><i class="fas fa-palette text-gray-400 w-4"></i> name, icon, colores</div>
+                    <div class="er-field" title="Identificador único"><span class="er-pk">PK</span> id</div>
+                    <div class="er-field" title="Usuario propietario del preset"><span class="er-fk">FK</span> → User</div>
+                    <div class="er-field" title="Nombre, ícono y colores del preset personalizado"><i class="fas fa-palette text-gray-400 w-4"></i> name, icon, colores</div>
                 </div>
             </div>
 
@@ -738,47 +739,47 @@ python manage.py runserver 0.0.0.0:8000</pre>
             <div class="flex gap-4 flex-nowrap">
                 <div class="er-box border-green-600 bg-green-50 dark:bg-green-900/20" style="width:16rem;">
                     <div class="er-title text-green-700">Cliente</div>
-                    <div class="er-field"><span class="er-pk">PK</span> id</div>
-                    <div class="er-field"><i class="fas fa-user text-gray-400 w-4"></i> nombre, telefono, email</div>
-                    <div class="er-field"><i class="fas fa-network-wired text-gray-400 w-4"></i> dispositivo_id (MAC, opcional)</div>
-                    <div class="er-field"><i class="fas fa-image text-green-400 w-4"></i> foto</div>
-                    <div class="er-field"><i class="fas fa-calendar text-gray-400 w-4"></i> fecha_registro, activo</div>
-                    <div class="er-field"><i class="fas fa-database text-indigo-400 w-4"></i> datos_extra (JSON)</div>
+                    <div class="er-field" title="Identificador único del cliente"><span class="er-pk">PK</span> id</div>
+                    <div class="er-field" title="Nombre completo, teléfono y correo electrónico"><i class="fas fa-user text-gray-400 w-4"></i> nombre, telefono, email</div>
+                    <div class="er-field" title="ID de dispositivo MAC (formato XX:XX:XX:XX:XX:XX)"><i class="fas fa-network-wired text-gray-400 w-4"></i> dispositivo_id (MAC, opcional)</div>
+                    <div class="er-field" title="Foto del cliente (archivo o URL)"><i class="fas fa-image text-green-400 w-4"></i> foto</div>
+                    <div class="er-field" title="Fecha de registro y estado activo/inactivo"><i class="fas fa-calendar text-gray-400 w-4"></i> fecha_registro, activo</div>
+                    <div class="er-field" title="Datos adicionales en formato JSON"><i class="fas fa-database text-indigo-400 w-4"></i> datos_extra (JSON)</div>
                 </div>
             </div>
             <div class="er-line"></div>
             <div class="er-arrow"><i class="fas fa-arrows-split-up-and-left"></i></div>
             <div class="er-label">1 → N</div>
 
-            <div class="flex flex-wrap gap-4 justify-center">
+            <div class="flex gap-4 flex-nowrap">
                 <div class="er-box border-blue-600 bg-blue-50 dark:bg-blue-900/20" style="width:13rem;">
                     <div class="er-title text-blue-700">HistorialCliente</div>
-                    <div class="er-field"><span class="er-pk">PK</span> id</div>
-                    <div class="er-field"><span class="er-fk">FK</span> → Cliente</div>
-                    <div class="er-field"><span class="er-fk">FK</span> → User (usuario)</div>
-                    <div class="er-field"><i class="fas fa-align-left text-gray-400 w-4"></i> cambio, fecha</div>
+                    <div class="er-field" title="Identificador único del registro"><span class="er-pk">PK</span> id</div>
+                    <div class="er-field" title="Cliente al que pertenece el historial"><span class="er-fk">FK</span> → Cliente</div>
+                    <div class="er-field" title="Usuario que realizó el cambio"><span class="er-fk">FK</span> → User (usuario)</div>
+                    <div class="er-field" title="Descripción del cambio y fecha"><i class="fas fa-align-left text-gray-400 w-4"></i> cambio, fecha</div>
                 </div>
                 <div class="er-box border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20" style="width:13rem;">
                     <div class="er-title text-indigo-600">Nota</div>
-                    <div class="er-field"><span class="er-pk">PK</span> id</div>
-                    <div class="er-field"><span class="er-fk">FK</span> → Cliente</div>
-                    <div class="er-field"><span class="er-fk">FK</span> → User (usuario)</div>
-                    <div class="er-field"><i class="fas fa-align-left text-gray-400 w-4"></i> contenido, fecha</div>
+                    <div class="er-field" title="Identificador único de la nota"><span class="er-pk">PK</span> id</div>
+                    <div class="er-field" title="Cliente asociado a la nota"><span class="er-fk">FK</span> → Cliente</div>
+                    <div class="er-field" title="Usuario que creó la nota"><span class="er-fk">FK</span> → User (usuario)</div>
+                    <div class="er-field" title="Contenido de la nota y fecha de creación"><i class="fas fa-align-left text-gray-400 w-4"></i> contenido, fecha</div>
                 </div>
                 <div class="er-box border-teal-500 bg-teal-50 dark:bg-teal-900/20" style="width:13rem;">
                     <div class="er-title text-teal-600">LogNotificacion</div>
-                    <div class="er-field"><span class="er-pk">PK</span> id</div>
-                    <div class="er-field"><span class="er-fk">FK</span> → Cliente</div>
-                    <div class="er-field"><span class="er-fk">FK</span> → Suscripcion</div>
-                    <div class="er-field"><i class="fas fa-envelope text-gray-400 w-4"></i> canal, destinatario</div>
-                    <div class="er-field"><i class="fas fa-check text-gray-400 w-4"></i> enviado_ok, fecha_envio</div>
+                    <div class="er-field" title="Identificador único del registro"><span class="er-pk">PK</span> id</div>
+                    <div class="er-field" title="Cliente destinatario de la notificación"><span class="er-fk">FK</span> → Cliente</div>
+                    <div class="er-field" title="Suscripción relacionada (si aplica)"><span class="er-fk">FK</span> → Suscripcion</div>
+                    <div class="er-field" title="Canal (WhatsApp/Email) y destinatario"><i class="fas fa-envelope text-gray-400 w-4"></i> canal, destinatario</div>
+                    <div class="er-field" title="Estado de envío y fecha/hora"><i class="fas fa-check text-gray-400 w-4"></i> enviado_ok, fecha_envio</div>
                 </div>
                 <div class="er-box border-orange-500 bg-orange-50 dark:bg-orange-900/20" style="width:13rem;">
                     <div class="er-title text-orange-600">Suscripcion</div>
-                    <div class="er-field"><span class="er-pk">PK</span> id</div>
-                    <div class="er-field"><span class="er-fk">FK</span> → Cliente</div>
-                    <div class="er-field"><span class="er-fk">FK</span> → Plan</div>
-                    <div class="er-field"><i class="fas fa-calendar text-gray-400 w-4"></i> fechas, estado</div>
+                    <div class="er-field" title="Identificador único de la suscripción"><span class="er-pk">PK</span> id</div>
+                    <div class="er-field" title="Cliente suscriptor"><span class="er-fk">FK</span> → Cliente</div>
+                    <div class="er-field" title="Plan contratado"><span class="er-fk">FK</span> → Plan</div>
+                    <div class="er-field" title="Fechas de inicio/vencimiento y estado (activo/vencido)"><i class="fas fa-calendar text-gray-400 w-4"></i> fechas, estado</div>
                 </div>
             </div>
 
@@ -788,19 +789,19 @@ python manage.py runserver 0.0.0.0:8000</pre>
             <div class="flex gap-4 flex-nowrap">
                 <div class="er-box border-gray-500 bg-gray-50 dark:bg-gray-800" style="width:14rem;">
                     <div class="er-title text-gray-600 dark:text-gray-300">Plan</div>
-                    <div class="er-field"><span class="er-pk">PK</span> id</div>
-                    <div class="er-field"><i class="fas fa-tag text-gray-400 w-4"></i> nombre (unique)</div>
-                    <div class="er-field"><i class="fas fa-dollar-sign text-green-400 w-4"></i> precio</div>
-                    <div class="er-field"><i class="fas fa-calendar-day text-gray-400 w-4"></i> duracion_dias</div>
-                    <div class="er-field"><i class="fas fa-toggle-on text-gray-400 w-4"></i> activo</div>
+                    <div class="er-field" title="Identificador único del plan"><span class="er-pk">PK</span> id</div>
+                    <div class="er-field" title="Nombre único del plan"><i class="fas fa-tag text-gray-400 w-4"></i> nombre (unique)</div>
+                    <div class="er-field" title="Precio del plan en moneda local"><i class="fas fa-dollar-sign text-green-400 w-4"></i> precio</div>
+                    <div class="er-field" title="Duración del plan en días"><i class="fas fa-calendar-day text-gray-400 w-4"></i> duracion_dias</div>
+                    <div class="er-field" title="Indica si el plan está disponible"><i class="fas fa-toggle-on text-gray-400 w-4"></i> activo</div>
                 </div>
                 <div class="er-box border-amber-500 bg-amber-50 dark:bg-amber-900/20" style="width:14rem;">
                     <div class="er-title text-amber-600">MovimientoFinanciero</div>
-                    <div class="er-field"><span class="er-pk">PK</span> id</div>
-                    <div class="er-field"><span class="er-fk">FK</span> → Suscripcion (nullable)</div>
-                    <div class="er-field"><i class="fas fa-arrow-up text-green-400 w-4"></i> tipo (ingreso/egreso)</div>
-                    <div class="er-field"><i class="fas fa-dollar-sign text-green-400 w-4"></i> monto</div>
-                    <div class="er-field"><i class="fas fa-align-left text-gray-400 w-4"></i> descripcion, fecha</div>
+                    <div class="er-field" title="Identificador único del movimiento"><span class="er-pk">PK</span> id</div>
+                    <div class="er-field" title="Suscripción asociada (puede ser nulo)"><span class="er-fk">FK</span> → Suscripcion (nullable)</div>
+                    <div class="er-field" title="Tipo de movimiento: ingreso o egreso"><i class="fas fa-arrow-up text-green-400 w-4"></i> tipo (ingreso/egreso)</div>
+                    <div class="er-field" title="Monto del movimiento"><i class="fas fa-dollar-sign text-green-400 w-4"></i> monto</div>
+                    <div class="er-field" title="Descripción y fecha del movimiento"><i class="fas fa-align-left text-gray-400 w-4"></i> descripcion, fecha</div>
                 </div>
             </div>
         </div>
