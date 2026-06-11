@@ -10,19 +10,20 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/static/css/pixel-bg.css">
 </head>
-<body class="min-h-screen relative{% if landing_config.pixel_bg and landing_config.pixel_bg != 'none' and not landing_config.background_image %} bg-pixel-{{ landing_config.pixel_bg }}{% endif %}">
+<body class="min-h-screen relative">
     {% if landing_config.background_image %}
     <div class="fixed inset-0 bg-cover bg-center bg-no-repeat z-0"
          style="background-image: url('{{ landing_config.background_image.url }}');">
     </div>
     {% elif landing_config.pixel_bg and landing_config.pixel_bg != 'none' %}
+    <div class="fixed inset-0 z-0 bg-pixel-{{ landing_config.pixel_bg }}"></div>
     {% else %}
     <div class="fixed inset-0 bg-cover bg-center bg-no-repeat z-0"
          style="background-image: url('/static/img/bg.webp');"
          onerror="this.style.display='none'">
     </div>
     {% endif %}
-    <div class="fixed inset-0 z-0 pointer-events-none"
+    <div class="fixed inset-0 z-[1] pointer-events-none"
          style="background: linear-gradient(135deg, {{ landing_config.gradient_from|default:'#111827' }}, {{ landing_config.gradient_to|default:'#1e3a5f' }}); opacity: calc({{ landing_config.overlay_opacity|default:40 }} / 100);"></div>
     <div class="absolute inset-0 z-10 overflow-y-auto">
     <div class="min-h-screen flex flex-col items-center justify-center px-6 py-8">

@@ -49,7 +49,7 @@
         .responsive-table table { min-width: 600px; }
         .responsive-table th, .responsive-table td { white-space: nowrap; }
         .overflow-x-auto table { min-width: 600px; }
-        .overflow-x-auto th, .overflow-x-auto td { white-space: nowrap; }
+        .table-nowrap th, .table-nowrap td { white-space: nowrap; }
         .table-list { overflow-x: auto; -webkit-overflow-scrolling: touch; }
         .table-list table { min-width: 600px; }
         .table-list th, .table-list td { white-space: nowrap; padding: 0.75rem; }
@@ -303,7 +303,7 @@
 
         /* Desktop: sidebar is static in grid */
         @media (min-width: 768px) {
-            .app-layout {
+            .app-layout.has-sidebar {
                 grid-template-columns: var(--sidebar-width) 1fr;
             }
             .app-layout--collapsed {

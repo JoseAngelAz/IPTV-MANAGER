@@ -65,7 +65,7 @@
 
         <div class="mt-6 p-4 bg-gray-100 dark:bg-gray-700 rounded">
             <p class="text-sm font-semibold mb-2">{{ tr.vista_previa }}</p>
-            <div class="relative h-32 rounded overflow-hidden border dark:border-gray-600" style="background: linear-gradient(135deg, var(--preview-from, #111827), var(--preview-to, #1e3a5f));">
+            <div id="gradient-preview" class="relative h-32 rounded overflow-hidden border dark:border-gray-600" style="background: linear-gradient(135deg, #111827, #1e3a5f);">
                 <div class="absolute inset-0 flex items-center justify-center">
                     <span class="text-white/60 text-xs">{{ tr.tiny_erp_manager_preview }}</span>
                 </div>
@@ -81,16 +81,24 @@
 
 <script>
 (function() {
-    const fromInput = document.getElementById('{{ form.gradient_from.id_for_label }}');
-    const toInput = document.getElementById('{{ form.gradient_to.id_for_label }}');
-    const preview = document.querySelector('.relative.h-32');
+    var fromInput = document.getElementById('{{ form.gradient_from.id_for_label }}');
+    var toInput = document.getElementById('{{ form.gradient_to.id_for_label }}');
+    var preview = document.getElementById('gradient-preview');
     if (fromInput && toInput && preview) {
+        function isValidColor(v) {
+            if (!v) return false;
+            v = v.trim();
+            return v.startsWith('#') || v.startsWith('rgb') || v.startsWith('hsl');
+        }
         function updatePreview() {
-            preview.style.setProperty('--preview-from', fromInput.value || '#111827');
-            preview.style.setProperty('--preview-to', toInput.value || '#1e3a5f');
+            var from = isValidColor(fromInput.value) ? fromInput.value.trim() : '#111827';
+            var to = isValidColor(toInput.value) ? toInput.value.trim() : '#1e3a5f';
+            preview.style.background = 'linear-gradient(135deg, ' + from + ', ' + to + ')';
         }
         fromInput.addEventListener('input', updatePreview);
+        fromInput.addEventListener('change', updatePreview);
         toInput.addEventListener('input', updatePreview);
+        toInput.addEventListener('change', updatePreview);
         updatePreview();
     }
 })();
